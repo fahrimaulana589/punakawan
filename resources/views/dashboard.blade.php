@@ -1,17 +1,43 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+  <x-slot name="header">
+    {{ __('Dashboard') }}
+  </x-slot>
+  
+  <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+    <div class="grid grid-cols-12 gap-4 md:gap-6">
+      <div class="col-span-12 space-y-6 xl:col-span-7">
+        <!-- Metric Group One -->
+        @include('partials.metric-group.metric-group-01')
+        <!-- Metric Group One -->
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
+        <!-- ====== Chart One Start -->
+        @include('partials.chart.chart-01')
+        <!-- ====== Chart One End -->
+      </div>
+      <div class="col-span-12 xl:col-span-5">
+        <!-- ====== Chart Two Start -->
+        @include('partials.chart.chart-02')
+        <!-- ====== Chart Two End -->
+      </div>
+
+      <div class="col-span-12">
+        <!-- ====== Chart Three Start -->
+        @include('partials.chart.chart-03')
+        <!-- ====== Chart Three End -->
+      </div>
+
+      <div class="col-span-12 xl:col-span-5">
+        <!-- ====== Map One Start -->
+        @include('partials.map-01')
+        <!-- ====== Map One End -->
+      </div>
+
+      <div class="col-span-12 xl:col-span-7">
+        <!-- ====== Table One Start -->
+        @include('partials.table.table-01')
+        <!-- ====== Table One End -->
+      </div>
     </div>
+  </div>
 </x-app-layout>
+
