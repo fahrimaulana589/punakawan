@@ -195,12 +195,12 @@
           <!-- Menu Item Produk -->
           <li>
             <a
-              href="{{ route('dashboard') }}"
+              href="{{ route('produk') }}"
               class="menu-item group"
-              :class="selected === 'produk' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'produk' | selected === 'produk.create' | selected === 'produk.edit' ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="selected === 'produk' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'produk' | selected === 'produk.create' | selected === 'produk.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"

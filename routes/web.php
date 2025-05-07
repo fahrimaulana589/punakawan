@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/pegawai/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
 
     Route::delete('/pegawai/delete/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.delete');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
+
+    Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create');
+    
+    Route::post('/produk/store', [ProdukController::class, 'store'])->name('produk.store');
+    
+    Route::get('/produk/edit/{id}', [ProdukController::class, 'edit'])->name('produk.edit');
+
+    Route::put('/produk/update/{id}', [ProdukController::class, 'update'])->name('produk.update');
+
+    Route::delete('/produk/delete/{id}', [ProdukController::class, 'destroy'])->name('produk.delete');
 });
 
 Route::middleware('auth')->group(function () {
