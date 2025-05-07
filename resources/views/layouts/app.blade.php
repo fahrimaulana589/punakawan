@@ -20,6 +20,7 @@
          $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
     :class="{'dark bg-gray-900': darkMode === true}"
   >
+    @include('sweetalert::alert') 
     <!-- ===== Preloader Start ===== -->
     @include('partials.preloader')
     <!-- ===== Preloader End ===== -->
