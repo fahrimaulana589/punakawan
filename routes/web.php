@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AkunController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
@@ -63,6 +64,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/produk/update/{id}', [ProdukController::class, 'update'])->name('produk.update');
 
     Route::delete('/produk/delete/{id}', [ProdukController::class, 'destroy'])->name('produk.delete');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/akun', [AkunController::class, 'index'])->name('akun');
+
+    Route::get('/akun/create', [AkunController::class, 'create'])->name('akun.create');
+    
+    Route::post('/akun/store', [AkunController::class, 'store'])->name('akun.store');
+    
+    Route::get('/akun/edit/{id}', [AkunController::class, 'edit'])->name('akun.edit');
+
+    Route::put('/akun/update/{id}', [AkunController::class, 'update'])->name('akun.update');
+
+    Route::delete('/akun/delete/{id}', [AkunController::class, 'destroy'])->name('akun.delete');
 });
 
 Route::middleware('auth')->group(function () {

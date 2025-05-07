@@ -228,7 +228,7 @@
           <!-- Menu Item Akun -->
           <li>
             <a
-              href="{{ route('dashboard') }}"
+              href="{{ route('akun') }}"
               class="menu-item group"
               :class="selected === 'akun' ? 'menu-item-active' : 'menu-item-inactive'"
             >
