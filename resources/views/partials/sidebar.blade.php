@@ -97,7 +97,7 @@
           <!-- Menu Item Absensi -->
           <li>
             <a
-              href="{{ route('calendar') }}"
+              href="{{ route('dashboard') }}"
               class="menu-item group"
               :class="selected === 'absensi' ? 'menu-item-active' : 'menu-item-inactive'"
             >
@@ -293,13 +293,13 @@
           <!-- Menu Item User -->
           <li>
             <a
-              href="{{ route('users') }}"
+              href="{{ route('user') }}"
               class="menu-item group"
-              :class="selected === 'users' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'user' ? 'menu-item-active' : 'menu-item-inactive'"
             >
             
               <svg
-                :class="selected === 'users' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'user' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"

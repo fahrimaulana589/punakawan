@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Akun;
+use App\Models\Pegawai;
+use App\Models\Produk;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -40,5 +43,17 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $kasir_user->assignRole($kasir_role);
+
+        Produk::factory(10)->create()->each(function ($produk, $index) {
+            $produk->kode = 'PRD' . str_pad($produk->id, 4, '0', STR_PAD_LEFT);
+            $produk->save();
+        });
+
+        Akun::factory(10)->create()->each(function ($produk, $index) {
+            $produk->kode = 'AKN' . str_pad($produk->id, 4, '0', STR_PAD_LEFT);
+            $produk->save();
+        });
+
+        Pegawai::factory(10)->create();
     }
 }

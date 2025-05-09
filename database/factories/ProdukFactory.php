@@ -17,7 +17,9 @@ class ProdukFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "nama" => $this->faker->word(),
+            "harga" => $this->faker->numberBetween(1000, 100000),
+            "kode" => "Temp",
         ];
     }
 }

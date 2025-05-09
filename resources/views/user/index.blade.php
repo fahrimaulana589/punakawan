@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Dashboard') }}
+    {{ __('User') }}
   </x-slot>
   
   
@@ -8,13 +8,13 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Form Elements`}">
+      <div x-data="{ pageName: `User`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
 
       <div class="flex items-center justify-end mb-4">
-        <a href="{{ route('users') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <a href="{{ route('user.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add User
         </a>
       </div>
@@ -89,17 +89,18 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center justify-end mb-4">
                         <a
-                        href="#"
+                        href="{{ route('user.edit', $user->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         Edit
                       </a>
-                      <a
-                        href="#"
-                        class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                      >
-                        Delete
-                      </a>
+                      <form action="{{ route('user.delete', $user->id) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <a href="{{ route('user.delete', $user->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                          Delete
+                        </a>
+                      </form>
                       </div>
                     </td>   
                   </tr>
