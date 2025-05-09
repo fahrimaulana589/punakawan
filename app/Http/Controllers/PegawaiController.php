@@ -20,12 +20,16 @@ class PegawaiController extends Controller
 
     public function create()
     {
-        return view('pegawai.create');
+        $lastId = Pegawai::max('id') ?? 0;
+        $kode = 'PGW' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+        
+        return view('pegawai.create',compact('kode'));
     }
     public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required|string|max:255|unique:pegawais,nama',
+            'kode' => 'required|string|max:255|unique:pegawais,kode',
             'jabatan' => 'required|string|max:255',
             'no_hp' => 'required|string|numeric',
             'alamat' => 'required|string|max:255',

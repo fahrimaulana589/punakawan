@@ -23,6 +23,7 @@ class PegawaiFactory extends Factory
             "no_hp" => $this->faker->phoneNumber(),
             "jenis_kelamin" => $this->faker->randomElement(['L', 'P']),
             "gaji" => $this->faker->numberBetween(3000000, 10000000),
+            "kode" => "Temp",
         ];
     }
 }

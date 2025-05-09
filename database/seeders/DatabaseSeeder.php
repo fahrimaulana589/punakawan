@@ -54,6 +54,9 @@ class DatabaseSeeder extends Seeder
             $produk->save();
         });
 
-        Pegawai::factory(10)->create();
+        Pegawai::factory(10)->create()->each(function ($pegawai, $index) {
+            $pegawai->kode = 'PGW' . str_pad($pegawai->id, 4, '0', STR_PAD_LEFT);
+            $pegawai->save();
+        });
     }
 }

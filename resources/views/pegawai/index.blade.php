@@ -46,7 +46,7 @@
               </p>
             </div>
           </div>
-        </div>
+      </div>
       @endsession
         
       <div class="flex items-center justify-end mb-4">
@@ -63,6 +63,15 @@
               <!-- table header start -->
               <thead>
                 <tr class="border-b border-gray-100 dark:border-gray-800">
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Kode
+                      </p>
+                    </div>
+                  </th>
                   <th class="px-5 py-3 sm:px-6">
                     <div class="flex items-center">
                       <p
@@ -133,6 +142,13 @@
               <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
                 @foreach ($pegawais as $pegawai)
                   <tr>
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ $pegawai->kode }}
+                        </p>
+                      </div>
+                    </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">

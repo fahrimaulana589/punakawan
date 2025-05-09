@@ -16,6 +16,7 @@ class Pegawai extends Model
         'no_hp',
         'jenis_kelamin',
         'gaji',
+        'kode'
     ];
 
     public function user()
