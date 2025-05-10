@@ -97,12 +97,12 @@
           <!-- Menu Item Absensi -->
           <li>
             <a
-              href="{{ route('dashboard') }}"
+              href="{{ route('penjualan') }}"
               class="menu-item group"
-              :class="selected === 'absensi' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'penjualan' ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="selected === 'absensi' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'penjualan' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -121,7 +121,7 @@
                 class="menu-item-text"
                 :class="sidebarToggle ? 'lg:hidden' : ''"
               >
-                Absensi
+                Penjualan
               </span>
             </a>
           </li>

@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Penjualan;
+use App\Models\Produk;
+use App\Models\Transaksi;
+use Illuminate\Http\Request;
+use Psy\Util\Json;
+use function GuzzleHttp\json_encode;
+
+class TransaksiController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $transaksis = Transaksi::orderBy("created_at","desc")->paginate(10);
+        return view('transaksi.index',compact('transaksis'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        // Menangkap data old dari session dan mengatur default jika tidak ada
+        $oldProdukIds = old('produk_ids', [null]);  // Default produk_id null
+        $oldJumlahs = old('jumlahs', [1]);  // Default jumlah 1
+
+        // Gabungkan produk_id dan jumlah ke dalam format yang diinginkan
+        $old = array_map(function ($produkId, $jumlah) {
+            return ['produk_id' => $produkId, 'jumlah' => $jumlah];
+        }, $oldProdukIds, $oldJumlahs);
+
+        $old = json_encode($old); // hasil asli: [{"produk_id":null,"jumlah":1}]
+
+        $errors = session('errors');
+        $messages = $errors ? $errors->messages() : [];
+
+        $messages = json_encode($messages); // hasil asli: {"produk_ids":["The produk ids field is required."]}
+
+        $produks = Produk::all();
+        return view('transaksi.create', compact('produks','old','messages'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'produk_ids'   => ['required', 'array', 'min:1'],
+            'produk_ids.*' => ['required', 'exists:produks,id'],
+            'jumlahs'      => ['required', 'array'],
+            'jumlahs.*'    => ['required', 'integer', 'min:1'],
+        ]);
+
+        $pegawai = auth()->user()->pegawai;
+
+        $total = 0;
+        foreach ($request->produk_ids as $key => $produkId) {
+            $produk = Produk::find($produkId);
+            $jumlah = $request->jumlahs[$key];
+
+            // Hitung total untuk setiap produk
+            $total += $produk->harga * $jumlah;
+        }
+        // Update total transaksi
+
+        $transaksi = Transaksi::create([
+            'debet_id'   => 1,
+            'kredit_id'  => 2,
+            'pegawai_id' => $pegawai->id,
+            'tanggal'    => now(),
+            'total'      => $total,
+        ]);
+
+        foreach ($request->produk_ids as $key => $produkId) {
+            $produk = Produk::find($produkId);
+            $jumlah = $request->jumlahs[$key];
+
+            // Simpan penjualan
+            Penjualan::create([
+                'produk_id' => $produkId,
+                'jumlah'    => $jumlah,
+                'harga'     => $produk->harga,
+                'total'     => $produk->harga * $jumlah,
+                'transaksi_id' => $transaksi->id
+            ]);
+        }
+
+        return redirect()->route('penjualan')->with('success', 'Transaksi berhasil ditambahkan.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
+        $transaksi = Transaksi::with(['penjualan.produk', 'pegawai'])->findOrFail($id);
+        $transaksi->tanggal = \Carbon\Carbon::parse($transaksi->tanggal)->format('d-m-Y');
+
+        // dd($transaksi->penjualan->first()->produk->nama);
+     
+        return view('transaksi.show', compact('transaksi'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Transaksi $transaksi)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Transaksi $transaksi)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Transaksi $transaksi)
+    {
+        //
+    }
+}

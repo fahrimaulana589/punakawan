@@ -4,6 +4,7 @@ use App\Http\Controllers\AkunController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -87,6 +88,18 @@ Route::middleware('auth')->group(function () {
     Route::put('/akun/update/{id}', [AkunController::class, 'update'])->name('akun.update');
 
     Route::delete('/akun/delete/{id}', [AkunController::class, 'destroy'])->name('akun.delete');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/penjualan', [TransaksiController::class, 'index'])->name('penjualan');
+    
+    Route::get('/penjualan/create', [TransaksiController::class, 'create'])->name('penjualan.create');
+
+    Route::post('/penjualan/store', [TransaksiController::class, 'store'])->name('penjualan.store');
+    
+    Route::get('/penjualan/show/{id}', [TransaksiController::class, 'show'])->name('penjualan.show');
+
+    
 });
 
 require __DIR__.'/auth.php';
