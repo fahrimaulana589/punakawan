@@ -6,6 +6,7 @@ use App\Models\Penjualan;
 use App\Models\Produk;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Psy\Util\Json;
 use function GuzzleHttp\json_encode;
 
@@ -41,7 +42,12 @@ class TransaksiController extends Controller
 
         $messages = json_encode($messages); // hasil asli: {"produk_ids":["The produk ids field is required."]}
 
-        $produks = Produk::all();
+        $produks = Produk::with(['parent' => function ($q) {
+            $q->withPivot('jumlah'); // ini penting
+        },'children' => function ($q) {
+            $q->withPivot('jumlah'); // ini penting
+        }])->get();
+
         return view('transaksi.create', compact('produks','old','messages'));
     }
 
@@ -66,6 +72,36 @@ class TransaksiController extends Controller
 
             // Hitung total untuk setiap produk
             $total += $produk->harga * $jumlah;
+        }
+
+        $produkIds = $request->produk_ids;
+        $jumlahs   = $request->jumlahs;
+
+        $produks = Produk::with(['parent', 'children'])->get();
+
+        // Buat array ID dan stok
+        $stokMap = $produks->pluck('stok', 'id')->toArray(); // [produk_id => stok]
+        
+        $errors = [];
+        foreach ($produkIds as $i => $produkId) {
+            $jumlah = $jumlahs[$i];
+        
+            $produk = $produks->firstWhere('id', $produkId);
+        
+            foreach ($produk->parent as $parent) {
+                //ambil jumlah yang dibutuhkan jumlah * jumlah yang di pivot
+                $jumlahDibutuhkan = $jumlah * $parent->pivot->jumlah;
+                $stokMap[$parent->id] -= $jumlahDibutuhkan;
+                
+                if ($stokMap[$parent->id] < 0) {
+                    $errors["produk_ids.$i"] = "Stok produk '{$produk->nama}' tidak mencukupi.";
+                    
+                }
+            }
+        }
+        // Jika ada error, lemparkan exception validasi
+        if (!empty($errors)) {
+            throw ValidationException::withMessages($errors);
         }
         // Update total transaksi
 

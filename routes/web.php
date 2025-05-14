@@ -57,6 +57,10 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/produk/edit/{id}', [ProdukController::class, 'edit'])->name('produk.edit');
 
+    Route::get('/produk/paket/{id}', [ProdukController::class, 'paket'])->name('produk.paket')->middleware('filter.produk.induk');
+
+    Route::post('/produk/paket/{id}/store', [ProdukController::class, 'storeToPaket'])->name('produk.paket.store');
+
     Route::put('/produk/update/{id}', [ProdukController::class, 'update'])->name('produk.update');
 
     Route::delete('/produk/delete/{id}', [ProdukController::class, 'destroy'])->name('produk.delete');

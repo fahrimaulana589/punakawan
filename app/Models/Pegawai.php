@@ -15,7 +15,7 @@ class Pegawai extends Model
         'alamat',
         'no_hp',
         'jenis_kelamin',
-        'gaji',
+        'gaji', 
         'kode'
     ];
 

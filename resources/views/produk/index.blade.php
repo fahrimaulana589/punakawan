@@ -46,7 +46,7 @@
               </p>
             </div>
           </div>
-        </div>
+      </div>
       @endsession
         
       <div class="flex items-center justify-end mb-4">
@@ -91,6 +91,24 @@
                     </div>
                   </th>
                   <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Stok
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Tipe
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
                     <div class="flex items-center justify-end">
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
@@ -123,26 +141,49 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $produk->harga }}
+                          Rp. {{ number_format($produk->harga, 0, ',', '.')  }}
+                        </p>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ $produk->stok }}
+                        </p>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ $produk->tipe }}
                         </p>
                       </div>
                     </td>
                     
                     <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center justify-end mb-4">
+                      <div class="flex items-center justify-end mb-4 gap-2">
+                        @if (in_array($produk->tipe, ['tunggal', 'paket']))
                         <a
-                        href="{{ route('produk.edit',$produk->id) }}"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                      >
-                        Edit
-                      </a>
-                      <form action="{{ route('produk.delete', $produk->id) }}" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <a href="{{ route('produk.delete', $produk->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                          Delete
+                          href="{{ route('produk.paket', $produk->id) }}"
+                          class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          Paket
                         </a>
-                      </form>
+                        @endif
+                      
+                        <a
+                          href="{{ route('produk.edit',$produk->id) }}"
+                          class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        >
+                          Edit
+                        </a>
+                        <form action="{{ route('produk.delete', $produk->id) }}" method="POST" class="inline">
+                          @csrf
+                          @method('DELETE')
+                          <a href="{{ route('produk.delete', $produk->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            Delete
+                          </a>
+                        </form>
                       </div>
                     </td>   
                   </tr>

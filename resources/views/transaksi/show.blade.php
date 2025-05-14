@@ -33,8 +33,8 @@
               <div class="space-y-2">
                 @foreach ($transaksi->penjualan as $item)
                   <div class="flex justify-between text-sm border-b pb-1">
-                    <span>{{ $item->produk->nama }}</span>
-                    <span>Rp. {{ number_format($item->produk->harga, 0, ',', '.') }}</span>
+                    <span>{{ $item->jumlah }}  x  ({{ $item->produk->nama }})</span>
+                    <span>Rp. {{ number_format(($item->jumlah * $item->produk->harga), 0, ',', '.') }}</span>
                   </div>
                 @endforeach
               </div>
