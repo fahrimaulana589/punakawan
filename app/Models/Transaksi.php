@@ -15,6 +15,7 @@ class Transaksi extends Model
         'pegawai_id',
         'tanggal',
         'total',
+        'status',
     ];
 
     public function penjualan()

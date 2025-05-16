@@ -93,16 +93,16 @@
             </a>
           </li>
           <!-- Menu Item Dashboard -->
-
-          <!-- Menu Item Absensi -->
-          <li>
+           <!-- Menu Item Authentication -->
+           <li>
             <a
-              href="{{ route('penjualan') }}"
+              href="#"
+              @click.prevent="selected = (selected === 'penjualan' ? '':'penjualan')"
               class="menu-item group"
-              :class="selected === 'penjualan' ? 'menu-item-active' : 'menu-item-inactive'"
-            >
+                :class="selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat' ? 'menu-item-active' : 'menu-item-inactive'"
+          >
               <svg
-                :class="selected === 'penjualan' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="(selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -112,7 +112,7 @@
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
-                  d="M8 2C8.41421 2 8.75 2.33579 8.75 2.75V3.75H15.25V2.75C15.25 2.33579 15.5858 2 16 2C16.4142 2 16.75 2.33579 16.75 2.75V3.75H18.5C19.7426 3.75 20.75 4.75736 20.75 6V9V19C20.75 20.2426 19.7426 21.25 18.5 21.25H5.5C4.25736 21.25 3.25 20.2426 3.25 19V9V6C3.25 4.75736 4.25736 3.75 5.5 3.75H7.25V2.75C7.25 2.33579 7.58579 2 8 2ZM8 5.25H5.5C5.08579 5.25 4.75 5.58579 4.75 6V8.25H19.25V6C19.25 5.58579 18.9142 5.25 18.5 5.25H16H8ZM19.25 9.75H4.75V19C4.75 19.4142 5.08579 19.75 5.5 19.75H18.5C18.9142 19.75 19.25 19.4142 19.25 19V9.75Z"
+                  d="M14 2.75C14 2.33579 14.3358 2 14.75 2C15.1642 2 15.5 2.33579 15.5 2.75V5.73291L17.75 5.73291H19C19.4142 5.73291 19.75 6.0687 19.75 6.48291C19.75 6.89712 19.4142 7.23291 19 7.23291H18.5L18.5 12.2329C18.5 15.5691 15.9866 18.3183 12.75 18.6901V21.25C12.75 21.6642 12.4142 22 12 22C11.5858 22 11.25 21.6642 11.25 21.25V18.6901C8.01342 18.3183 5.5 15.5691 5.5 12.2329L5.5 7.23291H5C4.58579 7.23291 4.25 6.89712 4.25 6.48291C4.25 6.0687 4.58579 5.73291 5 5.73291L6.25 5.73291L8.5 5.73291L8.5 2.75C8.5 2.33579 8.83579 2 9.25 2C9.66421 2 10 2.33579 10 2.75L10 5.73291L14 5.73291V2.75ZM7 7.23291L7 12.2329C7 14.9943 9.23858 17.2329 12 17.2329C14.7614 17.2329 17 14.9943 17 12.2329L17 7.23291L7 7.23291Z"
                   fill=""
                 />
               </svg>
@@ -123,9 +123,68 @@
               >
                 Penjualan
               </span>
+
+              <svg
+                class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
+                :class="[(selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.79175 7.39584L10.0001 12.6042L15.2084 7.39585"
+                  stroke=""
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </a>
+
+            <!-- Dropdown Menu Start -->
+            <div
+              class="overflow-hidden transform translate"
+              :class="(selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat') ? 'block' :'hidden'"
+            >
+              <ul
+                :class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
+              >
+                <li>
+                  <a
+                    href="{{ route('penjualan') }}"
+                    class="menu-dropdown-item group"
+                    :class="selected === 'penjualan' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                  >
+                    Transaksi
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="{{ route('penjualan.void') }}"
+                    class="menu-dropdown-item group"
+                    :class="selected === 'penjualan.void' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                  >
+                    Void
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="{{ route('penjualan.riwayat') }}"
+                    class="menu-dropdown-item group"
+                    :class="selected === 'penjualan.riwayat' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                  >
+                    Riwayat
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- Dropdown Menu End -->
           </li>
-          <!-- Menu Item Absensi -->
+          <!-- Menu Item Authentication -->
+
         </ul>
       </div>
       <!-- Menu Group -->

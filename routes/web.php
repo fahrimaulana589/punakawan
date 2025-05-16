@@ -97,13 +97,19 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/penjualan', [TransaksiController::class, 'index'])->name('penjualan');
     
+    Route::get('/penjualan/void', [TransaksiController::class, 'void'])->name('penjualan.void');
+
+    Route::get('/penjualan/riwayat', [TransaksiController::class, 'riwayat'])->name('penjualan.riwayat');    
+
     Route::get('/penjualan/create', [TransaksiController::class, 'create'])->name('penjualan.create');
 
     Route::post('/penjualan/store', [TransaksiController::class, 'store'])->name('penjualan.store');
     
     Route::get('/penjualan/show/{id}', [TransaksiController::class, 'show'])->name('penjualan.show');
 
-    
+    Route::post('/penjualan/cancel/{id}', [TransaksiController::class, 'cancel'])->name('penjualan.cancel');
+
+    Route::post('/penjualan/finish/{id}', [TransaksiController::class, 'finish'])->name('penjualan.finish');
 });
 
 require __DIR__.'/auth.php';

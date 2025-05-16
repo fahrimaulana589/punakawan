@@ -91,6 +91,15 @@
                   </div>
                 </th>
                 <th class="px-5 py-3 sm:px-6">
+                  <div class="flex items-center">
+                    <p
+                      class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                    >
+                      Status
+                    </p>
+                  </div>
+                </th>
+                <th class="px-5 py-3 sm:px-6">
                   <div class="flex items-center justify-end">
                     <p
                       class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
@@ -127,22 +136,72 @@
                       </p>
                     </div>
                   </td>
-                  
                   <td class="px-5 py-4 sm:px-6">
-                    <div class="flex items-center justify-end mb-4">
+                    <div class="flex items-center">
+                      <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                        {{ $transaksi->status }}
+                      </p>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4 sm:px-6">
+                    <div class="flex items-center justify-end">
                       <a
                       href="{{ route('penjualan.show',$transaksi->id) }}"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                       Show
                     </a>
-                    {{-- <form action="{{ route('transaksi.delete', $transaksi->id) }}" method="POST" class="inline">
+                    <form id="finish-form-{{ $transaksi->id }}" action="{{ route('penjualan.finish', $transaksi->id) }}" method="POST" class="inline">
                       @csrf
-                      @method('DELETE')
-                      <a href="{{ route('transaksi.delete', $transaksi->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                        Delete
-                      </a>
-                    </form> --}}
+                      <button 
+                          x-on:click.prevent="
+                              window.Swal.fire({
+                                  title: 'Yakin ingin menyelesaikan transaksi?',
+                                  text: 'Tindakan ini tidak dapat dibatalkan!',
+                                  icon: 'warning',
+                                  showCancelButton: true,
+                                  confirmButtonColor: '#d33',
+                                  cancelButtonColor: '#3085d6',
+                                  confirmButtonText: 'Ya, selesaikan!',
+                                  cancelButtonText: 'Batal'
+                              }).then((result) => {
+                                  if (result.isConfirmed) {
+                                      document.getElementById('finish-form-{{ $transaksi->id }}').submit();
+                                  }
+                              });
+                          " 
+                          type="button"
+                          class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-yellow-600 border border-transparent rounded-md shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                      >
+                          Selsesai
+                      </button>
+                    </form>
+                    <form id="cancel-form-{{ $transaksi->id }}" action="{{ route('penjualan.cancel', $transaksi->id) }}" method="POST" class="inline">
+                      @csrf
+                      <button 
+                          x-on:click.prevent="
+                              window.Swal.fire({
+                                  title: 'Yakin ingin membatalkan transaksi?',
+                                  text: 'Tindakan ini tidak dapat dibatalkan!',
+                                  icon: 'warning',
+                                  showCancelButton: true,
+                                  confirmButtonColor: '#d33',
+                                  cancelButtonColor: '#3085d6',
+                                  confirmButtonText: 'Ya, batalkan!',
+                                  cancelButtonText: 'Batal'
+                              }).then((result) => {
+                                  if (result.isConfirmed) {
+                                      document.getElementById('cancel-form-{{ $transaksi->id }}').submit();
+                                  }
+                              });
+                          " 
+                          type="button"
+                          class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      >
+                          Batal
+                      </button>
+                    </form>
+                  
                     </div>
                   </td>   
                 </tr>

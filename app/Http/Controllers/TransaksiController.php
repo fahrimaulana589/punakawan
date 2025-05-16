@@ -8,6 +8,7 @@ use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Psy\Util\Json;
+use RealRashid\SweetAlert\Facades\Alert;
 use function GuzzleHttp\json_encode;
 
 class TransaksiController extends Controller
@@ -17,8 +18,32 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        $transaksis = Transaksi::orderBy("created_at","desc")->paginate(10);
+        $transaksis = Transaksi::where(function($query) {
+            $query->whereNull('status')->orWhere('status', '');
+        })->orderBy('created_at', 'desc')->paginate(10);
         return view('transaksi.index',compact('transaksis'));
+    }
+
+     /**
+     * Display a listing of the resource.
+     */
+    public function void()
+    {
+        $transaksis = Transaksi::where(function($query) {
+            $query->where('status', 'batal');
+        })->orderBy('created_at', 'desc')->paginate(10);
+        return view('transaksi.void',compact('transaksis'));
+    }
+
+     /**
+     * Display a listing of the resource.
+     */
+    public function riwayat()
+    {
+        $transaksis = Transaksi::where(function($query) {
+            $query->where('status', 'selesai');
+        })->orderBy('created_at', 'desc')->paginate(10);
+        return view('transaksi.riwayat',compact('transaksis'));
     }
 
     /**
@@ -146,9 +171,23 @@ class TransaksiController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Transaksi $transaksi)
+    public function cancel(Transaksi $id)
     {
-        //
+        $id->status = 'batal';
+        $id->save();
+
+        return back();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function finish(Transaksi $id)
+    {
+        $id->status = 'selesai';
+        $id->save();
+
+        return back();
     }
 
     /**
