@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AkunController;
+use App\Http\Controllers\KonsumsiController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
@@ -92,6 +93,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/akun/update/{id}', [AkunController::class, 'update'])->name('akun.update');
 
     Route::delete('/akun/delete/{id}', [AkunController::class, 'destroy'])->name('akun.delete');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/bahankonsumsi', [KonsumsiController::class, 'index'])->name('bahankonsumsi');
+
+    Route::get('/bahankonsumsi/create', [KonsumsiController::class, 'create'])->name('bahankonsumsi.create');
+    
+    Route::post('/bahankonsumsi/store', [KonsumsiController::class, 'store'])->name('bahankonsumsi.store');
+    
+    Route::get('/bahankonsumsi/edit/{id}', [KonsumsiController::class, 'edit'])->name('bahankonsumsi.edit');
+
+    Route::put('/bahankonsumsi/update/{id}', [KonsumsiController::class, 'update'])->name('bahankonsumsi.update');
+
+    Route::delete('/bahankonsumsi/delete/{id}', [KonsumsiController::class, 'destroy'])->name('bahankonsumsi.delete');
 });
 
 Route::middleware('auth')->group(function () {

@@ -51,7 +51,7 @@
               </p>
             </div>
           </div>
-        </div>
+      </div>
       @endsession
 
       <div
