@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\AkunController;
+use App\Http\Controllers\BelanjaController;
 use App\Http\Controllers\KonsumsiController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
+use Illuminate\Queue\Connectors\BeanstalkdConnector;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -125,6 +127,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/penjualan/cancel/{id}', [TransaksiController::class, 'cancel'])->name('penjualan.cancel');
 
     Route::post('/penjualan/finish/{id}', [TransaksiController::class, 'finish'])->name('penjualan.finish');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/belanja', [BelanjaController::class, 'index'])->name('belanja');
+    
+    Route::get('/belanja/create', [BelanjaController::class, 'create'])->name('belanja.create');
+
+    Route::post('/belanja/store', [BelanjaController::class, 'store'])->name('belanja.store');
+    
+    Route::get('/belanja/edit/{id}', [BelanjaController::class, 'edit'])->name('belanja.edit');
+
+    Route::put('/belanja/update/{id}', [BelanjaController::class, 'update'])->name('belanja.update');
+
+    Route::delete('/belanja/delete/{id}', [BelanjaController::class, 'destroy'])->name('belanja.delete');
+
 });
 
 require __DIR__.'/auth.php';
