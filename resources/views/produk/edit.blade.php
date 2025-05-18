@@ -160,30 +160,55 @@
               />
             </div>
 
-            <!-- Elements -->
-            <div>
-              <label
-                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-              >
-                Tambah Stok
-              </label>
-              <input
-                type="text"
-                name="stok"
-                value="{{ old('stok',0) }}"
+            @if ($produk->parent->isEmpty())
+              
+              <!-- Elements -->
+              <div>
+                <label
+                  class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                >
+                  Tambah Stok
+                </label>
+                <input
+                  type="number"
+                  name="stok"
+                  value="{{ old('stok',0) }}"
+                  @error('stok')
+                    class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                  @else
+                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                  @enderror
+                />
                 @error('stok')
-                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @else
-                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                  <p class="text-theme-xs text-error-500">
+                    {{ $message }}
+                  </p>
                 @enderror
-              />
-              @error('stok')
-                <p class="text-theme-xs text-error-500">
-                  {{ $message }}
-                </p>
-              @enderror
-            </div>
-
+              </div>
+              <!-- Elements -->
+              <div>
+                <label
+                  class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                >
+                  Kurangi Stok
+                </label>
+                <input
+                  type="number"
+                  name="stok_kurang"
+                  value="{{ old('stok_kurang',0) }}"
+                  @error('stok')
+                    class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                  @else
+                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                  @enderror
+                />
+                @error('stok_kurang')
+                  <p class="text-theme-xs text-error-500">
+                    {{ $message }}
+                  </p>
+                @enderror
+              </div>
+            @endif
             <div class="flex items-center justify-end">
               <button
                 type="submit"

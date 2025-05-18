@@ -73,10 +73,11 @@
                 const pIndex = this.produkList.findIndex(p => p.id === produk.id);
                 if (pIndex >= 0) this.produkList[pIndex].stok -= jumlah;
     
-                
+                console.log(produk.nama);
                 if (produk.parent && Array.isArray(produk.parent)) {
                     const childrenMap = new Map(); // key: id, value: produk anak
                 
+                    console.log(produk.parent);
                     produk.parent.forEach(rel => {
                         const parentIndex = this.produkList.findIndex(p => p.id === rel.id);
                         
@@ -99,6 +100,29 @@
                 
                     // Ambil array dari nilai anak-anak unik
                     const children = Array.from(childrenMap.values());
+                    if(produk.children.length > 0){
+                        produk.children.forEach(child => {
+                            const childIndex = this.produkList.findIndex(p => p.id === child.id);
+                            const chd = this.produkList[childIndex];
+    
+                            const stok = [];
+                            
+                            chd.parent.forEach(rel => {
+                                const parentIndex = this.produkList.findIndex(p => p.id === rel.id);
+                                const stokasli = this.produkList[parentIndex].stok;
+                                const jumlahyangdibutuhkan = rel.pivot.jumlah;
+                                const ketersedian = Math.floor(stokasli / jumlahyangdibutuhkan);
+                               
+                                stok.push(ketersedian);
+                            });
+    
+                            // Ambil nilai stok terkecil dari semua parent
+                            const stokMinimum = Math.min(...stok);
+    
+                            // Update stok produk anak
+                            this.produkList[childIndex].stok = stokMinimum;
+                        });
+                    }
 
                     //update stok produk anak
                     children.forEach(child => {

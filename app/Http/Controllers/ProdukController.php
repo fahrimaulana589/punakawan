@@ -131,7 +131,7 @@ class ProdukController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:255|unique:produks,nama,'.$id,
+            'nama' => 'required|string|max:255|unique:produks,nama,' . $id,
             'harga' => [
                 'required',
                 'regex:/^[1-9][0-9]*$/',
@@ -141,21 +141,33 @@ class ProdukController extends Controller
                 'integer',
                 'min:0'
             ],
+            'stok_kurang' => [
+                'nullable',
+                'integer',
+                'min:0'
+            ],
         ]);
-
-
+        
         $produk = Produk::findOrFail($id);
-
-        if($request->stok > 0){
-           $stok = $produk->stok + $request->stok;            
-           $request->merge(['stok' => $stok]);
-        }else{
-            $request->merge(['stok' => $produk->stok]);
-        }       
-
-        $produk->update($request->all());
-
-        return back()->with('success', 'Produk updated successfully.');
+        
+        // Ambil nilai stok yang akan ditambahkan dan dikurangkan
+        $stokTambah = (int) $request->stok;
+        $stokKurang = (int) $request->stok_kurang;
+        
+        // Hitung stok baru
+        $stokBaru = $produk->stok + $stokTambah - $stokKurang;
+        
+        // Validasi jika stokBaru < 0
+        if ($stokBaru < 0) {
+            return back()->withErrors(['stok' => 'Stok tidak boleh kurang dari 0 setelah perhitungan.'])->withInput();
+        }
+        
+        // Merge stok baru ke request
+        $request->merge(['stok' => $stokBaru]);
+        
+        $produk->update($request->except(['stok_kurang']));
+        
+        return back()->with('success', 'Produk updated successfully.');        
     }
     public function destroy($id)
     {

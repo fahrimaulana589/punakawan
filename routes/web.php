@@ -127,6 +127,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/penjualan/cancel/{id}', [TransaksiController::class, 'cancel'])->name('penjualan.cancel');
 
     Route::post('/penjualan/finish/{id}', [TransaksiController::class, 'finish'])->name('penjualan.finish');
+    
+    Route::post('/penjualan/hapus/{id}', [TransaksiController::class, 'destroy'])->name('penjualan.destroy');
 });
 
 Route::middleware('auth')->group(function () {

@@ -108,20 +108,31 @@ class TransaksiController extends Controller
         $stokMap = $produks->pluck('stok', 'id')->toArray(); // [produk_id => stok]
         
         $errors = [];
+        $produkdanstok = [];
         foreach ($produkIds as $i => $produkId) {
             $jumlah = $jumlahs[$i];
         
             $produk = $produks->firstWhere('id', $produkId);
-        
-            foreach ($produk->parent as $parent) {
-                //ambil jumlah yang dibutuhkan jumlah * jumlah yang di pivot
-                $jumlahDibutuhkan = $jumlah * $parent->pivot->jumlah;
-                $stokMap[$parent->id] -= $jumlahDibutuhkan;
+            
+            if(!$produk->parent->isEmpty()){
+                foreach ($produk->parent as $parent) {
+                    //ambil jumlah yang dibutuhkan jumlah * jumlah yang di pivot
+                    $jumlahDibutuhkan = $jumlah * $parent->pivot->jumlah;
+                    $stokMap[$parent->id] -= $jumlahDibutuhkan;
+                    $produkdanstok[$parent->id] = $stokMap[$parent->id];
                 
-                if ($stokMap[$parent->id] < 0) {
-                    $errors["produk_ids.$i"] = "Stok produk '{$produk->nama}' tidak mencukupi.";
-                    
+                    if ($stokMap[$parent->id] < 0) {
+                        $errors["produk_ids.$i"] = "Stok produk '{$produk->nama}' tidak mencukupi.";
+                        
+                    }
                 }
+            }else{
+                // Jika produk tidak memiliki parent, cukup periksa stoknya
+                $stokMap[$produkId] -= $jumlah;
+                $produkdanstok[$produkId] = $stokMap[$produkId];
+                if ($stokMap[$produkId] < 0) {
+                    $errors["produk_ids.$i"] = "Stok produk '{$produk->nama}' tidak mencukupi.";
+                }                   
             }
         }
         // Jika ada error, lemparkan exception validasi
@@ -152,6 +163,12 @@ class TransaksiController extends Controller
             ]);
         }
 
+        foreach ($produkdanstok as $key => $stok){
+            $produk = Produk::find($key);
+            $produk->stok = $stok;
+            $produk->save();
+        }
+
         return redirect()->route('penjualan')->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
@@ -173,6 +190,32 @@ class TransaksiController extends Controller
      */
     public function cancel(Transaksi $id)
     {
+        $produkdanstok = [];
+        foreach ($id->penjualan as $i => $penjualan) {
+            $jumlah = $penjualan->jumlah;
+        
+            $produk = $penjualan->produk;
+            
+            if(!$produk->parent->isEmpty()){
+                foreach ($produk->parent as $parent) {
+                    //ambil jumlah yang dibutuhkan jumlah * jumlah yang di pivot
+                    $jumlahDibutuhkan = $jumlah * $parent->pivot->jumlah;
+                    $produkdanstok[$parent->id] = !isset($produkdanstok[$parent->id]) ? 0 : $produkdanstok[$parent->id];
+                    $produkdanstok[$parent->id] += $jumlahDibutuhkan;
+                }
+            }else{
+                // Jika produk tidak memiliki parent, cukup periksa stoknya
+                $produkdanstok[$produk->id] = !isset($produkdanstok[$produk->id]) ? 0 : $produkdanstok[$produk->id];
+                $produkdanstok[$produk->id] += $jumlah;                   
+            }
+        }
+
+        foreach ($produkdanstok as $key => $stok){
+            $produk = Produk::find($key);
+            $produk->stok += $stok;
+            $produk->save();
+        }
+
         $id->status = 'batal';
         $id->save();
 
@@ -201,8 +244,15 @@ class TransaksiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaksi $transaksi)
+    public function destroy(Transaksi $id)
     {
-        //
+
+        $id->penjualan()->delete();
+
+        //hapus transaski
+        $id->delete();
+
+        return back()->with('success', 'Transaksi berhasil dihapus.');
+    
     }
 }
