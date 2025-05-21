@@ -23,4 +23,13 @@ class Pegawai extends Model
     {
         return $this->hasOne(User::class);
     }
+
+    public function pegawai(){
+        return $this->hasOne(Pegawai::class);
+    }
+
+    public function penggajians(){
+
+        return $this->hasMany(Penggajian::class);
+    }
 }

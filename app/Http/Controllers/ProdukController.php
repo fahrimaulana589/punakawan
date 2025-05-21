@@ -76,13 +76,6 @@ class ProdukController extends Controller
             }
         }
 
-        $old = array_map(function ($item) {
-            return [
-                'produk_id' => $item['produk_id'] ?? null,
-                'jumlah' => $item['jumlah'] ?? 1
-            ];
-        }, $old);
-
         $old = json_encode($old); // hasil asli: [{"produk_id":null,"jumlah":1}]
 
         $produks = Produk::where('id', '!=', $produk->id)
