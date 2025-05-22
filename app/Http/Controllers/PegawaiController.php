@@ -41,9 +41,9 @@ class PegawaiController extends Controller
         ]);
         
 
-        Pegawai::create($request->all());
+        $pegawai = Pegawai::create($request->all());
 
-        return redirect()->route('pegawai')->with('success', 'Pegawai created successfully.');
+        return redirect()->route('pegawai.edit',$pegawai->id)->with('success', 'Pegawai created successfully.');
     }
     public function edit($id)
     {

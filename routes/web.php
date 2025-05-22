@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\BelanjaController;
 use App\Http\Controllers\KonsumsiController;
@@ -144,6 +145,20 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/belanja/delete/{id}', [BelanjaController::class, 'destroy'])->name('belanja.delete');
 
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
+
+    Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
+    
+    Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store');
+    
+    Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit');
+
+    Route::put('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
+
+    Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete');
 });
 
 require __DIR__.'/auth.php';

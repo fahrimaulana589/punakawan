@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
+use App\Models\Pegawai;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AbsensiController extends Controller
 {
@@ -12,7 +14,13 @@ class AbsensiController extends Controller
      */
     public function index()
     {
-        //
+        $title = 'Delete Absensi!';
+        $text = "Are you sure you want to delete?";
+        confirmDelete($title, $text);
+
+        $absensis = Absensi::paginate(10);
+        return view('absensi.index', compact('absensis'));
+    
     }
 
     /**
@@ -20,7 +28,8 @@ class AbsensiController extends Controller
      */
     public function create()
     {
-        //
+        $karyawans = Pegawai::all();
+        return view('absensi.create',compact('karyawans'));
     }
 
     /**
@@ -28,7 +37,26 @@ class AbsensiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'tanggal' => [
+                'required',
+                'date',
+                'before_or_equal:today',
+                // Cek kombinasi unik tanggal dan pegawai_id
+                Rule::unique('absensis')->where(function ($query) use ($request) {
+                    return $query->where('pegawai_id', $request->pegawai_id);
+                }),
+            ],
+            'pegawai_id' => 'required|numeric|exists:pegawais,id',
+            'status' => 'required|string|in:hadir,alpha,izin,terlambat,sakit',
+            'alasan' => 'nullable|string',
+        ]);
+
+        Absensi::create($request->all());
+
+        return redirect()->route('absensi')->with('success', 'Absensi created successfully.');
+    
     }
 
     /**
@@ -42,24 +70,49 @@ class AbsensiController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Absensi $absensi)
+    public function edit($id)
     {
-        //
+        $absensi = Absensi::findOrFail($id);
+        $karyawans = Pegawai::all();
+
+        return view('absensi.edit', compact('absensi','karyawans'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Absensi $absensi)
+    public function update(Request $request, Absensi $id)
     {
-        //
+        $request->validate([
+            'tanggal' => [
+                'required',
+                'date',
+                'before_or_equal:today',
+                // Cek kombinasi unik tanggal dan pegawai_id
+                Rule::unique('absensis')->where(function ($query) use ($request) {
+                    return $query->where('pegawai_id', $request->pegawai_id);
+                })
+                ->ignore($id->id),
+            ],
+            'pegawai_id' => 'required|numeric|exists:pegawais,id',
+            'status' => 'required|string|in:hadir,alpha,izin,terlambat,sakit',
+            'alasan' => 'nullable|string',
+        ]);
+
+        $id->update($request->all());
+        
+        return back()->with('success', 'Absensi updated successfully.');
+    
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Absensi $absensi)
+    public function destroy(Absensi $id)
     {
-        //
+        $id->delete();
+        
+        return back()->with('success', 'Absensi deleted successfully.');
+      
     }
 }

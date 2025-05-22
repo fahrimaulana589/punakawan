@@ -15,4 +15,9 @@ class Absensi extends Model
         'status',
         'alasan'
     ];
+
+    public function pegawai(){
+
+        return $this->belongsTo(Pegawai::class);
+    }
 }

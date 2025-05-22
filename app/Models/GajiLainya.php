@@ -10,8 +10,9 @@ class GajiLainya extends Model
     use HasFactory;
 
     protected $fillable = [
-        'penggajian_id',
         'gaji_karyawan_id',
-        'total',
+        "type",
+        "nama",
+        "total",    
     ];
 }
