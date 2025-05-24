@@ -16,6 +16,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        Pegawai::factory(10)->create()->each(function ($pegawai, $index) {
+            $pegawai->kode = 'PGW' . str_pad($pegawai->id, 4, '0', STR_PAD_LEFT);
+            $pegawai->save();
+        });
+
         $owner_role = Role::create(['name' => 'owner']);
         $admin_role = Role::create(['name' => 'admin']);
         $kasir_role = Role::create(['name' => 'kasir']);
@@ -24,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $admin_user = \App\Models\User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@example.com',
+            'pegawai_id' =>1
         ]);
 
         $admin_user->assignRole($admin_role);
@@ -31,7 +38,8 @@ class DatabaseSeeder extends Seeder
         //buat owner
         $owner_user = \App\Models\User::factory()->create([
             'name' => 'owner',
-            'email' => 'owner@example.com',
+            'email' => 'owner@example.com', 
+            'pegawai_id' =>2
         ]);
 
         $owner_user->assignRole($owner_role);
@@ -40,6 +48,7 @@ class DatabaseSeeder extends Seeder
         $kasir_user = \App\Models\User::factory()->create([
             'name' => 'kasir',
             'email' => 'kasir@example.com',
+            'pegawai_id' => 3
         ]);
 
         $kasir_user->assignRole($kasir_role);
@@ -54,9 +63,6 @@ class DatabaseSeeder extends Seeder
             $produk->save();
         });
 
-        Pegawai::factory(10)->create()->each(function ($pegawai, $index) {
-            $pegawai->kode = 'PGW' . str_pad($pegawai->id, 4, '0', STR_PAD_LEFT);
-            $pegawai->save();
-        });
+
     }
 }
