@@ -40,6 +40,11 @@ class BelanjaController extends Controller
         $request->validate([
             'konsumsi_id' => 'required|exists:konsumsis,id',
             'total' => 'required|numeric|min:0',
+            'tanggal' => [
+                'required',
+                'date',
+                'before_or_equal:today'
+            ],
         ]);
 
         $bahanKonsumsi = Konsumsi::findOrFail($request->konsumsi_id);
@@ -48,7 +53,7 @@ class BelanjaController extends Controller
             'debet_id' => $bahanKonsumsi->debet->id, // Assuming 1 is the ID for the "Belanja" account
             'kredit_id' => $bahanKonsumsi->kredit->id, // Assuming 2 is the ID for the "Kas" account
             'pegawai_id' => auth()->user()->pegawai_id,
-            'tanggal' => now(),
+            'tanggal' => $request->tanggal,
             'nama' => $bahanKonsumsi->nama,
             'total' => $request->total,
         ];
