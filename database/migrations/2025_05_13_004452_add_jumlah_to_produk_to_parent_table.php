@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('parent', function (Blueprint $table) {
+        Schema::table('produk_to_parent', function (Blueprint $table) {
             $table->dropColumn('jumlah');   
         });
     }
