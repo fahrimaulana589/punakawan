@@ -77,7 +77,7 @@
                     <p
                       class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                     >
-                      Kasir
+                      Karyawan
                     </p>
                   </div>
                 </th>
@@ -148,9 +148,9 @@
                       <a
                       href="{{ route('penjualan.show',$transaksi->id) }}"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
+                      >
                       Show
-                    </a>
+                      </a>
                     <form id="finish-form-{{ $transaksi->id }}" action="{{ route('penjualan.finish', $transaksi->id) }}" method="POST" class="inline">
                       @csrf
                       <button 
@@ -214,7 +214,7 @@
     </div>
 
     <div class="mt-4">
-      {{-- {{ $transaksis->links() }}  --}}
+      {{ $transaksis->links() }} 
     </div>
   </div>
 </x-app-layout>

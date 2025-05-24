@@ -14,4 +14,9 @@ class Gaji extends Model
         'nama',
         'total'
     ];
+
+    public function karyawans(){
+
+        return $this->hasMany(GajiKaryawan::class);
+    }
 }

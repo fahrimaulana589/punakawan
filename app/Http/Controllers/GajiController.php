@@ -280,7 +280,8 @@ class GajiController extends Controller
                 'tanggal' => $tanggal,
                 'pegawai_id' => $pegawai->id,
                 'gaji_id' => $gaji_bulanan->id,
-                'total' => $total_gaji
+                'total' => $total_gaji,
+                'gaji_pokok'=> $pegawai->gaji
             ]);
 
             foreach($pegawai->penggajians as $penggajian){
@@ -310,7 +311,7 @@ class GajiController extends Controller
      */
     public function show(Gaji $gaji)
     {
-        //
+        return view('gaji.show',compact('gaji'));
     }
 
     /**

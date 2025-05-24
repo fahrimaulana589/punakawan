@@ -103,7 +103,13 @@
                     </div>
                   </td>
                   <td class="px-5 py-4 sm:px-6">
-                    <div class="flex items-center justify-end">                    
+                    <div class="flex items-center justify-end">  
+                      <a
+                      href="{{ route('penjualan.show',$transaksi->id) }}"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        Karyawan
+                      </a>                  
                       <form id="cancel-form-{{ $transaksi->id }}" action="{{ route('penjualan.destroy', $transaksi->id) }}" method="POST" class="inline">
                         @csrf
                         <button 
@@ -141,7 +147,7 @@
     </div>
 
     <div class="mt-4">
-      {{-- {{ $transaksis->links() }}  --}}
+      {{ $transaksis->links() }} 
     </div>
   </div>
 </x-app-layout>

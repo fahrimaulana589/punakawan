@@ -46,6 +46,10 @@ class TransaksiController extends Controller
         return view('transaksi.riwayat',compact('transaksis'));
     }
 
+    public function createManual(){
+        return view('transaksi.manual');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -74,6 +78,34 @@ class TransaksiController extends Controller
         }])->get();
 
         return view('transaksi.create', compact('produks','old','messages'));
+    }
+
+    public function storeManual(Request $request){
+        $request->validate([
+            'tanggal' => [
+                'required',
+                'date',
+                'before_or_equal:today'
+            ],
+            'total' => [
+                'required',
+                'numeric',
+                'min:0'
+            ]
+        ]);
+
+        $pegawai = auth()->user()->pegawai;
+
+        Transaksi::create([
+            'debet_id' => 1,
+            'kredit_id' => 2,
+            'total' => $request->total,
+            'tanggal' => $request->tanggal,
+            'status' => 'selesai',
+            'pegawai_id' => $pegawai->id,
+        ]);
+
+        return redirect()->route('penjualan.riwayat')->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
     /**
@@ -236,9 +268,34 @@ class TransaksiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaksi $transaksi)
+    public function edit(Transaksi $id)
     {
-        //
+        $transaksi = $id;
+        return view('transaksi.edit', compact('transaksi'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Transaksi $id)
+    {
+        $request->validate([
+            'tanggal' => [
+                'required',
+                'date',
+                'before_or_equal:today'
+            ],
+            'total' => [
+                'required',
+                'numeric',
+                'min:0'
+            ]
+        ]);
+
+        $id->fill($request->all())->save();
+
+        return back()->with('success', 'Transaksi berhasil diupdate.');
+   
     }
 
     /**

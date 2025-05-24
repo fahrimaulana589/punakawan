@@ -14,5 +14,14 @@ class GajiKaryawan extends Model
         'pegawai_id',
         'gaji_id',
         'total',
+        'gaji_pokok'
     ];
+
+    public function gajiLainyas(){
+        return $this->hasMany(GajiLainya::class);
+    }
+
+    public function karyawan(){
+        return $this->belongsTo(Pegawai::class,'pegawai_id');
+    }
 }

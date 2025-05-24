@@ -122,9 +122,17 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/penjualan/create', [TransaksiController::class, 'create'])->name('penjualan.create');
 
+    Route::get('/penjualan/create/manual', [TransaksiController::class, 'createManual'])->name('penjualan.create.manual');
+
     Route::post('/penjualan/store', [TransaksiController::class, 'store'])->name('penjualan.store');
     
+    Route::post('/penjualan/store/manual', [TransaksiController::class, 'storeManual'])->name('penjualan.store.manual');
+    
     Route::get('/penjualan/show/{id}', [TransaksiController::class, 'show'])->name('penjualan.show');
+
+    Route::get('/penjualan/edit/{id}', [TransaksiController::class, 'edit'])->name('penjualan.edit');
+
+    Route::put('/penjualan/update/{id}', [TransaksiController::class, 'update'])->name('penjualan.update');
 
     Route::post('/penjualan/cancel/{id}', [TransaksiController::class, 'cancel'])->name('penjualan.cancel');
 
@@ -174,6 +182,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/gaji/store/generate', [GajiController::class, 'storeGenerate'])->name('gaji.store.generate');
     
     Route::get('/gaji/edit/{gaji}', [GajiController::class, 'edit'])->name('gaji.edit');
+
+    Route::get('/gaji/show/{gaji}', [GajiController::class, 'show'])->name('gaji.show');
 
     Route::put('/gaji/update/{gaji}', [GajiController::class, 'update'])->name('gaji.update');
 
