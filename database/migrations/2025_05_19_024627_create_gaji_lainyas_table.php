@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('gaji_lainyas', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(GajiKaryawan::class)->constrained('gaji_karyawans')->onDelete('restrict');
+            $table->foreignIdFor(GajiKaryawan::class)->constrained('gaji_karyawans')->onDelete('cascade');
                     
             $table->string('type');
             $table->string('nama');

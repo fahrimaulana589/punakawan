@@ -55,10 +55,11 @@ class PegawaiController extends Controller
         $oldPotonganJenis = old('potongan_jenis', []);  // Default jumlah 1
         $oldTunjanganNama = old('tunjangan_nama', []);  // Default produk_id null
         $oldTunjanganJumlah = old('tunjangan_jumlah', []);  // Default jumlah 1
-
-        $oldTunjangan = array_map(function ($tunjangan_nama, $tunjangan_jumlah) {
-            return ['nama' => $tunjangan_nama, 'total' => $tunjangan_jumlah,'type' => 'tunjangan'];
-        }, $oldTunjanganNama, $oldTunjanganJumlah);
+        $oldTunjanganJenis = old('tunjangan_jenis', []);  // Default jumlah 1
+        
+        $oldTunjangan = array_map(function ($tunjangan_nama, $tunjangan_jumlah,$tunjanganJenis) {
+            return ['nama' => $tunjangan_nama, 'total' => $tunjangan_jumlah,'type' => $tunjanganJenis];
+        }, $oldTunjanganNama, $oldTunjanganJumlah,$oldTunjanganJenis);
 
         $oldPotongan = array_map(function ($potongan_nama, $potongan_jumlah,$potonganJenis) {
             return ['nama' => $potongan_nama, 'total' => $potongan_jumlah,'type' => $potonganJenis];
@@ -71,6 +72,7 @@ class PegawaiController extends Controller
             && empty(old('potongan_jenis'))
             && empty(old('tunjangan_nama'))
             && empty(old('tunjangan_jumlah'))
+            && empty(old('tunjangan_jenis'))
             ) {
             $old = [];
             foreach ($pegawai->penggajians as $penggajian) {
@@ -104,6 +106,8 @@ class PegawaiController extends Controller
             'tunjangan_nama.*' => 'required|string|max:255',
             'tunjangan_jumlah'      => ['nullable', 'array'],
             'tunjangan_jumlah.*'    => 'required|numeric|min:1',
+            'tunjangan_jenis'      => ['nullable', 'array'],
+            'tunjangan_jenis.*'    => 'required|in:tunjangan_bulanan,tunjangan_harian',
         ]);
 
         $request->validate([
@@ -123,13 +127,13 @@ class PegawaiController extends Controller
 
         $pegawai->penggajians()->delete();
 
-        $tunjangan = array_map(function ($nama, $jumlah) {
+        $tunjangan = array_map(function ($nama, $jumlah,$jenis) {
             return [
                 'nama' => $nama,
                 'total' => $jumlah,
-                'type' => 'tunjangan',
+                'type' => $jenis,
             ];
-        }, $request->tunjangan_nama ?? [], $request->tunjangan_jumlah ?? []);
+        }, $request->tunjangan_nama ?? [], $request->tunjangan_jumlah ?? [],$request->tunjangan_jenis ?? []);
         
         $potongan = array_map(function ($nama, $jumlah,$jenis) {
             return [

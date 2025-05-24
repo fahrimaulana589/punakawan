@@ -12,6 +12,7 @@ class GajiKaryawan extends Model
     protected $fillable = [
         'tanggal',
         'pegawai_id',
+        'gaji_id',
         'total',
     ];
 }

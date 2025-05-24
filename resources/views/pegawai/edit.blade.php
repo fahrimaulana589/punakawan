@@ -64,9 +64,8 @@
           },
           removeItem(filteredIndex,type) {
             const realIndex = this.items.findIndex((item, i) => {
-              if (type === 'tunjangan') {
-                return item.type === 'tunjangan' &&
-                       this.items.filter(i => i.type === 'tunjangan').indexOf(item) === filteredIndex;
+              if (item.type === 'tunjangan' || item.type === 'tunjangan_bulanan' || item.type === 'tunjangan_harian') {
+                return this.items.filter(i => ['tunjangan','tunjangan_bulanan','tunjangan_harian'].includes(i.type)).indexOf(item) === filteredIndex;
               } else {
                 return (item.type === 'potongan' || item.type === 'potongan_bulanan' || item.type === 'potongan_absensi') &&
                        this.items.filter(i => ['potongan','potongan_bulanan','potongan_absensi'].includes(i.type)).indexOf(item) === filteredIndex;
@@ -314,7 +313,7 @@
               @enderror
             </div>
 
-            <template x-for="(item, index) in items.filter(i => i.type === 'tunjangan')" :key="index">
+            <template x-for="(item, index) in items.filter(i => i.type === 'tunjangan' || i.type === 'tunjangan_bulanan' || i.type === 'tunjangan_harian')" :key="index">
               <!-- Elements -->
               <div class="flex gap-4">
                 <div class="flex-1">
@@ -336,12 +335,76 @@
                       <p class="text-sm text-error-500 mt-1" x-text="messages[`tunjangan_nama.${index}`][0]"></p>
                     </template>
                   </div>
+
+                  <div>
+                    <label
+                      class="mt-6 mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    >
+                      Jenis Tunjangan
+                    </label>
+                    <div
+                      x-data="{ isOptionSelected: false }"
+                      class="relative z-20 bg-transparent"
+                    >
+                      <select
+                        name="tunjangan_jenis[]"
+                        :class="messages[`tunjangan_jenis.${index}`]
+                            ? 'dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30'
+                            : 'dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30'"
+                        @change="isOptionSelected = true"
+                      >
+                        <option
+                          value="tunjangan"
+                          class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                        >
+                          Select Option
+                        </option>
+                        <option
+                          :selected="item.type == 'tunjangan_bulanan'"
+                          value="tunjangan_bulanan"
+                          class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                        >
+                          Bulanan
+                        </option>
+                        <option
+                          :selected="item.type == 'tunjangan_harian'"
+                          value="tunjangan_harian "
+                          class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                        >
+                          Harian
+                        </option>
+                      </select>
+                      <span
+                        class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+                      >
+                        <svg
+                          class="stroke-current"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
+                            stroke=""
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <template x-if="messages[`tunjangan_jenis.${index}`]">
+                      <p class="text-sm text-error-500 mt-1" x-text="messages[`tunjangan_jenis.${index}`][0]"></p>
+                    </template>
+                  </div>
     
                   <div>
                     <label
                       class="mt-6 mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
-                      <span x-text="'Jumlah '+item.type+' '+(index+1)"></span>
+                      <span x-text="'Jumlah Tunjangan '+(index+1)"></span>
                     </label>
                     <input
                       type="number"
@@ -458,7 +521,7 @@
                       <label
                         class="mt-6 mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                       >
-                        <span x-text="'Jumlah '+item.type+' '+(index+1)"></span>
+                        <span x-text="'Jumlah Potongan '+(index+1)"></span>
                       </label>
                       <input
                         type="number"

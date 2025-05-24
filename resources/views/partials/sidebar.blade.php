@@ -272,7 +272,7 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'pengeluaran.index'|| selected === 'belanja') ? 'block' :'hidden'"
+              :class="(selected === 'pengeluaran.index'|| selected === 'belanja' || selected === 'gaji') ? 'block' :'hidden'"
             >
               <ul
                 :class="sidebarToggle ? 'lg:hidden' : 'flex'"
@@ -289,14 +289,14 @@
                 </li>
                 <li>
                   <a
-                    href="{{ route('penjualan.void') }}"
+                    href="{{ route('gaji') }}"
                     class="menu-dropdown-item group"
-                    :class="selected === 'penjualan.void' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    :class="selected === 'gaji' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Gaji
                   </a>
                 </li>
-                <li>
+                {{-- <li>
                   <a
                     href="{{ route('penjualan.riwayat') }}"
                     class="menu-dropdown-item group"
@@ -304,7 +304,7 @@
                   >
                     Lainya
                   </a>
-                </li>
+                </li> --}}
               </ul>
             </div>
             <!-- Dropdown Menu End -->

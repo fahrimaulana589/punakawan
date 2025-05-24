@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\BelanjaController;
+use App\Http\Controllers\GajiController;
 use App\Http\Controllers\KonsumsiController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ProdukController;
@@ -159,6 +160,24 @@ Route::middleware('auth')->group(function () {
     Route::put('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
 
     Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/gaji', [GajiController::class, 'index'])->name('gaji');
+
+    Route::get('/gaji/create', [GajiController::class, 'create'])->name('gaji.create');
+    
+    Route::get('/gaji/generate', [GajiController::class, 'generate'])->name('gaji.generate');
+    
+    Route::post('/gaji/store', [GajiController::class, 'store'])->name('gaji.store');
+    
+    Route::post('/gaji/store/generate', [GajiController::class, 'storeGenerate'])->name('gaji.store.generate');
+    
+    Route::get('/gaji/edit/{gaji}', [GajiController::class, 'edit'])->name('gaji.edit');
+
+    Route::put('/gaji/update/{gaji}', [GajiController::class, 'update'])->name('gaji.update');
+
+    Route::delete('/gaji/delete/{gaji}', [GajiController::class, 'destroy'])->name('gaji.delete');
 });
 
 require __DIR__.'/auth.php';
