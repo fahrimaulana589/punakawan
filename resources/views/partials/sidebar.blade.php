@@ -31,7 +31,23 @@
     class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar"
   >
     <!-- Sidebar Menu -->
-    <nav x-data="{selected: '{{ Route::currentRouteName() }}'}">
+    @php
+      use Illuminate\Support\Facades\Route;
+
+      $currentRoute = Route::currentRouteName();
+      $previousUrl = url()->previous();
+
+      // Dapatkan route name dari previous URL (jika memungkinkan)
+      $previousRoute = collect(Route::getRoutes())->first(function ($route) use ($previousUrl) {
+          return $route->matches(request()->create($previousUrl));
+      })?->getName();
+
+      // Jika sekarang berada di transaksi.show, pakai route sebelumnya
+      $selected = $currentRoute === 'penjualan.show' ? $previousRoute : $currentRoute;
+    @endphp
+
+    <nav x-data="{ selected: '{{ $selected }}' }">
+      @canany(['dashboard','transaksi_kasir','transaksi_read','belanja_read','absensi_read','gaji_read'])
       <!-- Menu Group -->
       <div>
         <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
@@ -61,7 +77,8 @@
         </h3>
 
         <ul class="flex flex-col gap-4 mb-6">
-          <!-- Menu Item Dashboard -->
+          @can('dashboard')
+            <!-- Menu Item Dashboard -->
           <li>
             <a
               href="{{ route('dashboard') }}"
@@ -93,8 +110,10 @@
             </a>
           </li>
           <!-- Menu Item Dashboard -->
+          @endcan
 
-           <!-- Menu Item Dashboard -->
+          @can('absensi_read')
+           <!-- Menu Item Absensi -->
            <li>
             <a
               href="{{ route('absensi') }}"
@@ -125,18 +144,20 @@
               </span>
             </a>
           </li>
-          <!-- Menu Item Dashboard -->
+          <!-- Menu Item Absensi -->
+          @endcan
           
-          <!-- Menu Item Authentication -->
-           <li>
+          @canany(['transaksi_kasir','transaksi_read'])
+          <!-- Menu Item Penjualan -->
+          <li>
             <a
               href="#"
               @click.prevent="selected = (selected === 'penjualan.index' || (selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat') ? '':'penjualan.index')"
               class="menu-item group"
-                :class="selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat' ? 'menu-item-active' : 'menu-item-inactive'"
-          >
+                :class="selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat' || selected === 'penjualan.create' || selected === 'penjualan.create.manual' || selected === 'penjualan.edit' || selected === 'penjualan.show' ? 'menu-item-active' : 'menu-item-inactive'"
+            >
               <svg
-                :class="(selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                :class="(selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat' || selected === 'penjualan.create' || selected === 'penjualan.create.manual' || selected === 'penjualan.edit' || selected === 'penjualan.show') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -160,7 +181,7 @@
 
               <svg
                 class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
-                :class="[(selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat') ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                :class="[(selected === 'penjualan' || selected === 'penjualan.show' || selected === 'penjualan.void' || selected === 'penjualan.riwayat' || selected === 'penjualan.create' || selected === 'penjualan.create.manual' || selected === 'penjualan.edit' ) ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
@@ -180,7 +201,7 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'penjualan.index'|| selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat') ? 'block' :'hidden'"
+              :class="(selected === 'penjualan.index'|| selected === 'penjualan.show'|| selected === 'penjualan' || selected === 'penjualan.void' || selected === 'penjualan.riwayat' || selected === 'penjualan.create' || selected === 'penjualan.create.manual' || selected === 'penjualan.edit' ) ? 'block' :'hidden'"
             >
               <ul
                 :class="sidebarToggle ? 'lg:hidden' : 'flex'"
@@ -190,7 +211,7 @@
                   <a
                     href="{{ route('penjualan') }}"
                     class="menu-dropdown-item group"
-                    :class="selected === 'penjualan' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    :class="selected === 'penjualan' || selected === 'penjualan.create' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Transaksi
                   </a>
@@ -217,9 +238,11 @@
             </div>
             <!-- Dropdown Menu End -->
           </li>
-          <!-- Menu Item Authentication -->
-
-          <!-- Menu Item Authentication -->
+          <!-- Menu Item Penjualan -->
+          @endcanany
+          
+          @canany(['belanja_read','gaji_read'])
+          <!-- Menu Item Pengeluaran -->
           <li>
             <a
               href="#"
@@ -278,6 +301,7 @@
                 :class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
+                @can('belanja_read')
                 <li>
                   <a
                     href="{{ route('belanja') }}"
@@ -286,7 +310,10 @@
                   >
                     Belanja
                   </a>
-                </li>
+                </li>  
+                @endcan
+               
+                @can('gaji_read')
                 <li>
                   <a
                     href="{{ route('gaji') }}"
@@ -296,6 +323,7 @@
                     Gaji
                   </a>
                 </li>
+                @endcan
                 {{-- <li>
                   <a
                     href="{{ route('penjualan.riwayat') }}"
@@ -309,12 +337,15 @@
             </div>
             <!-- Dropdown Menu End -->
           </li>
-          <!-- Menu Item Authentication -->
+          <!-- Menu Item Pengeluaran -->
+          @endcanany
 
         </ul>
       </div>
       <!-- Menu Group -->
+      @endcanany
 
+      @canany(['produk_read','karyawan_read','bahan_produksi_read','akun_read','produk_read'])
       <!-- Menu Master -->
       <div>
         <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
@@ -344,7 +375,8 @@
         </h3>
 
         <ul class="flex flex-col gap-4 mb-6">
-          <!-- Menu Item Pegawai -->
+          @can('karyawan_read')
+          <!-- Menu Item Karyawan -->
           <li>
             <a
               href="{{ route('pegawai') }}"
@@ -375,8 +407,10 @@
               </span>
             </a>
           </li>
-          <!-- Menu Item Pegawai -->
+          <!-- Menu Item Karyawan -->
+          @endcan
 
+          @can('produk_read')
           <!-- Menu Item Produk -->
           <li>
             <a
@@ -409,7 +443,9 @@
             </a>
           </li>
           <!-- Menu Item Produk -->
+          @endcan
 
+          @can('akun_read')
           <!-- Menu Item Akun -->
           <li>
             <a
@@ -442,8 +478,10 @@
             </a>
           </li>
           <!-- Menu Item Akun -->
+          @endcan
 
-          <!-- Menu Item Akun -->
+          @can('bahan_produksi_read')
+          <!-- Menu Item Bahan produksi -->
           <li>
             <a
               href="{{ route('bahankonsumsi') }}"
@@ -474,11 +512,14 @@
               </span>
             </a>
           </li>
-          <!-- Menu Item Akun -->
+          <!-- Menu Item Bahan produksi -->
+          @endcan
         </ul>
       </div>
       <!-- Menu Master -->
+      @endcanany
 
+      @canany(['user_read'])
       <!-- Menu Setting -->
       <div>
         <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
@@ -543,6 +584,7 @@
         </ul>
       </div>
       <!-- Menu Setting -->
+      @endcanany
 
     </nav>
     <!-- Sidebar Menu -->

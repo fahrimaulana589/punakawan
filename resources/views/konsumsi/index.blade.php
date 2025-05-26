@@ -48,94 +48,99 @@
           </div>
         </div>
       @endsession
-        
+      
+      @can('bahan_produksi_create')
       <div class="flex items-center justify-end mb-4">
         <a href="{{ route('bahankonsumsi.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add Bahan Konsumsi
         </a>
       </div>
+      @endcan
       <!-- ====== Table Six Start -->
-        <div
-          class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
-        >
-          <div class="max-w-full overflow-x-auto">
-            <table class="min-w-full">
-              <!-- table header start -->
-              <thead>
-                <tr class="border-b border-gray-100 dark:border-gray-800">                 
-                  <th class="px-5 py-3 sm:px-6">
+      <div
+        class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+      >
+        <div class="max-w-full overflow-x-auto">
+          <table class="min-w-full">
+            <!-- table header start -->
+            <thead>
+              <tr class="border-b border-gray-100 dark:border-gray-800">                 
+                <th class="px-5 py-3 sm:px-6">
+                  <div class="flex items-center">
+                    <p
+                      class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                    >
+                      Nama
+                    </p>
+                  </div>
+                </th>
+                <th class="px-5 py-3 sm:px-6">
+                  <div class="flex items-center">
+                    <p
+                      class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                    >
+                      Debet
+                    </p>
+                  </div>
+                </th>
+                <th class="px-5 py-3 sm:px-6">
+                  <div class="flex items-center">
+                    <p
+                      class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                    >
+                      Kredit
+                    </p>
+                  </div>
+                </th>
+                <th class="px-5 py-3 sm:px-6">
+                  <div class="flex items-center justify-end">
+                    <p
+                      class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                    >
+                      Action
+                    </p>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <!-- table header end -->
+            <!-- table body start -->
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              @foreach ($konsumsis as $konsumsi)
+                <tr>
+                  <td class="px-5 py-4 sm:px-6">
                     <div class="flex items-center">
-                      <p
-                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
-                      >
-                        Nama
+                      <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                        {{ $konsumsi->nama }}
                       </p>
                     </div>
-                  </th>
-                  <th class="px-5 py-3 sm:px-6">
+                  </td>
+                  <td class="px-5 py-4 sm:px-6">
                     <div class="flex items-center">
-                      <p
-                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
-                      >
-                        Debet
+                      <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                        {{ $konsumsi->debet->nama }}
                       </p>
                     </div>
-                  </th>
-                  <th class="px-5 py-3 sm:px-6">
+                  </td>
+                  <td class="px-5 py-4 sm:px-6">
                     <div class="flex items-center">
-                      <p
-                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
-                      >
-                        Kredit
+                      <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                        {{ $konsumsi->kredit->nama }}
                       </p>
                     </div>
-                  </th>
-                  <th class="px-5 py-3 sm:px-6">
-                    <div class="flex items-center justify-end">
-                      <p
-                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
-                      >
-                        Action
-                      </p>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <!-- table header end -->
-              <!-- table body start -->
-              <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                @foreach ($konsumsis as $konsumsi)
-                  <tr>
-                    <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center">
-                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $konsumsi->nama }}
-                        </p>
-                      </div>
-                    </td>
-                    <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center">
-                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $konsumsi->debet->nama }}
-                        </p>
-                      </div>
-                    </td>
-                    <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center">
-                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $konsumsi->kredit->nama }}
-                        </p>
-                      </div>
-                    </td>
-                    
-                    <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center justify-end mb-4">
-                        <a
-                        href="{{ route('bahankonsumsi.edit',$konsumsi->id) }}"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  </td>
+                  
+                  <td class="px-5 py-4 sm:px-6">
+                    <div class="flex items-center justify-end mb-4">
+                      @can('bahan_produksi_edit')
+                      <a
+                      href="{{ route('bahankonsumsi.edit',$konsumsi->id) }}"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         Edit
                       </a>
+                      @endcan
+                      @can('bahan_produksi_delete')
                       <form action="{{ route('bahankonsumsi.delete', $konsumsi->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
@@ -143,14 +148,15 @@
                           Delete
                         </a>
                       </form>
-                      </div>
-                    </td>   
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
+                      @endcan
+                    </div>
+                  </td>   
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
+      </div>
         
       <!-- ====== Table Six End -->
     </div>

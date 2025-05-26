@@ -40,154 +40,109 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai');
-
-    Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
-    
-    Route::post('/pegawai/store', [PegawaiController::class, 'store'])->name('pegawai.store');
-    
-    Route::get('/pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
-
-    Route::put('/pegawai/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
-
-    Route::delete('/pegawai/delete/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.delete');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
-
-    Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create');
-    
-    Route::post('/produk/store', [ProdukController::class, 'store'])->name('produk.store');
-    
-    Route::get('/produk/edit/{id}', [ProdukController::class, 'edit'])->name('produk.edit');
-
-    Route::get('/produk/paket/{id}', [ProdukController::class, 'paket'])->name('produk.paket')->middleware('filter.produk.induk');
-
-    Route::post('/produk/paket/{id}/store', [ProdukController::class, 'storeToPaket'])->name('produk.paket.store');
-
-    Route::put('/produk/update/{id}', [ProdukController::class, 'update'])->name('produk.update');
-
-    Route::delete('/produk/delete/{id}', [ProdukController::class, 'destroy'])->name('produk.delete');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/user', [UserController::class, 'index'])->name('user');
-
-    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
-    
-    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
-    
-    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-
-    Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
-
-    Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.delete');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/akun', [AkunController::class, 'index'])->name('akun');
-
-    Route::get('/akun/create', [AkunController::class, 'create'])->name('akun.create');
-    
-    Route::post('/akun/store', [AkunController::class, 'store'])->name('akun.store');
-    
-    Route::get('/akun/edit/{id}', [AkunController::class, 'edit'])->name('akun.edit');
-
-    Route::put('/akun/update/{id}', [AkunController::class, 'update'])->name('akun.update');
-
-    Route::delete('/akun/delete/{id}', [AkunController::class, 'destroy'])->name('akun.delete');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/bahankonsumsi', [KonsumsiController::class, 'index'])->name('bahankonsumsi');
-
-    Route::get('/bahankonsumsi/create', [KonsumsiController::class, 'create'])->name('bahankonsumsi.create');
-    
-    Route::post('/bahankonsumsi/store', [KonsumsiController::class, 'store'])->name('bahankonsumsi.store');
-    
-    Route::get('/bahankonsumsi/edit/{id}', [KonsumsiController::class, 'edit'])->name('bahankonsumsi.edit');
-
-    Route::put('/bahankonsumsi/update/{id}', [KonsumsiController::class, 'update'])->name('bahankonsumsi.update');
-
-    Route::delete('/bahankonsumsi/delete/{id}', [KonsumsiController::class, 'destroy'])->name('bahankonsumsi.delete');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/penjualan', [TransaksiController::class, 'index'])->name('penjualan');
-    
-    Route::get('/penjualan/void', [TransaksiController::class, 'void'])->name('penjualan.void');
-
-    Route::get('/penjualan/riwayat', [TransaksiController::class, 'riwayat'])->name('penjualan.riwayat');    
-
-    Route::get('/penjualan/create', [TransaksiController::class, 'create'])->name('penjualan.create');
-
-    Route::get('/penjualan/create/manual', [TransaksiController::class, 'createManual'])->name('penjualan.create.manual');
-
-    Route::post('/penjualan/store', [TransaksiController::class, 'store'])->name('penjualan.store');
-    
-    Route::post('/penjualan/store/manual', [TransaksiController::class, 'storeManual'])->name('penjualan.store.manual');
-    
-    Route::get('/penjualan/show/{id}', [TransaksiController::class, 'show'])->name('penjualan.show');
-
-    Route::get('/penjualan/edit/{id}', [TransaksiController::class, 'edit'])->name('penjualan.edit');
-
-    Route::put('/penjualan/update/{id}', [TransaksiController::class, 'update'])->name('penjualan.update');
-
-    Route::post('/penjualan/cancel/{id}', [TransaksiController::class, 'cancel'])->name('penjualan.cancel');
-
-    Route::post('/penjualan/finish/{id}', [TransaksiController::class, 'finish'])->name('penjualan.finish');
-    
-    Route::post('/penjualan/hapus/{id}', [TransaksiController::class, 'destroy'])->name('penjualan.destroy');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/belanja', [BelanjaController::class, 'index'])->name('belanja');
-    
-    Route::get('/belanja/create', [BelanjaController::class, 'create'])->name('belanja.create');
-
-    Route::post('/belanja/store', [BelanjaController::class, 'store'])->name('belanja.store');
-    
-    Route::get('/belanja/edit/{id}', [BelanjaController::class, 'edit'])->name('belanja.edit');
-
-    Route::put('/belanja/update/{id}', [BelanjaController::class, 'update'])->name('belanja.update');
-
-    Route::delete('/belanja/delete/{id}', [BelanjaController::class, 'destroy'])->name('belanja.delete');
+    // Karyawan (Pegawai)
+    Route::get('/karyawan', [PegawaiController::class, 'index'])->name('pegawai')->middleware('can:karyawan_read');
+    Route::get('/karyawan/create', [PegawaiController::class, 'create'])->name('pegawai.create')->middleware('can:karyawan_create');
+    Route::post('/karyawan/store', [PegawaiController::class, 'store'])->name('pegawai.store')->middleware('can:karyawan_create');
+    Route::get('/karyawan/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit')->middleware('can:karyawan_edit');
+    Route::put('/karyawan/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update')->middleware('can:karyawan_edit');
+    Route::delete('/karyawan/delete/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.delete')->middleware('can:karyawan_delete');
 
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
+    // Produk
+    Route::get('/produk', [ProdukController::class, 'index'])->name('produk')->middleware('can:produk_read');
+    Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create')->middleware('can:produk_create');
+    Route::post('/produk/store', [ProdukController::class, 'store'])->name('produk.store')->middleware('can:produk_create');
+    Route::get('/produk/edit/{id}', [ProdukController::class, 'edit'])->name('produk.edit')->middleware('can:produk_edit');
+    Route::get('/produk/paket/{id}', [ProdukController::class, 'paket'])->name('produk.paket')->middleware(['can:produk_edit']);
+    Route::post('/produk/paket/{id}/store', [ProdukController::class, 'storeToPaket'])->name('produk.paket.store')->middleware('can:produk_edit');
+    Route::put('/produk/update/{id}', [ProdukController::class, 'update'])->name('produk.update')->middleware('can:produk_edit');
+    Route::delete('/produk/delete/{id}', [ProdukController::class, 'destroy'])->name('produk.delete')->middleware('can:produk_delete');
 
-    Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
-    
-    Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store');
-    
-    Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit');
-
-    Route::put('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
-
-    Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/gaji', [GajiController::class, 'index'])->name('gaji');
+   // User
+   Route::get('/user', [UserController::class, 'index'])->name('user')->middleware('can:user_read');
+   Route::get('/user/create', [UserController::class, 'create'])->name('user.create')->middleware('can:user_create');
+   Route::post('/user/store', [UserController::class, 'store'])->name('user.store')->middleware('can:user_create');
+   Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit')->middleware('can:user_edit');
+   Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update')->middleware('can:user_edit');
+   Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.delete')->middleware('can:user_delete');
 
-    Route::get('/gaji/create', [GajiController::class, 'create'])->name('gaji.create');
-    
-    Route::get('/gaji/generate', [GajiController::class, 'generate'])->name('gaji.generate');
-    
-    Route::post('/gaji/store', [GajiController::class, 'store'])->name('gaji.store');
-    
-    Route::post('/gaji/store/generate', [GajiController::class, 'storeGenerate'])->name('gaji.store.generate');
-    
-    Route::get('/gaji/edit/{gaji}', [GajiController::class, 'edit'])->name('gaji.edit');
+});
 
-    Route::get('/gaji/show/{gaji}', [GajiController::class, 'show'])->name('gaji.show');
+Route::middleware('auth')->group(function () {
+     // Akun
+     Route::get('/akun', [AkunController::class, 'index'])->name('akun')->middleware('can:akun_read');
+     Route::get('/akun/create', [AkunController::class, 'create'])->name('akun.create')->middleware('can:akun_create');
+     Route::post('/akun/store', [AkunController::class, 'store'])->name('akun.store')->middleware('can:akun_create');
+     Route::get('/akun/edit/{id}', [AkunController::class, 'edit'])->name('akun.edit')->middleware('can:akun_edit');
+     Route::put('/akun/update/{id}', [AkunController::class, 'update'])->name('akun.update')->middleware('can:akun_edit');
+     Route::delete('/akun/delete/{id}', [AkunController::class, 'destroy'])->name('akun.delete')->middleware('can:akun_delete');
+ 
+});
 
-    Route::put('/gaji/update/{gaji}', [GajiController::class, 'update'])->name('gaji.update');
+Route::middleware('auth')->group(function () {
+   // Bahan Konsumsi
+   Route::get('/bahanproduksi', [KonsumsiController::class, 'index'])->name('bahankonsumsi')->middleware('can:bahan_produksi_read');
+   Route::get('/bahanproduksi/create', [KonsumsiController::class, 'create'])->name('bahankonsumsi.create')->middleware('can:bahan_produksi_create');
+   Route::post('/bahanproduksi/store', [KonsumsiController::class, 'store'])->name('bahankonsumsi.store')->middleware('can:bahan_produksi_create');
+   Route::get('/bahanproduksi/edit/{id}', [KonsumsiController::class, 'edit'])->name('bahankonsumsi.edit')->middleware('can:bahan_produksi_edit');
+   Route::put('/bahanproduksi/update/{id}', [KonsumsiController::class, 'update'])->name('bahankonsumsi.update')->middleware('can:bahan_produksi_edit');
+   Route::delete('/bahanproduksi/delete/{id}', [KonsumsiController::class, 'destroy'])->name('bahankonsumsi.delete')->middleware('can:bahan_produksi_delete');
+});
 
-    Route::delete('/gaji/delete/{gaji}', [GajiController::class, 'destroy'])->name('gaji.delete');
+Route::middleware('auth')->group(function () {
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('penjualan')->middleware(['permission:transaksi_kasir|transaksi_read']); 
+    Route::get('/transaksi/void', [TransaksiController::class, 'void'])->name('penjualan.void')->middleware(['permission:transaksi_kasir|transaksi_read']);
+    Route::get('/transaksi/riwayat', [TransaksiController::class, 'riwayat'])->name('penjualan.riwayat')->middleware(['permission:transaksi_kasir|transaksi_read']);    
+    Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('penjualan.create')->middleware(['can:transaksi_kasir']);
+    Route::get('/transaksi/create/manual', [TransaksiController::class, 'createManual'])->name('penjualan.create.manual')->middleware(['can:transaksi_create']);
+    Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('penjualan.store')->middleware(['can:transaksi_kasir']);
+    Route::post('/transaksi/store/manual', [TransaksiController::class, 'storeManual'])->name('penjualan.store.manual')->middleware(['can:transaksi_create']);
+    Route::get('/transaksi/show/{id}', [TransaksiController::class, 'show'])->name('penjualan.show')->middleware(['permission:transaksi_kasir|transaksi_read']);
+    Route::get('/transaksi/edit/{id}', [TransaksiController::class, 'edit'])->name('penjualan.edit')->middleware(['can:transaksi_edit']);
+    Route::put('/transaksi/update/{id}', [TransaksiController::class, 'update'])->name('penjualan.update')->middleware(['can:transaksi_edit']);
+    Route::post('/transaksi/cancel/{id}', [TransaksiController::class, 'cancel'])->name('penjualan.cancel')->middleware(['can:transaksi_kasir']);
+    Route::post('/transaksi/finish/{id}', [TransaksiController::class, 'finish'])->name('penjualan.finish')->middleware(['can:transaksi_kasir']);    
+    Route::post('/transaksi/delete/{id}', [TransaksiController::class, 'destroy'])->name('penjualan.destroy')->middleware(['can:transaksi_delete']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/belanja', [BelanjaController::class, 'index'])->name('belanja')->middleware('can:belanja_read');
+    Route::get('/belanja/create', [BelanjaController::class, 'create'])->name('belanja.create')->middleware('can:belanja_create');
+    Route::post('/belanja/store', [BelanjaController::class, 'store'])->name('belanja.store')->middleware('can:belanja_create');
+    Route::get('/belanja/edit/{id}', [BelanjaController::class, 'edit'])->name('belanja.edit')->middleware('can:belanja_edit');
+    Route::put('/belanja/update/{id}', [BelanjaController::class, 'update'])->name('belanja.update')->middleware('can:belanja_edit');
+    Route::delete('/belanja/delete/{id}', [BelanjaController::class, 'destroy'])->name('belanja.delete')->middleware('can:belanja_delete');
+
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi')->middleware('can:absensi_read');
+    Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create')->middleware('can:absensi_create');
+    Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store')->middleware('can:absensi_create');
+    Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit')->middleware('can:absensi_edit');
+    Route::put('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update')->middleware('can:absensi_edit');
+    Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete')->middleware('can:absensi_delete');
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/gaji', [GajiController::class, 'index'])->name('gaji')->middleware('can:gaji_read');
+    Route::get('/gaji/create', [GajiController::class, 'create'])->name('gaji.create')->middleware('can:gaji_create');
+    Route::get('/gaji/generate', [GajiController::class, 'generate'])->name('gaji.generate')->middleware('can:gaji_create');
+    Route::post('/gaji/store', [GajiController::class, 'store'])->name('gaji.store')->middleware('can:gaji_create');
+    Route::post('/gaji/store/generate', [GajiController::class, 'storeGenerate'])->name('gaji.store.generate')->middleware('can:gaji_create');
+    Route::get('/gaji/edit/{gaji}', [GajiController::class, 'edit'])->name('gaji.edit')->middleware('can:gaji_edit');
+    Route::get('/gaji/show/{gaji}', [GajiController::class, 'show'])->name('gaji.show')->middleware('can:gaji_read');
+    Route::put('/gaji/update/{gaji}', [GajiController::class, 'update'])->name('gaji.update')->middleware('can:gaji_edit');
+    Route::delete('/gaji/delete/{gaji}', [GajiController::class, 'destroy'])->name('gaji.delete')->middleware('can:gaji_delete');
+
 });
 
 require __DIR__.'/auth.php';

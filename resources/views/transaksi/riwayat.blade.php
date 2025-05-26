@@ -49,12 +49,13 @@
       </div>
       @endsession
 
+      @can('transaksi_create')
       <div class="flex items-center justify-end mb-4">
         <a href="{{ route('penjualan.create.manual') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add Transaksi
         </a>
       </div>
-        
+      @endcan
       <!-- ====== Table Six Start -->
       <div
         class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
@@ -143,12 +144,15 @@
                       >
                         Show
                       </a>
+                      @can('transaksi_edit')
                       <a
-                        href="{{ route('penjualan.edit',$transaksi->id) }}"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      href="{{ route('penjualan.edit',$transaksi->id) }}"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         Edit
-                      </a>
+                      </a> 
+                      @endcan
+                      @can('transaksi_delete')
                       <form id="cancel-form-{{ $transaksi->id }}" action="{{ route('penjualan.destroy', $transaksi->id) }}" method="POST" class="inline">
                         @csrf
                         <button 
@@ -174,6 +178,7 @@
                             Hapus
                         </button>
                       </form>
+                      @endcan
                     </div>
                   </td> 
                 </tr>

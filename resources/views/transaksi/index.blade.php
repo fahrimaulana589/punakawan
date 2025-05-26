@@ -151,57 +151,59 @@
                       >
                       Show
                       </a>
-                    <form id="finish-form-{{ $transaksi->id }}" action="{{ route('penjualan.finish', $transaksi->id) }}" method="POST" class="inline">
-                      @csrf
-                      <button 
-                          x-on:click.prevent="
-                              window.Swal.fire({
-                                  title: 'Yakin ingin menyelesaikan transaksi?',
-                                  text: 'Tindakan ini tidak dapat dibatalkan!',
-                                  icon: 'warning',
-                                  showCancelButton: true,
-                                  confirmButtonColor: '#d33',
-                                  cancelButtonColor: '#3085d6',
-                                  confirmButtonText: 'Ya, selesaikan!',
-                                  cancelButtonText: 'Batal'
-                              }).then((result) => {
-                                  if (result.isConfirmed) {
-                                      document.getElementById('finish-form-{{ $transaksi->id }}').submit();
-                                  }
-                              });
-                          " 
-                          type="button"
-                          class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-yellow-600 border border-transparent rounded-md shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-                      >
-                          Selsesai
-                      </button>
-                    </form>
-                    <form id="cancel-form-{{ $transaksi->id }}" action="{{ route('penjualan.cancel', $transaksi->id) }}" method="POST" class="inline">
-                      @csrf
-                      <button 
-                          x-on:click.prevent="
-                              window.Swal.fire({
-                                  title: 'Yakin ingin membatalkan transaksi?',
-                                  text: 'Tindakan ini tidak dapat dibatalkan!',
-                                  icon: 'warning',
-                                  showCancelButton: true,
-                                  confirmButtonColor: '#d33',
-                                  cancelButtonColor: '#3085d6',
-                                  confirmButtonText: 'Ya, batalkan!',
-                                  cancelButtonText: 'Batal'
-                              }).then((result) => {
-                                  if (result.isConfirmed) {
-                                      document.getElementById('cancel-form-{{ $transaksi->id }}').submit();
-                                  }
-                              });
-                          " 
-                          type="button"
-                          class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                      >
-                          Batal
-                      </button>
-                    </form>
-                  
+                      @can('transaksi_kasir')
+                      <form id="finish-form-{{ $transaksi->id }}" action="{{ route('penjualan.finish', $transaksi->id) }}" method="POST" class="inline">
+                        @csrf
+                        <button 
+                            x-on:click.prevent="
+                                window.Swal.fire({
+                                    title: 'Yakin ingin menyelesaikan transaksi?',
+                                    text: 'Tindakan ini tidak dapat dibatalkan!',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Ya, selesaikan!',
+                                    cancelButtonText: 'Batal'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        document.getElementById('finish-form-{{ $transaksi->id }}').submit();
+                                    }
+                                });
+                            " 
+                            type="button"
+                            class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-yellow-600 border border-transparent rounded-md shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                        >
+                            Selsesai
+                        </button>
+                      </form>
+                      <form id="cancel-form-{{ $transaksi->id }}" action="{{ route('penjualan.cancel', $transaksi->id) }}" method="POST" class="inline">
+                        @csrf
+                        <button 
+                            x-on:click.prevent="
+                                window.Swal.fire({
+                                    title: 'Yakin ingin membatalkan transaksi?',
+                                    text: 'Tindakan ini tidak dapat dibatalkan!',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#3085d6',
+                                    confirmButtonText: 'Ya, batalkan!',
+                                    cancelButtonText: 'Batal'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        document.getElementById('cancel-form-{{ $transaksi->id }}').submit();
+                                    }
+                                });
+                            " 
+                            type="button"
+                            class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        >
+                            Batal
+                        </button>
+                      </form>
+                      @endcan
+                      
                     </div>
                   </td>   
                 </tr>

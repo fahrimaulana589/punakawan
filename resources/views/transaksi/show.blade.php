@@ -11,7 +11,7 @@
       <div x-data="{ 
         pageName: `Show Transaksi`,
         urls:[
-          {name: 'Produk', url: '{{ route('penjualan') }}'},
+          {name: 'Transaksi', url: '{{ url()->previous() }}'},
         ]
       }">
         @include('partials.breadcrumb')
