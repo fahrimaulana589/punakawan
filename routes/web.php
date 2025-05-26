@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -86,7 +86,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-   // Bahan Konsumsi
+   // Bahan Produksi
    Route::get('/bahanproduksi', [KonsumsiController::class, 'index'])->name('bahankonsumsi')->middleware('can:bahan_produksi_read');
    Route::get('/bahanproduksi/create', [KonsumsiController::class, 'create'])->name('bahankonsumsi.create')->middleware('can:bahan_produksi_create');
    Route::post('/bahanproduksi/store', [KonsumsiController::class, 'store'])->name('bahankonsumsi.store')->middleware('can:bahan_produksi_create');

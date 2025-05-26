@@ -174,7 +174,7 @@ class GajiController extends Controller
             'nama' => "Gaji ".$nama,
         ]);
 
-        return redirect()->route('gaji')->with('success', 'Gaji deleted successfully.');
+        return redirect()->route('gaji')->with('success', 'Gaji created successfully.');
     }
 
     /**
@@ -303,7 +303,7 @@ class GajiController extends Controller
             }
         }
 
-        return redirect()->route('gaji')->with('success', 'Gaji added successfully.');
+        return redirect()->route('gaji')->with('success', 'Gaji created successfully.');
     }
 
     /**
@@ -370,7 +370,7 @@ class GajiController extends Controller
     {
         $gaji->delete();
 
-        return redirect()->route('gaji')->with('success', 'Gaji added successfully.');
+        return redirect()->route('gaji')->with('success', 'Gaji delated successfully.');
    
     }
 }

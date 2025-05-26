@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $title = 'Delete Pegawai!';
+        $title = 'Delete User !';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -30,7 +30,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255|unique:users,name',
             'email' => 'required|string|max:255|unique:users,email',
             'password' => 'required|string|max:255',
-            'role' => ['required', 'string', Rule::in(['owner', 'admin','kasir'])],
+            'role' => ['required', 'string', Rule::in(['Kasir', 'Direktur SDM','Direktur Produksi','Direktur Keuangan'])],
             'pegawai_id' => 'required|string|max:255|unique:users,pegawai_id',
         ]);
 
@@ -59,7 +59,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255|unique:users,name,'.$id,
             'email' => 'required|string|max:255|unique:users,email,'.$id,
             'password' => 'string|max:255|nullable',
-            'role' => ['required', 'string', Rule::in(['owner', 'admin','kasir'])],
+            'role' => ['required', 'string', Rule::in(['Kasir', 'Direktur SDM','Direktur Produksi','Direktur Keuangan'])],
             'pegawai_id' => 'required|string|max:255|unique:users,pegawai_id,'.$id,
         ]);
 

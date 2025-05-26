@@ -10,7 +10,7 @@ class PegawaiController extends Controller
 {
     public function index()
     {
-        $title = 'Delete Pegawai!';
+        $title = 'Delete Karyawan!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -43,7 +43,7 @@ class PegawaiController extends Controller
 
         $pegawai = Pegawai::create($request->all());
 
-        return redirect()->route('pegawai.edit',$pegawai->id)->with('success', 'Pegawai created successfully.');
+        return redirect()->route('pegawai.edit',$pegawai->id)->with('success', 'Karyawan created successfully.');
     }
     public function edit($id)
     {
@@ -148,13 +148,13 @@ class PegawaiController extends Controller
         // Simpan ulang penggajian
         $pegawai->penggajians()->createMany($dataPenggajian);        
 
-        return back()->with('success', 'Pegawai updated successfully.');
+        return back()->with('success', 'Karyawan updated successfully.');
     }
     public function destroy($id)
     {
         $pegawai = Pegawai::findOrFail($id);
         $pegawai->delete();
 
-        return redirect()->route('pegawai')->with('success', 'Pegawai deleted successfully.');
+        return redirect()->route('pegawai')->with('success', 'Karyawan deleted successfully.');
     }
 }

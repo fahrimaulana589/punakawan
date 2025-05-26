@@ -46,14 +46,17 @@
               </p>
             </div>
           </div>
-        </div>
+      </div>
       @endsession
         
+      @can('belanja_create')
       <div class="flex items-center justify-end mb-4">
         <a href="{{ route('belanja.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add Belanja
         </a>
-      </div>
+      </div>  
+      @endcan
+
       <!-- ====== Table Six Start -->
         <div
           class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
@@ -182,19 +185,25 @@
                     
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center justify-end mb-4">
+                        @can('belanja_edit')
                         <a
                         href="{{ route('belanja.edit',$jurnal->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                      >
-                        Edit
-                      </a>
-                      <form action="{{ route('belanja.delete', $jurnal->id) }}" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <a href="{{ route('belanja.delete', $jurnal->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                          Delete
-                        </a>
-                      </form>
+                        >
+                          Edit
+                        </a>  
+                        @endcan
+                       
+                        @can('belanja_delete')
+                        <form action="{{ route('belanja.delete', $jurnal->id) }}" method="POST" class="inline">
+                          @csrf
+                          @method('DELETE')
+                          <a href="{{ route('belanja.delete', $jurnal->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            Delete
+                          </a>
+                        </form>
+                        @endcan
+                        
                       </div>
                     </td>   
                   </tr>

@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         });
 
         $kasir_role = Role::create(['name' => 'Kasir']);
-        $direktur_keuangan_role = Role::create(['name' => 'Direktur keuangan']);
+        $direktur_keuangan_role = Role::create(['name' => 'Direktur Keuangan']);
         $direktur_produksi_role = Role::create(['name' => 'Direktur Produksi']);
         $direktur_sdm_role = Role::create(['name' => 'Direktur SDM']);
 
@@ -79,6 +79,29 @@ class DatabaseSeeder extends Seeder
         
         $kasir_role->givePermissionTo([
             'dashboard','transaksi_kasir','produk_read'
+        ]);
+
+        $direktur_produksi_role->givePermissionTo([
+            'dashboard',
+            'belanja_create','belanja_read','belanja_edit','belanja_delete',
+            'produk_create','produk_read','produk_edit','produk_delete',
+            'bahan_produksi_create','bahan_produksi_read','bahan_produksi_edit','bahan_produksi_delete',
+        ]);
+
+        $direktur_sdm_role->givePermissionTo([
+            'dashboard',
+            'karyawan_create','karyawan_read','karyawan_edit','karyawan_delete',
+            'absensi_create','absensi_read','absensi_edit','absensi_delete',
+            'user_create','user_read','user_edit','user_delete',
+        ]);
+
+        $direktur_keuangan_role->givePermissionTo([
+            'dashboard',
+            'transaksi_read',
+            'absensi_read',
+            'belanja_read',
+            'gaji_create','gaji_read','gaji_edit','gaji_delete',
+            'akun_create','akun_read','akun_edit','akun_delete',
         ]);
         
         //buat kasir

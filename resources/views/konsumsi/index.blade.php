@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Bahan Konsumsi') }}
+    {{ __('Bahan Produksi') }}
   </x-slot>
   
   
@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Bahan Konsumsi`}">
+      <div x-data="{ pageName: `Bahan Produksi`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
@@ -52,7 +52,7 @@
       @can('bahan_produksi_create')
       <div class="flex items-center justify-end mb-4">
         <a href="{{ route('bahankonsumsi.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add Bahan Konsumsi
+          Add Bahan Produksi
         </a>
       </div>
       @endcan
@@ -140,6 +140,7 @@
                         Edit
                       </a>
                       @endcan
+
                       @can('bahan_produksi_delete')
                       <form action="{{ route('bahankonsumsi.delete', $konsumsi->id) }}" method="POST" class="inline">
                         @csrf
@@ -149,6 +150,7 @@
                         </a>
                       </form>
                       @endcan
+
                     </div>
                   </td>   
                 </tr>

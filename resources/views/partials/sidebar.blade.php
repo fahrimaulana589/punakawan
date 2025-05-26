@@ -9,10 +9,10 @@
   >
     <a href="index.html">
       <span class="logo" :class="sidebarToggle ? 'hidden' : ''">
-        <img class="dark:hidden" src="./images/logo/logo.svg" alt="Logo" />
+        <img class="w-20 dark:hidden" src="{{ asset('images/punakawan_logo.png') }}" alt="Logo" />
         <img
-          class="hidden dark:block"
-          src="./images/logo/logo-dark.svg"
+          class="w-20 hidden dark:block"
+          src="{{ asset('images/punakawan_logo.png') }}"
           alt="Logo"
         />
       </span>
@@ -113,16 +113,16 @@
           @endcan
 
           @can('absensi_read')
-           <!-- Menu Item Absensi -->
-           <li>
+          <!-- Menu Item Absensi -->
+          <li>
             <a
               href="{{ route('absensi') }}"
               class="menu-item group"
-              :class="selected === 'absensi' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'absensi' || selected === 'absensi.create' || selected === 'absensi.edit' ? 'menu-item-active' : 'menu-item-inactive'"
             >
             
               <svg
-                :class="selected === 'absensi' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'absensi' || selected === 'absensi.create' || selected === 'absensi.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
@@ -246,12 +246,12 @@
           <li>
             <a
               href="#"
-              @click.prevent="selected = (selected === 'pengeluaran.index' || (selected === 'belanja') ? '':'pengeluaran.index')"
+              @click.prevent="selected = (selected === 'pengeluaran.index' || (selected === 'belanja' || selected === 'belanja.create'  ||selected === 'belanja.edit'  || selected === 'gaji' || selected === 'gaji.create' || selected === 'gaji.edit' || selected === 'gaji.generate' || selected === 'gaji.show') ? '':'pengeluaran.index')"
               class="menu-item group"
-                :class="selected === 'belanja' ? 'menu-item-active' : 'menu-item-inactive'"
+                :class="selected === 'belanja' || selected === 'belanja.create'  ||selected === 'belanja.edit'  || selected === 'gaji' || selected === 'gaji.create' || selected === 'gaji.edit' || selected === 'gaji.generate' || selected === 'gaji.show' ? 'menu-item-active' : 'menu-item-inactive'"
           >
               <svg
-                :class="(selected === 'belanja') ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
+                :class="selected === 'belanja'  || selected === 'belanja.create'  ||selected === 'belanja.edit'  || selected === 'gaji' || selected === 'gaji.create' || selected === 'gaji.edit' || selected === 'gaji.generate' || selected === 'gaji.show' ? 'menu-item-icon-active'  :'menu-item-icon-inactive'"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -295,7 +295,7 @@
             <!-- Dropdown Menu Start -->
             <div
               class="overflow-hidden transform translate"
-              :class="(selected === 'pengeluaran.index'|| selected === 'belanja' || selected === 'gaji') ? 'block' :'hidden'"
+              :class="(selected === 'pengeluaran.index'|| selected === 'belanja' || selected === 'belanja.create' || selected === 'belanja.edit' || selected === 'gaji'  || selected === 'gaji.create' || selected === 'gaji.edit' || selected === 'gaji.generate' || selected === 'gaji.show') ? 'block' :'hidden'"
             >
               <ul
                 :class="sidebarToggle ? 'lg:hidden' : 'flex'"
@@ -306,7 +306,7 @@
                   <a
                     href="{{ route('belanja') }}"
                     class="menu-dropdown-item group"
-                    :class="selected === 'belanja' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    :class="selected === 'belanja' || selected === 'belanja.create' || selected === 'belanja.edit' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Belanja
                   </a>
@@ -318,7 +318,7 @@
                   <a
                     href="{{ route('gaji') }}"
                     class="menu-dropdown-item group"
-                    :class="selected === 'gaji' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    :class="selected === 'gaji' || selected === 'gaji.create' || selected === 'gaji.edit' || selected === 'gaji.generate' || selected === 'gaji.show' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Gaji
                   </a>
@@ -403,7 +403,7 @@
                 class="menu-item-text"
                 :class="sidebarToggle ? 'lg:hidden' : ''"
               >
-                Pegawai
+                Karyawan
               </span>
             </a>
           </li>
@@ -416,10 +416,10 @@
             <a
               href="{{ route('produk') }}"
               class="menu-item group"
-              :class="selected === 'produk' | selected === 'produk.create' | selected === 'produk.edit' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'produk' | selected === 'produk.create' | selected === 'produk.edit' | selected === 'produk.paket' ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="selected === 'produk' | selected === 'produk.create' | selected === 'produk.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'produk' | selected === 'produk.create' | selected === 'produk.edit' | selected === 'produk.paket' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -451,10 +451,10 @@
             <a
               href="{{ route('akun') }}"
               class="menu-item group"
-              :class="selected === 'akun' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'akun' || selected === 'akun.create' || selected === 'akun.edit' ?  'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="selected === 'akun' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'akun' || selected === 'akun.create' || selected === 'akun.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -486,10 +486,10 @@
             <a
               href="{{ route('bahankonsumsi') }}"
               class="menu-item group"
-              :class="selected === 'bahankonsumsi' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'bahankonsumsi' || selected === 'bahankonsumsi.create' || selected === 'bahankonsumsi.edit' ? 'menu-item-active' : 'menu-item-inactive'"
             >
               <svg
-                :class="selected === 'bahankonsumsi' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'bahankonsumsi'  || selected === 'bahankonsumsi.create' || selected === 'bahankonsumsi.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -508,7 +508,7 @@
                 class="menu-item-text"
                 :class="sidebarToggle ? 'lg:hidden' : ''"
               >
-                Bahan Konsumsi
+                Bahan Produksi
               </span>
             </a>
           </li>
@@ -551,14 +551,16 @@
         <ul class="flex flex-col gap-4 mb-6">
           <!-- Menu Item User -->
           <li>
+            @can('user_read')
+            
             <a
               href="{{ route('user') }}"
               class="menu-item group"
-              :class="selected === 'user' ? 'menu-item-active' : 'menu-item-inactive'"
+              :class="selected === 'user' || selected === 'user.create' || selected === 'user.edit' ? 'menu-item-active' : 'menu-item-inactive'"
             >
             
               <svg
-                :class="selected === 'user' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                :class="selected === 'user' || selected === 'user.create' || selected === 'user.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
@@ -579,6 +581,7 @@
                 User
               </span>
             </a>
+            @endcan
           </li>
           <!-- Menu Item User -->
         </ul>

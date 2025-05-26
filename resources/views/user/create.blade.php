@@ -134,32 +134,42 @@
                     Select Option
                   </option>
                   <option
-                    value="owner"
-                    @if (old('role') == 'owner')
-                      selected
-                    @endif
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Owner
-                  </option>
-                  <option
-                    value="admin"
-                    @if (old('role') == 'admin')
-                      selected
-                    @endif
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Admin
-                  </option>
-
-                  <option
-                    value="kasir"
-                    @if (old('role') == 'kasir')
+                    value="Kasir"
+                    @if (old('role') == 'Kasir')
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
                     Kasir
+                  </option>
+                  <option
+                    value="Direktur Keuangan"
+                    @if (old('role') == 'Direktur Keuangan')
+                      selected
+                    @endif
+                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Direktur Keuangan
+                  </option>
+
+                  <option
+                    value="Direktur Produksi"
+                    @if (old('role') == 'Direktur Produksi')
+                      selected
+                    @endif
+                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Direktur Produksi
+                  </option>
+
+                  <option
+                    value="Direktur SDM"
+                    @if (old('role') == 'Direktur SDM')
+                      selected
+                    @endif
+                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Direktur SDM
                   </option>
                 </select>
                 <span
@@ -195,7 +205,7 @@
               <label
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
               >
-                Pegawai
+                Karyawan
               </label>
               <div
                 x-data="{ isOptionSelected: false }"

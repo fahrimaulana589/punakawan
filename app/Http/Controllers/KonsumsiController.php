@@ -10,7 +10,7 @@ class KonsumsiController extends Controller
 {
     public function index()
     {
-        $title = 'Delete Bahan Konsumsi!';
+        $title = 'Delete Bahan Produksi!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -35,7 +35,7 @@ class KonsumsiController extends Controller
 
         Konsumsi::create($request->all());
 
-        return redirect()->route('bahankonsumsi')->with('success', 'Bahan Konsumsi created successfully.');
+        return redirect()->route('bahankonsumsi')->with('success', 'Bahan Produksi created successfully.');
     }
     public function edit($id)
     {
@@ -54,13 +54,13 @@ class KonsumsiController extends Controller
         $konsumsi = Konsumsi::findOrFail($id);
         $konsumsi->update($request->all());
 
-        return back()->with('success', 'Bahan Konsumsi updated successfully.');
+        return back()->with('success', 'Bahan Produksi updated successfully.');
     }
     public function destroy($id)
     {
         $konsumsi = Konsumsi::findOrFail($id);
         $konsumsi->delete();
 
-        return back()->with('success', 'Bahan KOnsumsi deleted successfully.');
+        return back()->with('success', 'Bahan Produksi deleted successfully.');
     }
 }

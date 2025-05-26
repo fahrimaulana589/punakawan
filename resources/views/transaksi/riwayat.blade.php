@@ -144,6 +144,7 @@
                       >
                         Show
                       </a>
+                      
                       @can('transaksi_edit')
                       <a
                       href="{{ route('penjualan.edit',$transaksi->id) }}"
@@ -152,6 +153,7 @@
                         Edit
                       </a> 
                       @endcan
+
                       @can('transaksi_delete')
                       <form id="cancel-form-{{ $transaksi->id }}" action="{{ route('penjualan.destroy', $transaksi->id) }}" method="POST" class="inline">
                         @csrf

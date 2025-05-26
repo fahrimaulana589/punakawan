@@ -105,7 +105,7 @@ class TransaksiController extends Controller
             'pegawai_id' => $pegawai->id,
         ]);
 
-        return redirect()->route('penjualan.riwayat')->with('success', 'Transaksi berhasil ditambahkan.');
+        return redirect()->route('penjualan.riwayat')->with('success', 'Transaksi created successfully.');
     }
 
     /**
@@ -201,7 +201,7 @@ class TransaksiController extends Controller
             $produk->save();
         }
 
-        return redirect()->route('penjualan')->with('success', 'Transaksi berhasil ditambahkan.');
+        return redirect()->route('penjualan')->with('success', 'Transaksi created successfully.');
     }
 
     /**
@@ -309,7 +309,7 @@ class TransaksiController extends Controller
         //hapus transaski
         $id->delete();
 
-        return back()->with('success', 'Transaksi berhasil dihapus.');
+        return back()->with('success', 'Transaksi dealted successfully.');
     
     }
 }

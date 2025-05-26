@@ -171,32 +171,42 @@
                     Select Option
                   </option>
                   <option
-                    value="owner"
-                    @if (old('role',$user->roles->first()->name) == 'owner')
-                      selected
-                    @endif
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Owner
-                  </option>
-                  <option
-                    value="admin"
-                    @if (old('role',$user->roles->first()->name) == 'admin')
-                      selected
-                    @endif
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Admin
-                  </option>
-
-                  <option
-                    value="kasir"
-                    @if (old('role',$user->roles->first()->name) == 'kasir')
+                    value="Kasir"
+                    @if (old('role',$user->roles->first()->name) == 'Kasir')
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
                     Kasir
+                  </option>
+                  <option
+                    value="Direktur Keuangan"
+                    @if (old('role',$user->roles->first()->name) == 'Direktur Keuangan')
+                      selected
+                    @endif
+                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Direktur Keuangan
+                  </option>
+
+                  <option
+                    value="Direktur SDM"
+                    @if (old('role',$user->roles->first()->name) == 'Direktur SDM')
+                      selected
+                    @endif
+                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Direktur SDM
+                  </option>
+
+                  <option
+                    value="Direktur Produksi"
+                    @if (old('role',$user->roles->first()->name) == 'Direktur Produksi')
+                      selected
+                    @endif
+                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+                  >
+                    Direktur Produksi
                   </option>
                 </select>
                 <span

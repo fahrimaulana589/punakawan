@@ -110,6 +110,7 @@
                       >
                         show
                       </a>
+                      
                       @can('transaksi_delete')        
                       <form id="cancel-form-{{ $transaksi->id }}" action="{{ route('penjualan.destroy', $transaksi->id) }}" method="POST" class="inline">
                         @csrf

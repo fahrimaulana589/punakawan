@@ -18,7 +18,12 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
             <div>
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <img class="w-20 dark:hidden" src="{{ asset('images/punakawan_logo.png') }}" alt="Logo" />
+                    <img
+                      class="w-20 hidden dark:block"
+                      src="{{ asset('images/punakawan_logo.png') }}"
+                      alt="Logo"
+                    />
                 </a>
             </div>
 

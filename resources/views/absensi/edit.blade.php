@@ -9,7 +9,7 @@
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Add Absensi`,
+        pageName: `Edit Absensi`,
         urls:[
           {name: 'Absensi', url: '{{ route('absensi') }}'},
         ]

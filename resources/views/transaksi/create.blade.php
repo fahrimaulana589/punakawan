@@ -7,7 +7,7 @@
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Add Penjualan`,
+        pageName: `Add Transaksi`,
         urls:[
           {name: 'Transaksi', url: '{{ route('penjualan') }}'},
         ]

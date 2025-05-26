@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Buat Transaksi') }}
+    {{ __('Edit Transaksi') }}
   </x-slot>
   
   

@@ -9,9 +9,9 @@
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Generate Gaji`,
+        pageName: `Show Gaji`,
         urls:[
-          {name: 'Gaji', url: '{{ route('pegawai') }}'},
+          {name: 'Gaji', url: '{{ route('gaji') }}'},
         ]
       }">
         @include('partials.breadcrumb')

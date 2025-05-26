@@ -1,15 +1,15 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Transaksi') }}
+    {{ __('Paket Produk') }}
   </x-slot>
 
   <div class="p-4 mx-auto max-w-screen-xl md:p-6">
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Add Penjualan`,
+        pageName: `Add Paket Produk`,
         urls:[
-          {name: 'Transaksi', url: '{{ route('penjualan') }}'},
+          {name: 'Produk', url: '{{ route('produk') }}'},
         ]
       }">
         @include('partials.breadcrumb')
