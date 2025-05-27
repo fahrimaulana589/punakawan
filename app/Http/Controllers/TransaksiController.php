@@ -20,7 +20,7 @@ class TransaksiController extends Controller
     {
         $transaksis = Transaksi::where(function($query) {
             $query->whereNull('status')->orWhere('status', '');
-        })->orderBy('created_at', 'desc')->paginate(10);
+        })->orderBy('tanggal', 'desc')->paginate(10);
         return view('transaksi.index',compact('transaksis'));
     }
 
@@ -31,7 +31,7 @@ class TransaksiController extends Controller
     {
         $transaksis = Transaksi::where(function($query) {
             $query->where('status', 'batal');
-        })->orderBy('created_at', 'desc')->paginate(10);
+        })->orderBy('tanggal', 'desc')->paginate(10);
         return view('transaksi.void',compact('transaksis'));
     }
 
@@ -42,7 +42,7 @@ class TransaksiController extends Controller
     {
         $transaksis = Transaksi::where(function($query) {
             $query->where('status', 'selesai');
-        })->orderBy('created_at', 'desc')->paginate(10);
+        })->orderBy('tanggal', 'desc')->paginate(10);
         return view('transaksi.riwayat',compact('transaksis'));
     }
 
@@ -96,6 +96,9 @@ class TransaksiController extends Controller
 
         $pegawai = auth()->user()->pegawai;
 
+        $lastId = Transaksi::max('id') ?? 0;
+        $kode = 'TSK' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+
         Transaksi::create([
             'debet_id' => 1,
             'kredit_id' => 2,
@@ -103,6 +106,7 @@ class TransaksiController extends Controller
             'tanggal' => $request->tanggal,
             'status' => 'selesai',
             'pegawai_id' => $pegawai->id,
+            'kode' => $kode
         ]);
 
         return redirect()->route('penjualan.riwayat')->with('success', 'Transaksi created successfully.');
@@ -173,12 +177,16 @@ class TransaksiController extends Controller
         }
         // Update total transaksi
 
+        $lastId = Transaksi::max('id') ?? 0;
+        $kode = 'TSK' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+
         $transaksi = Transaksi::create([
             'debet_id'   => 1,
             'kredit_id'  => 2,
             'pegawai_id' => $pegawai->id,
             'tanggal'    => now(),
             'total'      => $total,
+            'kode'       => $kode,
         ]);
 
         foreach ($request->produk_ids as $key => $produkId) {

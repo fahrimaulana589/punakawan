@@ -3,10 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Imports\DataImport;
 use App\Models\Akun;
 use App\Models\Pegawai;
 use App\Models\Produk;
 use Illuminate\Database\Seeder;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -17,12 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-        Pegawai::factory(10)->create()->each(function ($pegawai, $index) {
-            $pegawai->kode = 'PGW' . str_pad($pegawai->id, 4, '0', STR_PAD_LEFT);
-            $pegawai->save();
-        });
-
+        
         $kasir_role = Role::create(['name' => 'Kasir']);
         $direktur_keuangan_role = Role::create(['name' => 'Direktur Keuangan']);
         $direktur_produksi_role = Role::create(['name' => 'Direktur Produksi']);
@@ -104,53 +101,8 @@ class DatabaseSeeder extends Seeder
             'akun_create','akun_read','akun_edit','akun_delete',
         ]);
         
-        //buat kasir
-        $kasir_user = \App\Models\User::factory()->create([
-            'name' => 'Kasir',
-            'email' => 'kasir@example.com',
-            'pegawai_id' =>1
-        ]);
-
-        $kasir_user->assignRole($kasir_role);
-
-        //buat direktur keuangan
-        $direktur_keuangan_user = \App\Models\User::factory()->create([
-            'name' => 'Direktur Keuangan',
-            'email' => 'direktur_keuangan@example.com', 
-            'pegawai_id' =>2
-        ]);
-
-        $direktur_keuangan_user->assignRole($direktur_keuangan_role);
-
-        //buat direktur produksi
-        $direktur_produksi_user = \App\Models\User::factory()->create([
-            'name' => 'Direktur Produksi',
-            'email' => 'direktur_produksi@example.com',
-            'pegawai_id' => 3
-        ]);
-
-        $direktur_produksi_user->assignRole($direktur_produksi_role);
-
-        //buat direktur sdm
-        $direktur_sdm_user = \App\Models\User::factory()->create([
-            'name' => 'Direktur SDM',
-            'email' => 'direktur_sdm@example.com',
-            'pegawai_id' => 3
-        ]);
-
-        $direktur_sdm_user->assignRole($direktur_sdm_role);
-
-        Produk::factory(10)->create()->each(function ($produk, $index) {
-            $produk->kode = 'PRD' . str_pad($produk->id, 4, '0', STR_PAD_LEFT);
-            $produk->stok = 10;
-            $produk->save();
-        });
-
-        Akun::factory(10)->create()->each(function ($produk, $index) {
-            $produk->kode = 'AKN' . str_pad($produk->id, 4, '0', STR_PAD_LEFT);
-            $produk->save();
-        });
-
+        $path = storage_path('/app/data/data.xlsx');
+        Excel::import(new DataImport(), $path);
 
     }
 }

@@ -95,6 +95,10 @@
             @enderror
             </div>
 
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              {{ $tanggal_awal }} - {{ $tanggal_akhir }}
+            </div>
+
             <div class="grid grid-cols-12 gap-2">
               @foreach($karyawans as $karyawan)
               

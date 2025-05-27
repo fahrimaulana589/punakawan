@@ -16,6 +16,7 @@ class Transaksi extends Model
         'tanggal',
         'total',
         'status',
+        'kode',
     ];
 
     public function penjualan()

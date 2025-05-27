@@ -10,8 +10,12 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
+use App\Imports\AkunImport;
+use App\Imports\DataImport;
+use App\Models\Akun;
 use Illuminate\Queue\Connectors\BeanstalkdConnector;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +32,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/test', function () {
+
+    $path = storage_path('/app/data/data.xlsx');
+    Excel::import(new DataImport(), $path);
+});
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

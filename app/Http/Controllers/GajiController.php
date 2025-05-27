@@ -63,24 +63,30 @@ class GajiController extends Controller
                 ->withInput();
         }
     
+        // Ambil tanggal dari input
         $tanggal = $request->get('tanggal');
         $tanggal_akhir = Carbon::parse($tanggal);
 
-        $tanggal = $request->get('tanggal');
-        $tanggal_akhir = Carbon::parse($tanggal);
+        // Cek apakah tanggal akhir adalah hari terakhir di bulan
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
 
-        $target_hari = $tanggal_akhir->day - 1;
-        $bulan_lalu = $tanggal_akhir->copy()->subMonth();
-
-        // jika target_hari < 1, pakai hari terakhir bulan sebelumnya
-        if ($target_hari < 1) {
-            $tanggal_awal = $bulan_lalu->endOfMonth();
-        } elseif ($target_hari > $bulan_lalu->daysInMonth) {
-            $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
+        if ($is_akhir_bulan) {
+            // Jika hari terakhir bulan ini → ambil tanggal 1 di bulan ini
+            $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
         } else {
-            $tanggal_awal = $bulan_lalu->copy()->setDay($target_hari);
+            // Bukan hari terakhir → coba ambil hari +1 di bulan sebelumnya
+            $target_day = $tanggal_akhir->day + 1;
+            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
+
+            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+
+            // Jika tidak valid (keluar dari bulan sebelumnya), fallback ke tanggal 1 bulan ini
+            if ($tanggal_awal->month !== $bulan_lalu->month) {
+                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            }
         }
 
+        // Format hasil
         $tanggal_awal = $tanggal_awal->toDateString();
         $tanggal_akhir = $tanggal_akhir->toDateString();
  
@@ -134,7 +140,7 @@ class GajiController extends Controller
             $rekapHadir[$pegawai->id] = $hadirCount;
         }
 
-        return view('gaji.generate', compact('tanggal','total_gaji','karyawans','rekapAlpa','rekapHadir'));
+        return view('gaji.generate', compact('tanggal','tanggal_awal','tanggal_akhir','total_gaji','karyawans','rekapAlpa','rekapHadir'));
     }
 
     /**
@@ -172,6 +178,8 @@ class GajiController extends Controller
             'tanggal' => $request->tanggal,
             'total' => $request->total,
             'nama' => "Gaji ".$nama,
+            'debet_id' => 1, // Ganti dengan ID akun debet yang sesuai
+            'kredit_id' => 2, // Ganti dengan ID akun kredit yang sesuai
         ]);
 
         return redirect()->route('gaji')->with('success', 'Gaji created successfully.');
@@ -212,6 +220,8 @@ class GajiController extends Controller
             'tanggal' => $request->tanggal,
             'total' => $request->total,
             'nama' => "Gaji ".$nama,
+            'debet_id' => 1, // Ganti dengan ID akun debet yang sesuai
+            'kredit_id' => 2, // Ganti dengan ID akun kredit yang sesuai
         ]);
 
         $tanggal = $request->get('tanggal');
@@ -220,7 +230,7 @@ class GajiController extends Controller
         $tanggal = $request->get('tanggal');
         $tanggal_akhir = Carbon::parse($tanggal);
 
-        $target_hari = $tanggal_akhir->day - 1;
+        $target_hari = $tanggal_akhir->day + 1;
         $bulan_lalu = $tanggal_akhir->copy()->subMonth();
 
         // jika target_hari < 1, pakai hari terakhir bulan sebelumnya

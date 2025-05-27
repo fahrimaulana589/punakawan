@@ -12,7 +12,9 @@ class Gaji extends Model
     protected $fillable = [
         'tanggal',
         'nama',
-        'total'
+        'total',
+        'debet_id',
+        'kredit_id',
     ];
 
     public function karyawans(){

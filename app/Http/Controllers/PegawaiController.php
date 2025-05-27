@@ -21,7 +21,7 @@ class PegawaiController extends Controller
     public function create()
     {
         $lastId = Pegawai::max('id') ?? 0;
-        $kode = 'PGW' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+        $kode = 'KRY' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
         
         return view('pegawai.create',compact('kode'));
     }
