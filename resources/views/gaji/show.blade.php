@@ -125,7 +125,7 @@
                       :class="isBelow ? 'w-full flex justify-end' : ''" 
                       class="text-sm"
                     >
-                      Rp. {{ number_format($karyawan->gaji_pokok, 0, ',', '.') }}
+                      {{ $karyawan->gajiRupiah }}
                     </div>
                   </div>
 
@@ -164,7 +164,7 @@
                         :class="isBelow ? 'w-full flex justify-end' : ''" 
                         class="text-sm"
                       >
-                        Rp. {{ number_format($penggajian->total, 0, ',', '.') }}
+                        {{ $penggajian->totalRupiah }}
                       </div>
                     </div>
                   @endforeach
@@ -191,7 +191,7 @@
                       :class="isBelow ? 'w-full flex justify-end' : ''" 
                       class="text-sm"
                     >
-                      Rp. {{ number_format($karyawan->total, 0, ',', '.') }}
+                      {{ $karyawan->totalRupiah }}
                     </div>
                   </div>
                   @endif

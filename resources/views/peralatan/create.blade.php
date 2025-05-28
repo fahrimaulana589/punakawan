@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Buat Karyawan') }}
+    {{ __('Buat Peralatan') }}
   </x-slot>
   
   
@@ -9,9 +9,9 @@
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Add Karyawan`,
+        pageName: `Add Peralatan`,
         urls:[
-          {name: 'Karyawan', url: '{{ route('pegawai') }}'},
+          {name: 'Peralatan', url: '{{ route('peralatan') }}'},
         ]
       }">
         @include('partials.breadcrumb')
@@ -25,40 +25,16 @@
           <h3
             class="text-base font-medium text-gray-800 dark:text-white/90"
           >
-            Data Karyawan
+            Data Peralatan
           </h3>
         </div>
         <div class="grid grid-cols-12 border border-gray-100 dark:border-gray-800">
           <form
             class="space-y-6 col-span-12 lg:col-span-7 md:col-span-8  p-5 sm:p-6"
-            action="{{ route('pegawai.store') }}"
+            action="{{ route('peralatan.store') }}"
             method="POST"
           >
             @csrf
-
-            <div>
-              <label
-                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-              >
-                Kode
-              </label>
-              <input
-                type="text"
-                name="kode"
-                value="{{ old('kode',$kode) }}"
-                readonly
-                @error('kode')
-                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @else
-                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @enderror
-              />
-              @error('kode')
-                <p class="text-theme-xs text-error-500">
-                  {{ $message }}
-                </p>
-              @enderror
-            </div>
 
             <!-- Elements -->
             <div>
@@ -84,129 +60,32 @@
               @enderror
             </div>
 
-             <!-- Elements -->
-             <div>
-              <label
-                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-              >
-                Jabatan
-              </label>
-              <input
-                type="text"
-                name="jabatan"
-                value="{{ old('jabatan') }}"
-                @error('jabatan')
-                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @else
-                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @enderror
-              />
-              @error('jabatan')
-                <p class="text-theme-xs text-error-500">
-                  {{ $message }}
-                </p>
-              @enderror
-            </div>
-
-             <!-- Elements -->
-             <div>
-              <label
-                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-              >
-                Alamat
-              </label>
-              <textarea
-                placeholder="Enter a description..."
-                type="text"
-                rows="6"
-                name="alamat"
-                @error('alamat')
-                  class="dark:bg-dark-900 shadow-theme-xs border-error-300 focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @else
-                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @enderror
-              >{{ old('alamat') }}</textarea>
-              @error('alamat')
-                <p class="text-theme-xs text-error-500">
-                  {{ $message }}
-                </p>
-              @enderror
-            </div>
-
             <!-- Elements -->
             <div>
               <label
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
               >
-                Handphone
+                Tanggal Aktif
               </label>
-              <input
-                type="text"
-                name="no_hp"
-                value="{{ old('no_hp') }}"
-                @error('no_hp')
-                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @else
-                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                @enderror
-                />
-                @error('no_hp')
-                  <p class="text-theme-xs text-error-500">
-                    {{ $message }}
-                  </p>
-                @enderror
-            </div>
 
-            <!-- Elements -->
-            <div>
-              <label
-                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-              >
-                Jenis Kelamin
-              </label>
-              <div
-                x-data="{ isOptionSelected: false }"
-                class="relative z-20 bg-transparent"
-              >
-                <select
-                  @error('jenis_kelamin')
+              <div class="relative">
+                <input
+                  type="date"
+                  name="tanggal_aktif"
+                  value="{{ old('tanggal_aktif') }}"
+                  placeholder="Select date"
+                  @error('tanggal_aktif')
                     class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                   @else
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                   @enderror:class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
-                  name="jenis_kelamin"
-                  @change="isOptionSelected = true"
-                >
-                  <option
-                    value=""
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Select Option
-                  </option>
-                  <option
-                    value="L"
-                    @if (old('jenis_kelamin') == 'L')
-                      selected
-                    @endif
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Laki laki
-                  </option>
-                  <option
-                    value="P"
-                    @if (old('jenis_kelamin') == 'P')
-                      selected
-                    @endif
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    Perempuan
-                  </option>
-                </select>
+                  onclick="this.showPicker()"
+                />
                 <span
-                  class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+                  class="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 dark:text-gray-400"
                 >
                   <svg
-                    class="stroke-current"
+                    class="fill-current"
                     width="20"
                     height="20"
                     viewBox="0 0 20 20"
@@ -214,16 +93,91 @@
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
-                      stroke=""
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.66659 1.5415C7.0808 1.5415 7.41658 1.87729 7.41658 2.2915V2.99984H12.5833V2.2915C12.5833 1.87729 12.919 1.5415 13.3333 1.5415C13.7475 1.5415 14.0833 1.87729 14.0833 2.2915V2.99984L15.4166 2.99984C16.5212 2.99984 17.4166 3.89527 17.4166 4.99984V7.49984V15.8332C17.4166 16.9377 16.5212 17.8332 15.4166 17.8332H4.58325C3.47868 17.8332 2.58325 16.9377 2.58325 15.8332V7.49984V4.99984C2.58325 3.89527 3.47868 2.99984 4.58325 2.99984L5.91659 2.99984V2.2915C5.91659 1.87729 6.25237 1.5415 6.66659 1.5415ZM6.66659 4.49984H4.58325C4.30711 4.49984 4.08325 4.7237 4.08325 4.99984V6.74984H15.9166V4.99984C15.9166 4.7237 15.6927 4.49984 15.4166 4.49984H13.3333H6.66659ZM15.9166 8.24984H4.08325V15.8332C4.08325 16.1093 4.30711 16.3332 4.58325 16.3332H15.4166C15.6927 16.3332 15.9166 16.1093 15.9166 15.8332V8.24984Z"
+                      fill=""
                     />
                   </svg>
                 </span>
               </div>
-              @error('jenis_kelamin')
+              
+              @error('tanggal_aktif')
+              <p class="text-theme-xs text-error-500">
+                {{ $message }}
+              </p>
+            @enderror
+            </div>
+
+            <!-- Elements -->
+            <div>
+              <label
+                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                Tanggal NonAktif
+              </label>
+
+              <div class="relative">
+                <input
+                  type="date"
+                  name="tanggal_nonaktif"
+                  value="{{ old('tanggal_nonaktif') }}"
+                  placeholder="Select date"
+                  @error('tanggal_nonaktif')
+                    class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                  @else
+                    class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                  @enderror:class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
+                  onclick="this.showPicker()"
+                />
+                <span
+                  class="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+                >
+                  <svg
+                    class="fill-current"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.66659 1.5415C7.0808 1.5415 7.41658 1.87729 7.41658 2.2915V2.99984H12.5833V2.2915C12.5833 1.87729 12.919 1.5415 13.3333 1.5415C13.7475 1.5415 14.0833 1.87729 14.0833 2.2915V2.99984L15.4166 2.99984C16.5212 2.99984 17.4166 3.89527 17.4166 4.99984V7.49984V15.8332C17.4166 16.9377 16.5212 17.8332 15.4166 17.8332H4.58325C3.47868 17.8332 2.58325 16.9377 2.58325 15.8332V7.49984V4.99984C2.58325 3.89527 3.47868 2.99984 4.58325 2.99984L5.91659 2.99984V2.2915C5.91659 1.87729 6.25237 1.5415 6.66659 1.5415ZM6.66659 4.49984H4.58325C4.30711 4.49984 4.08325 4.7237 4.08325 4.99984V6.74984H15.9166V4.99984C15.9166 4.7237 15.6927 4.49984 15.4166 4.49984H13.3333H6.66659ZM15.9166 8.24984H4.08325V15.8332C4.08325 16.1093 4.30711 16.3332 4.58325 16.3332H15.4166C15.6927 16.3332 15.9166 16.1093 15.9166 15.8332V8.24984Z"
+                      fill=""
+                    />
+                  </svg>
+                </span>
+              </div>
+              <p class="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
+                Kosongkan jika peralatan masih digunakan
+              </p>
+              @error('tanggal_nonaktif')
+              <p class="text-theme-xs text-error-500">
+                {{ $message }}
+              </p>
+            @enderror
+            </div>
+
+            <!-- Elements -->
+            <div>
+              <label
+                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                Harga
+              </label>
+              <input
+                type="number"
+                name="harga"
+                value="{{ old('harga') }}"
+                @error('harga')
+                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @else
+                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @enderror
+              />
+              @error('harga')
                 <p class="text-theme-xs text-error-500">
                   {{ $message }}
                 </p>
@@ -235,19 +189,46 @@
               <label
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
               >
-                Gaji
+                Umur Ekonomis
               </label>
               <input
-                type="text"
-                name="gaji"
-                value="{{ old('gaji') }}"
-                @error('gaji')
+                type="number"
+                name="umur_ekonomis"
+                value="{{ old('umur_ekonomis') }}"
+                @error('umur_ekonomis')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else
                   class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @enderror
               />
-              @error('gaji')
+              <p class="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
+                Masukan dalam format bulan
+              </p>
+              @error('umur_ekonomis')
+                <p class="text-theme-xs text-error-500">
+                  {{ $message }}
+                </p>
+              @enderror
+            </div>
+
+            <!-- Elements -->
+            <div>
+              <label
+                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                Nilai Sisa
+              </label>
+              <input
+                type="number"
+                name="nilai_sisa"
+                value="{{ old('nilai_sisa') }}"
+                @error('nilai_sisa')
+                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @else
+                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @enderror
+              />
+              @error('nilai_sisa')
                 <p class="text-theme-xs text-error-500">
                   {{ $message }}
                 </p>

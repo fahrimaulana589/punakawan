@@ -112,7 +112,7 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $gaji->tanggal }}
+                          {{ $gaji->tanggalFormat }}
                         </p>
                       </div>
                     </td>
@@ -126,7 +126,7 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          Rp. {{ number_format($gaji->total, 0, ',', '.')  }}
+                          {{ $gaji->totalRupiah  }}
                         </p>
                       </div>
                     </td>

@@ -91,9 +91,8 @@ class DatabaseSeeder extends Seeder
 
         $direktur_produksi_role->givePermissionTo([
             'dashboard',
-            'belanja_create','belanja_create_manual','belanja_read','belanja_edit','belanja_delete',
+            'belanja_create','belanja_read','belanja_edit','belanja_delete',
             'persedian_create','persedian_read','persedian_edit','persedian_delete',
-            'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
             'produk_create','produk_read','produk_edit','produk_delete',
             'bahan_produksi_create','bahan_produksi_read','bahan_produksi_edit','bahan_produksi_delete',
         ]);
@@ -107,9 +106,10 @@ class DatabaseSeeder extends Seeder
 
         $direktur_keuangan_role->givePermissionTo([
             'dashboard',
-            'transaksi_read',
+            'transaksi_read','transaksi_create','transaksi_edit','transaksi_delete',
             'absensi_read',
-            'belanja_read',
+            'belanja_read','belanja_edit','belanja_delete','belanja_create_manual',
+            'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
             'gaji_create','gaji_read','gaji_edit','gaji_delete',
             'akun_create','akun_read','akun_edit','akun_delete',
         ]);

@@ -129,7 +129,7 @@
                 Harga
               </label>
               <input
-                type="text"
+                type="number"
                 name="harga"
                 value="{{ old('harga',$produk->harga) }}"
                 @error('harga')

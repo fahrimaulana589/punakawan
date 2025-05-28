@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Transaksi extends Model
 {
@@ -36,13 +37,27 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Pegawai::class);
     }
-    public function getTotalAttribute($value)
+    
+    public function totalRupiah(): Attribute
     {
-        return number_format($value, 0, ',', '.');
+        return Attribute::make(
+            get: function ($key,$data) {
+                $nilai = $data['total'];
+
+                return format_uang($nilai);
+            },
+        );
     }
-    public function getTanggalAttribute($value)
+
+    public function tanggalFormat(): Attribute
     {
-        return \Carbon\Carbon::parse($value)->format('d-m-Y');
+        return Attribute::make(
+            get: function ($key,$data) {
+                $nilai = $data['tanggal'];
+
+                return format_tanggal($nilai);
+            },
+        );
     }
 
 }

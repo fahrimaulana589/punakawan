@@ -47,4 +47,15 @@ class Persedian extends Model
             },
         );
     }
+
+    public function totalRupiah(): Attribute
+    {
+        return Attribute::make(
+            get: function ($key,$data) {
+                $nilai = $data['total'];
+
+                return format_uang($nilai);
+            },
+        );
+    }
 }

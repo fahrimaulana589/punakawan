@@ -128,7 +128,7 @@
                       :class="isBelow ? 'w-full flex justify-end' : ''" 
                       class="text-sm"
                     >
-                      Rp. {{ number_format($karyawan->gaji, 0, ',', '.') }}
+                      {{ $karyawan->gajiRupiah }}
                     </div>
                   </div>
 
@@ -179,7 +179,7 @@
                         :class="isBelow ? 'w-full flex justify-end' : ''" 
                         class="text-sm"
                       >
-                        Rp. {{ number_format($lainya, 0, ',', '.') }}
+                        {{ format_uang($lainya) }}
                       </div>
                     </div>
                   @endforeach
@@ -206,7 +206,7 @@
                       :class="isBelow ? 'w-full flex justify-end' : ''" 
                       class="text-sm"
                     >
-                      Rp. {{ number_format($gaji, 0, ',', '.') }}
+                      {{ format_uang($gaji) }}
                     </div>
                   </div>
                   @endif

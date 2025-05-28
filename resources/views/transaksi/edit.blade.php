@@ -84,7 +84,7 @@
                 <input
                   type="date"
                   name="tanggal"
-                  value="{{ old('tanggal',$transaksi->getRawOriginal('tanggal')) }}"
+                  value="{{ old('tanggal',$transaksi->tanggal) }}"
                   placeholder="Select date"
                   @error('tanggal')
                     class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
@@ -131,7 +131,7 @@
               <input
                 type="number"
                 name="total"
-                value="{{ old('total',$transaksi->getRawOriginal('total')) }}"
+                value="{{ old('total',$transaksi->total) }}"
                 @error('total')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else

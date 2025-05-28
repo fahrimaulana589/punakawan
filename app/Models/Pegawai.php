@@ -4,6 +4,7 @@ namespace App\Models;
     
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Pegawai extends Model
 {
@@ -31,5 +32,16 @@ class Pegawai extends Model
     public function penggajians(){
 
         return $this->hasMany(Penggajian::class);
+    }
+
+    public function gajiRupiah(): Attribute
+    {
+        return Attribute::make(
+            get: function ($key,$data) {
+                $nilai = $data['gaji'];
+
+                return format_uang($nilai);
+            },
+        );
     }
 }

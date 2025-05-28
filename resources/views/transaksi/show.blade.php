@@ -34,7 +34,7 @@
                 @foreach ($transaksi->penjualan as $item)
                   <div class="flex justify-between text-sm border-b pb-1">
                     <span>{{ $item->jumlah }}  x  ({{ $item->produk->nama }})</span>
-                    <span>Rp. {{ number_format(($item->jumlah * $item->produk->harga), 0, ',', '.') }}</span>
+                    <span>{{ format_uang($item->jumlah * $item->produk->harga) }}</span>
                   </div>
                 @endforeach
               </div>
@@ -42,7 +42,7 @@
           
             <div class="mt-4 pt-4 flex justify-between font-semibold text-base">
               <span>Total</span>
-              <span>Rp. {{ $transaksi->total }}</span>
+              <span>{{ $transaksi->totalRupiah }}</span>
             </div>
           
           </div>        

@@ -77,4 +77,15 @@ class Produk extends Model
         );
     }
 
+    public function hargaRupiah(): Attribute
+    {
+        return Attribute::make(
+            get: function ($key,$data) {
+                $nilai = $data['harga'];
+
+                return format_uang($nilai);
+            },
+        );
+    }
+
 }

@@ -238,7 +238,7 @@
                 Gaji
               </label>
               <input
-                type="text"
+                type="number"
                 name="gaji"
                 value="{{ old('gaji') }}"
                 @error('gaji')

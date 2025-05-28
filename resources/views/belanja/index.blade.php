@@ -49,15 +49,15 @@
       </div>
       @endsession
         
-      @canany(['belanja_create'])
+      @canany(['belanja_create','belanja_create_manual'])
       <div class="flex items-center justify-end mb-4 gap-2">
-        @canany('belanja_create')
+        @can('belanja_create')
         <a href="{{ route('belanja.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add Belanja
         </a>
         @endcan
         
-        @canany('belanja_create_manual')
+        @can('belanja_create_manual')
         <a href="{{ route('belanja.create.manual') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add Catatan
         </a>
@@ -147,7 +147,7 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->tanggal }}
+                          {{ $jurnal->tanggalFormat }}
                         </p>
                       </div>
                     </td>
@@ -170,7 +170,7 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->total }}
+                          {{ $jurnal->totalRupiah }}
                         </p>
                       </div>
                     </td>
