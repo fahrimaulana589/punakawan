@@ -6,6 +6,8 @@ use App\Http\Controllers\BelanjaController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\KonsumsiController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PeralatanController;
+use App\Http\Controllers\PersedianController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
@@ -123,7 +125,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/belanja', [BelanjaController::class, 'index'])->name('belanja')->middleware('can:belanja_read');
     Route::get('/belanja/create', [BelanjaController::class, 'create'])->name('belanja.create')->middleware('can:belanja_create');
+    Route::get('/belanja/create/manual', [BelanjaController::class, 'createManual'])->name('belanja.create.manual')->middleware('can:belanja_create_manual');
     Route::post('/belanja/store', [BelanjaController::class, 'store'])->name('belanja.store')->middleware('can:belanja_create');
+    Route::post('/belanja/store/manual', [BelanjaController::class, 'storeManual'])->name('belanja.store.manual')->middleware('can:belanja_create_manual');
     Route::get('/belanja/edit/{id}', [BelanjaController::class, 'edit'])->name('belanja.edit')->middleware('can:belanja_edit');
     Route::put('/belanja/update/{id}', [BelanjaController::class, 'update'])->name('belanja.update')->middleware('can:belanja_edit');
     Route::delete('/belanja/delete/{id}', [BelanjaController::class, 'destroy'])->name('belanja.delete')->middleware('can:belanja_delete');
@@ -138,6 +142,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/absensi/edit/{id}', [AbsensiController::class, 'edit'])->name('absensi.edit')->middleware('can:absensi_edit');
     Route::put('/absensi/update/{id}', [AbsensiController::class, 'update'])->name('absensi.update')->middleware('can:absensi_edit');
     Route::delete('/absensi/delete/{id}', [AbsensiController::class, 'destroy'])->name('absensi.delete')->middleware('can:absensi_delete');
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/persedian', [PersedianController::class, 'index'])->name('persedian')->middleware('can:persedian_read');
+    Route::get('/persedian/create', [PersedianController::class, 'create'])->name('persedian.create')->middleware('can:persedian_create');
+    Route::post('/persedian/store', [PersedianController::class, 'store'])->name('persedian.store')->middleware('can:persedian_create');
+    Route::get('/persedian/edit/{id}', [PersedianController::class, 'edit'])->name('persedian.edit')->middleware('can:persedian_edit');
+    Route::put('/persedian/update/{id}', [PersedianController::class, 'update'])->name('persedian.update')->middleware('can:persedian_edit');
+    Route::delete('/persedian/delete/{id}', [PersedianController::class, 'destroy'])->name('persedian.delete')->middleware('can:persedian_delete');
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/peralatan', [PeralatanController::class, 'index'])->name('peralatan')->middleware('can:peralatan_read');
+    Route::get('/peralatan/create', [PeralatanController::class, 'create'])->name('peralatan.create')->middleware('can:peralatan_create');
+    Route::post('/peralatan/store', [PeralatanController::class, 'store'])->name('peralatan.store')->middleware('can:peralatan_create');
+    Route::get('/peralatan/edit/{id}', [PeralatanController::class, 'edit'])->name('peralatan.edit')->middleware('can:peralatan_edit');
+    Route::put('/peralatan/update/{id}', [PeralatanController::class, 'update'])->name('peralatan.update')->middleware('can:peralatan_edit');
+    Route::delete('/peralatan/delete/{id}', [PeralatanController::class, 'destroy'])->name('peralatan.delete')->middleware('can:peralatan_delete');
 
 });
 

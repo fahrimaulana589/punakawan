@@ -59,6 +59,7 @@ class DatabaseSeeder extends Seeder
         $user_delete = Permission::create(['name' => 'user_delete']);
 
         $belanja_create = Permission::create(['name' => 'belanja_create']);
+        $belanja_create_manual = Permission::create(['name' => 'belanja_create_manual']);
         $belanja_read = Permission::create(['name' => 'belanja_read']);
         $belanja_edit = Permission::create(['name' => 'belanja_edit']);
         $belanja_delete = Permission::create(['name' => 'belanja_delete']);
@@ -67,6 +68,16 @@ class DatabaseSeeder extends Seeder
         $absensi_read = Permission::create(['name' => 'absensi_read']);
         $absensi_edit = Permission::create(['name' => 'absensi_edit']);
         $absensi_delete = Permission::create(['name' => 'absensi_delete']);
+
+        $persedian_create = Permission::create(['name' => 'persedian_create']);
+        $persedian_read = Permission::create(['name' => 'persedian_read']);
+        $persedian_edit = Permission::create(['name' => 'persedian_edit']);
+        $persedian_delete = Permission::create(['name' => 'persedian_delete']);
+
+        $peralatan_create = Permission::create(['name' => 'peralatan_create']);
+        $peralatan_read = Permission::create(['name' => 'peralatan_read']);
+        $peralatan_edit = Permission::create(['name' => 'peralatan_edit']);
+        $peralatan_delete = Permission::create(['name' => 'peralatan_delete']);
 
         $gaji_create = Permission::create(['name' => 'gaji_create']);
         $gaji_read = Permission::create(['name' => 'gaji_read']);
@@ -80,7 +91,9 @@ class DatabaseSeeder extends Seeder
 
         $direktur_produksi_role->givePermissionTo([
             'dashboard',
-            'belanja_create','belanja_read','belanja_edit','belanja_delete',
+            'belanja_create','belanja_create_manual','belanja_read','belanja_edit','belanja_delete',
+            'persedian_create','persedian_read','persedian_edit','persedian_delete',
+            'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
             'produk_create','produk_read','produk_edit','produk_delete',
             'bahan_produksi_create','bahan_produksi_read','bahan_produksi_edit','bahan_produksi_delete',
         ]);

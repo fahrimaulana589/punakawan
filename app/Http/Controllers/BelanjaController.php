@@ -33,6 +33,15 @@ class BelanjaController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     */
+    public function createManual()
+    {
+        $akuns = Akun::all();
+        return view('belanja.manual', compact('akuns'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -55,6 +64,35 @@ class BelanjaController extends Controller
             'pegawai_id' => auth()->user()->pegawai_id,
             'tanggal' => $request->tanggal,
             'nama' => $bahanKonsumsi->nama,
+            'total' => $request->total,
+        ];
+
+        Jurnal::create($data);
+
+        return redirect()->route('belanja')->with('success', 'Belanja created successfully.');
+        
+    }
+
+    public function storeManual(Request $request)
+    {
+        $request->validate([
+            'tanggal' => [
+                'required',
+                'date',
+                'before_or_equal:today'
+            ],
+            'nama' => 'required|string|max:255',
+            'debet_id' => 'required|exists:akuns,id',
+            'kredit_id' => 'required|exists:akuns,id',
+            'total' => 'required|numeric|min:0',
+        ]);
+
+        $data =[
+            'debet_id' => $request->debet_id, // Assuming 1 is the ID for the "Belanja" account
+            'kredit_id' => $request->kredit_id, // Assuming 2 is the ID for the "Kas" account
+            'pegawai_id' => auth()->user()->pegawai_id,
+            'tanggal' => $request->tanggal,
+            'nama' => $request->nama,
             'total' => $request->total,
         ];
 
@@ -89,6 +127,11 @@ class BelanjaController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
+            'tanggal' => [
+                'required',
+                'date',
+                'before_or_equal:today'
+            ],
             'nama' => 'required|string|max:255',
             'debet_id' => 'required|exists:akuns,id',
             'kredit_id' => 'required|exists:akuns,id',

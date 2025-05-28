@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('persedians', function (Blueprint $table) {
             $table->id();
+
+            $table->year('tahun');
+            $table->integer('bulan');
+            $table->integer('total');
+
+            $table->foreignId('konsumsi_id')->constrained('konsumsis')->onDelete('restrict');
+          
             $table->timestamps();
         });
     }

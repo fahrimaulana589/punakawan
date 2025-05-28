@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Belanja') }}
+    {{ __('Karyawan') }}
   </x-slot>
   
   
@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Belanja`}">
+      <div x-data="{ pageName: `Karyawan`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
@@ -48,23 +48,14 @@
           </div>
       </div>
       @endsession
-        
-      @canany(['belanja_create'])
-      <div class="flex items-center justify-end mb-4 gap-2">
-        @canany('belanja_create')
-        <a href="{{ route('belanja.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add Belanja
+      
+      @can('karyawan_create')
+      <div class="flex items-center justify-end mb-4">
+        <a href="{{ route('pegawai.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Add Karyawan
         </a>
-        @endcan
-        
-        @canany('belanja_create_manual')
-        <a href="{{ route('belanja.create.manual') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add Catatan
-        </a>
-        @endcan
-      </div>  
+      </div>
       @endcan
-
       <!-- ====== Table Six Start -->
         <div
           class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
@@ -79,16 +70,7 @@
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                       >
-                        Tanggal
-                      </p>
-                    </div>
-                  </th>
-                  <th class="px-5 py-3 sm:px-6">
-                    <div class="flex items-center">
-                      <p
-                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
-                      >
-                        Pembeli
+                        Kode
                       </p>
                     </div>
                   </th>
@@ -106,7 +88,7 @@
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                       >
-                        Jumlah
+                        Alamat
                       </p>
                     </div>
                   </th>
@@ -115,7 +97,7 @@
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                       >
-                        Debet
+                        Jabatan
                       </p>
                     </div>
                   </th>
@@ -124,7 +106,25 @@
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                       >
-                        Kredit
+                        Jenis Kelamin
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Handphone
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Gaji
                       </p>
                     </div>
                   </th>
@@ -142,76 +142,78 @@
               <!-- table header end -->
               <!-- table body start -->
               <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                @foreach ($jurnals as $jurnal)
+                @foreach ($pegawais as $pegawai)
                   <tr>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->tanggal }}
+                          {{ $pegawai->kode }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->pegawai->nama }}
+                          {{ $pegawai->nama }}
                         </p>
                       </div>
                     </td>
-
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->nama }}
+                          {{ $pegawai->alamat }}
                         </p>
                       </div>
                     </td>
-
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->total }}
+                          {{ $pegawai->jabatan }}
                         </p>
                       </div>
                     </td>
-
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->debet->nama }}
+                          {{ $pegawai->jenis_kelamin }}
                         </p>
                       </div>
                     </td>
-
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $jurnal->kredit->nama }}
+                          {{ $pegawai->no_hp }}
                         </p>
                       </div>
                     </td>
-                    
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ $pegawai->gaji }}
+                        </p>
+                      </div>
+                    </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center justify-end mb-4">
-                        @can('belanja_edit')
+                        @can('karyawan_edit')
                         <a
-                        href="{{ route('belanja.edit',$jurnal->id) }}"
+                        href="{{ route('pegawai.edit',$pegawai->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Edit
                         </a>  
                         @endcan
                        
-                        @can('belanja_delete')
-                        <form action="{{ route('belanja.delete', $jurnal->id) }}" method="POST" class="inline">
+                        @can('karyawan_delete')
+                        <form action="{{ route('pegawai.delete', $pegawai->id) }}" method="POST" class="inline">
                           @csrf
                           @method('DELETE')
-                          <a href="{{ route('belanja.delete', $jurnal->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                          <a href="{{ route('pegawai.delete', $pegawai->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Delete
                           </a>
                         </form>
                         @endcan
-                        
+
                       </div>
                     </td>   
                   </tr>
@@ -225,7 +227,7 @@
     </div>
 
     <div class="mt-4">
-      {{ $jurnals->links() }} 
+      {{ $pegawais->links() }}
     </div>
   </div>
 </x-app-layout>

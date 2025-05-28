@@ -44,7 +44,7 @@ class PeralatanController extends Controller
      */
     public function edit(Peralatan $peralatan)
     {
-        //
+        
     }
 
     /**

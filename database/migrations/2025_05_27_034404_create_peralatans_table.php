@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('peralatans', function (Blueprint $table) {
             $table->id();
+
+            $table->string('nama');
+            $table->date('tanggal_aktif');
+            $table->date('tanggal_nonaktif')->nullable();
+            $table->integer('harga')->default(0);
+            $table->integer('umur_ekonomis')->default(0); // dalam bulan
+            $table->integer('nilai_sisa')->default(0);
+
             $table->timestamps();
         });
     }
