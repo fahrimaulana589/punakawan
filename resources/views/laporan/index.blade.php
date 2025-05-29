@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Persedian') }}
+    {{ __('Laporan') }}
   </x-slot>
   
   
@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Persedian`}">
+      <div x-data="{ pageName: `Laporan`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
@@ -49,10 +49,10 @@
       </div>
       @endsession
       
-      @can('persedian_create')
+      @can('laporan_create')
       <div class="flex items-center justify-end mb-4">
-        <a href="{{ route('persedian.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add Persedian
+        <a href="{{ route('laporan.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Add Laporan
         </a>
       </div>
       @endcan
@@ -84,24 +84,6 @@
                     </div>
                   </th>
                   <th class="px-5 py-3 sm:px-6">
-                    <div class="flex items-center">
-                      <p
-                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
-                      >
-                        Nama
-                      </p>
-                    </div>
-                  </th>
-                  <th class="px-5 py-3 sm:px-6">
-                    <div class="flex items-center">
-                      <p
-                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
-                      >
-                        Total
-                      </p>
-                    </div>
-                  </th>
-                  <th class="px-5 py-3 sm:px-6">
                     <div class="flex items-center justify-end">
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
@@ -115,52 +97,44 @@
               <!-- table header end -->
               <!-- table body start -->
               <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                @foreach ($persedians as $persedian)
+                @foreach ($laporans as $laporan)
                   <tr>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $persedian->tahun }}
+                          {{ $laporan->tahun }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $persedian->namaBulan }}
+                          {{ $laporan->namaBulan }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center">
-                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $persedian->bahanProduksi->nama }}
-                        </p>
-                      </div>
-                    </td>
-                    <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center">
-                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $persedian->totalRupiah }}
-                        </p>
-                      </div>
-                    </td>
-                    <td class="px-5 py-4 sm:px-6">
-                      <div class="flex items-center justify-end mb-4">
-                        @can('persedian_edit')
+                      <div class="flex items-center justify-end mb-4 gap-2">
                         <a
-                        href="{{ route('persedian.edit',$persedian->id) }}"
+                        href="{{ route('laporan.show', $laporan->id) }}"
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        >
+                          Show
+                        </a>
+                        @can('laporan_edit')
+                        <a
+                        href="{{ route('laporan.edit',$laporan->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Edit
                         </a>  
                         @endcan
                        
-                        @can('persedian_delete')
-                        <form action="{{ route('persedian.delete', $persedian->id) }}" method="POST" class="inline">
+                        @can('laporan_delete')
+                        <form action="{{ route('laporan.delete', $laporan->id) }}" method="POST" class="inline">
                           @csrf
                           @method('DELETE')
-                          <a href="{{ route('persedian.delete', $persedian->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                          <a href="{{ route('laporan.delete', $laporan->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Delete
                           </a>
                         </form>
@@ -179,7 +153,7 @@
     </div>
 
     <div class="mt-4">
-      {{ $persedians->links() }}
+      {{ $laporans->links() }}
     </div>
   </div>
 </x-app-layout>

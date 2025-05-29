@@ -19,6 +19,8 @@ class DataImport implements WithMultipleSheets
             'transaksi' => new TransaksiImport(),
             'pembelian' => new PembelianImport(),
             'gaji' => new GajiImport(),
+            'persedian' => new PersedianImport(),
+            'peralatan' => new PeralatanImport()
         ];
     }
 }

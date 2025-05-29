@@ -18,8 +18,8 @@ class PersedianController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $persdians = Persedian::paginate(10);
-        return view('persedian.index', compact('persdians'));
+        $persedians = Persedian::paginate(10);
+        return view('persedian.index', compact('persedians'));
     
     }
 
@@ -65,6 +65,12 @@ class PersedianController extends Controller
                 'required',
                 'integer',
                 'between:1,12',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->tahun == date('Y') && $value > date('n')) {
+                    $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
+                    }
+                },    
+                
                 Rule::unique('persedians')->where(function ($query) use ($request) {
                     return $query->where('tahun', $request->tahun);
                 })
@@ -141,6 +147,12 @@ class PersedianController extends Controller
                 'required',
                 'integer',
                 'between:1,12',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->tahun == date('Y') && $value > date('n')) {
+                    $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
+                    }
+                },    
+                
                 Rule::unique('persedians')->where(function ($query) use ($request) {
                     return $query->where('tahun', $request->tahun);
                 })->ignore($id),

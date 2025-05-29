@@ -5,6 +5,7 @@ use App\Http\Controllers\AkunController;
 use App\Http\Controllers\BelanjaController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\KonsumsiController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PeralatanController;
 use App\Http\Controllers\PersedianController;
@@ -152,6 +153,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/persedian/edit/{id}', [PersedianController::class, 'edit'])->name('persedian.edit')->middleware('can:persedian_edit');
     Route::put('/persedian/update/{id}', [PersedianController::class, 'update'])->name('persedian.update')->middleware('can:persedian_edit');
     Route::delete('/persedian/delete/{id}', [PersedianController::class, 'destroy'])->name('persedian.delete')->middleware('can:persedian_delete');
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan')->middleware('can:laporan_read');
+    Route::get('/laporan/create', [LaporanController::class, 'create'])->name('laporan.create')->middleware('can:laporan_create');
+    Route::post('/laporan/store', [LaporanController::class, 'store'])->name('laporan.store')->middleware('can:laporan_create');
+    Route::get('/laporan/edit/{id}', [LaporanController::class, 'edit'])->name('laporan.edit')->middleware('can:laporan_edit');
+    Route::put('/laporan/update/{id}', [LaporanController::class, 'update'])->name('laporan.update')->middleware('can:laporan_edit');
+    Route::delete('/laporan/delete/{id}', [LaporanController::class, 'destroy'])->name('laporan.delete')->middleware('can:laporan_delete');
+    Route::get('/laporan/show/{id}', [LaporanController::class, 'show'])->name('laporan.show')->middleware('can:laporan_read');
+    Route::get('/laporan/penjualan/{id}', [LaporanController::class, 'penjualan'])->name('laporan.penjualan')->middleware('can:laporan_read');
+    Route::get('/laporan/jurnal/{id}', [LaporanController::class, 'jurnal'])->name('laporan.jurnal')->middleware('can:laporan_read');
 
 });
 

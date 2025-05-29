@@ -64,7 +64,7 @@ class PeralatanController extends Controller
             'nilai_sisa' => [
                 'required',
                 'integer',
-                'min:1',
+                'min:0',
             ],
         ]);
         
@@ -130,7 +130,7 @@ class PeralatanController extends Controller
             'nilai_sisa' => [
                 'required',
                 'integer',
-                'min:1',
+                'min:0',
             ],
         ]);
 

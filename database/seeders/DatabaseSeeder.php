@@ -74,6 +74,11 @@ class DatabaseSeeder extends Seeder
         $persedian_edit = Permission::create(['name' => 'persedian_edit']);
         $persedian_delete = Permission::create(['name' => 'persedian_delete']);
 
+        $laporan_create = Permission::create(['name' => 'laporan_create']);
+        $laporan_read = Permission::create(['name' => 'laporan_read']);
+        $laporan_edit = Permission::create(['name' => 'laporan_edit']);
+        $laporan_delete = Permission::create(['name' => 'laporan_delete']);
+
         $peralatan_create = Permission::create(['name' => 'peralatan_create']);
         $peralatan_read = Permission::create(['name' => 'peralatan_read']);
         $peralatan_edit = Permission::create(['name' => 'peralatan_edit']);
@@ -108,6 +113,7 @@ class DatabaseSeeder extends Seeder
             'dashboard',
             'transaksi_read','transaksi_create','transaksi_edit','transaksi_delete',
             'absensi_read',
+            'laporan_create','laporan_read','laporan_edit','laporan_delete',
             'belanja_read','belanja_edit','belanja_delete','belanja_create_manual',
             'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
             'gaji_create','gaji_read','gaji_edit','gaji_delete',
