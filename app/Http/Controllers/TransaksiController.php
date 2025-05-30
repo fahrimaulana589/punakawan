@@ -100,8 +100,8 @@ class TransaksiController extends Controller
         $kode = 'TSK' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
 
         Transaksi::create([
-            'debet_id' => 1,
-            'kredit_id' => 2,
+            'debet_id' => 7,
+            'kredit_id' => 1,
             'total' => $request->total,
             'tanggal' => $request->tanggal,
             'status' => 'selesai',
@@ -181,8 +181,8 @@ class TransaksiController extends Controller
         $kode = 'TSK' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
 
         $transaksi = Transaksi::create([
-            'debet_id'   => 1,
-            'kredit_id'  => 2,
+            'debet_id'   => 7,
+            'kredit_id'  => 1,
             'pegawai_id' => $pegawai->id,
             'tanggal'    => now(),
             'total'      => $total,

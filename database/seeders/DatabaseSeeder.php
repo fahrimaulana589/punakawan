@@ -59,10 +59,14 @@ class DatabaseSeeder extends Seeder
         $user_delete = Permission::create(['name' => 'user_delete']);
 
         $belanja_create = Permission::create(['name' => 'belanja_create']);
-        $belanja_create_manual = Permission::create(['name' => 'belanja_create_manual']);
         $belanja_read = Permission::create(['name' => 'belanja_read']);
         $belanja_edit = Permission::create(['name' => 'belanja_edit']);
         $belanja_delete = Permission::create(['name' => 'belanja_delete']);
+
+        $jurnal_create = Permission::create(['name' => 'jurnal_create']);
+        $jurnal_read = Permission::create(['name' => 'jurnal_read']);
+        $jurnal_edit = Permission::create(['name' => 'jurnal_edit']);
+        $jurnal_delete = Permission::create(['name' => 'jurnal_delete']);
 
         $absensi_create = Permission::create(['name' => 'absensi_create']);
         $absensi_read = Permission::create(['name' => 'absensi_read']);
@@ -114,7 +118,8 @@ class DatabaseSeeder extends Seeder
             'transaksi_read','transaksi_create','transaksi_edit','transaksi_delete',
             'absensi_read',
             'laporan_create','laporan_read','laporan_edit','laporan_delete',
-            'belanja_read','belanja_edit','belanja_delete','belanja_create_manual',
+            'belanja_read',
+            'jurnal_create','jurnal_read','jurnal_edit','jurnal_delete',
             'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
             'gaji_create','gaji_read','gaji_edit','gaji_delete',
             'akun_create','akun_read','akun_edit','akun_delete',

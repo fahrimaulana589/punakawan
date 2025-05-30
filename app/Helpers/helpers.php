@@ -1,5 +1,15 @@
 <?php
 
+use App\Models\Akun;
+use App\Models\Belanja;
+use App\Models\Konsumsi;
+use App\Models\Laporan;
+use App\Models\Persedian;
+use App\Models\Jurnal;
+use App\Models\Transaksi;
+use App\Models\Gaji;
+use App\Models\Peralatan;
+
 if (!function_exists('format_uang')) {
     function format_uang($nilai)
     {
@@ -47,5 +57,183 @@ if (!function_exists('tanggal_akhir_laporan')) {
     function tanggal_akhir_laporan($tahun,$bulan)
     {
         return now()->setYear($tahun)->setMonth($bulan)->endOfMonth()->toDateString();
+    }
+}
+
+if (!function_exists('data_jurnal')) {
+    function data_jurnal(Laporan $id):array{
+        $data = [];
+
+        $isFirstLaporan = Laporan::where('tahun', '<', $id->tahun)
+            ->orWhere(function ($query) use ($id) {
+                $query->where('tahun', $id->tahun)
+                      ->where('bulan', '<', $id->bulan);
+            })
+            ->doesntExist();
+
+        $startDate = tanggal_awal_laporan($id->tahun,$id->bulan);
+        $endDate = tanggal_akhir_laporan($id->tahun,$id->bulan);
+        
+        $transaksi = Transaksi::whereBetween('tanggal', [$startDate, $endDate])
+            ->get();
+
+        $data_transaksi = [];
+
+        foreach ($transaksi as $item) {
+            $tanggal = $item->tanggal;
+            $total = $item->total;
+
+            if (isset($data[$tanggal])) {
+                $data_transaksi[$tanggal]['total'] += $total;
+                $data_transaksi[$tanggal]['nama'] = "Penjualan";
+
+                $data_transaksi[$tanggal]['debet'] = $item->debet->id;
+                $data_transaksi[$tanggal]['kredit'] = $item->kredit->id;
+            } else {
+                $data_transaksi[$tanggal]['total'] = $total;
+                $data_transaksi[$tanggal]['nama'] = "Penjualan";
+
+                $data_transaksi[$tanggal]['debet'] = $item->debet->id;
+                $data_transaksi[$tanggal]['kredit'] = $item->kredit->id;
+            }
+        }
+
+        foreach ($data_transaksi as $tanggal => $item) {
+            $data[] = [
+                'tanggal' => $tanggal,
+                'nama' => $item['nama'],
+                'total' => $item['total'],
+                'debet' => $item['debet'],
+                'kredit' => $item['kredit'],
+            ];
+        }
+
+        $jurnals = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('tipe','=',1)
+            ->get();
+
+        $belanjas = Belanja::whereBetween('tanggal', [$startDate, $endDate])
+            ->get();
+
+        $gaji = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('tipe','=',2)
+            ->first();
+
+        $previousMonth = $id->bulan - 1;
+        $previousYear = $id->tahun;
+
+        if ($previousMonth < 1) {
+            $previousMonth = 12;
+            $previousYear -= 1;
+        }
+
+        $persedians = Persedian::where('tahun','=',$previousYear)
+            ->where('bulan','=',$previousMonth)
+            ->get();
+
+        $peralatans = Peralatan::where(function ($query) use ($startDate) {
+            $query->where(function ($q) use ($startDate) {
+                $q->whereNotNull('tanggal_nonaktif')
+                  ->whereDate('tanggal_aktif', '<=', $startDate)
+                  ->whereDate('tanggal_nonaktif', '>=', $startDate);
+            })
+            ->orWhere(function ($q) use ($startDate) {
+                $q->whereNull('tanggal_nonaktif')
+                  ->whereDate('tanggal_aktif', '<=', $startDate);
+            });
+        })->get();
+
+        if($isFirstLaporan){
+            foreach($jurnals as $jurnal){
+                $data[] = [
+                    'tanggal' => $jurnal->tanggal,
+                    'nama' => $jurnal->nama,
+                    'total' => $jurnal->total,
+                    'debet' => $jurnal->debet->id,
+                    'kredit' => $jurnal->kredit->id,
+                ];
+            }
+        }
+
+        foreach( $persedians as $key => $value ){
+            $data[] = [
+                'tanggal' => $startDate,
+                'nama' => "Saldo Awal ".$value->bahanProduksi->nama,
+                'total' => $value->total,
+                'kredit' => 6,
+                'debet' => $value->bahanProduksi->debet_id
+            ];
+        }
+
+        foreach($peralatans as $key => $value){
+            $data[] = [
+                'tanggal' => $startDate,
+                'nama'=> $value->nama,
+                'total'=> $value->harga,
+                'debet' => 5,
+                'kredit' => 6, 
+            ];
+        }
+
+        foreach($belanjas as $belanja){
+            $nama_belanja = $belanja->bahanProduksi->debet->nama." (".$belanja->bahanProduksi->nama.")";
+            $data[] = [
+                'tanggal' => $belanja->tanggal,
+                'nama'=> $nama_belanja,
+                'total'=> $belanja->total,
+                'debet' => $belanja->bahanProduksi->debet->id,
+                'kredit' => $belanja->bahanProduksi->kredit->id, 
+            ];
+        }
+
+        $data[] = [
+            'tanggal' => $gaji->tanggal,
+            'nama'=> $gaji->nama,
+            'total'=> $gaji->total,
+            'debet' => $gaji->debet_id,
+            'kredit' => $gaji->kredit_id, 
+        ];
+
+        $groupedByDebet = [];
+
+        foreach ($data as $item) {
+            $debetId = $item['debet'];
+            if (!isset($groupedByDebet[$debetId])) {
+            $groupedByDebet[$debetId] = [];
+            }
+            $groupedByDebet[$debetId][] = $item;
+        }
+
+        $groupedByKredit = [];
+
+        foreach ($data as $item) {
+            $kreditId = $item['kredit'];
+            if (!isset($groupedByKredit[$kreditId])) {
+            $groupedByKredit[$kreditId] = [];
+            }
+            $groupedByKredit[$kreditId][] = $item;
+        }
+
+        $mergedData = [];
+
+        foreach ($groupedByDebet as $debetId => $items) {
+            foreach ($items as $item) {
+                $mergedData[$debetId][] = array_merge($item, ['status' => 'debet']);
+            }
+        }
+
+        foreach ($groupedByKredit as $kreditId => $items) {
+            foreach ($items as $item) {
+                $mergedData[$kreditId][] = array_merge($item, ['status' => 'kredit']);
+            }
+        }
+
+        foreach ($mergedData as $id => &$items) {
+            usort($items, function ($a, $b) {
+                return strtotime($a['tanggal']) - strtotime($b['tanggal']);
+            });
+        }
+
+        return $mergedData;
     }
 }

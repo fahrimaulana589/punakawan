@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->date('tanggal');
             
-            $table->foreignId('gaji_id')->constrained('gajis')->onDelete('cascade');
+            $table->foreignId('gaji_id')->constrained('jurnals')->onDelete('cascade');
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('restrict');
             
             $table->integer('total');

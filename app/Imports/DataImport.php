@@ -20,7 +20,8 @@ class DataImport implements WithMultipleSheets
             'pembelian' => new PembelianImport(),
             'gaji' => new GajiImport(),
             'persedian' => new PersedianImport(),
-            'peralatan' => new PeralatanImport()
+            'peralatan' => new PeralatanImport(),
+            'jurnal' => new JurnalImport(),
         ];
     }
 }

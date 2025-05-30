@@ -2,13 +2,12 @@
 
 namespace App\Imports;
 
-use App\Models\Belanja;
 use App\Models\Jurnal;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class PembelianImport implements ToModel,WithStartRow
+class JurnalImport implements ToModel,WithStartRow
 {
     /**
     * @param array $row
@@ -22,16 +21,19 @@ class PembelianImport implements ToModel,WithStartRow
             $tanggal = Date::excelToDateTimeObject($row[1])->format('Y-m-d');
         }
 
-        return new Belanja([
+        return new Jurnal([
             'tanggal' => $tanggal, // Asumsi kolom pertama adalah tanggal
-            'total' => $row[3], // Asumsi kolom kedua adalah total
-            'pegawai_id' => $row[4], // Asumsi kolom ketiga adalah pegawai_id
-            'konsumsi_id' => $row[5], // Asumsi kolom keempat adalah debet_id
+            'nama' => $row[2], // Asumsi kolom kedua adalah nama
+            'total' => $row[3], // Asumsi kolom ketiga adalah total
+            'debet_id' => $row[5], // Asumsi kolom keempat adalah debet_id
+            'kredit_id' => $row[6], // Asumsi kolom kelima adalah kredit_id
+            'tipe' => 1,
+            'pegawai_id' => $row[4]
         ]);
     }
 
     public function startRow(): int
     {
-        return 2; // Mulai dari baris kedua, karena baris pertama biasanya header
+        return 2; // Mulai membaca dari baris kedua
     }
 }

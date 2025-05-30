@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->year('tahun');
             $table->integer('bulan');
-            $table->integer('tot    al');
+            $table->integer('total');
 
             $table->foreignId('konsumsi_id')->constrained('konsumsis')->onDelete('restrict');
           

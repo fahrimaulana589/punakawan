@@ -13,6 +13,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\JurnalController;
 use App\Imports\AkunImport;
 use App\Imports\DataImport;
 use App\Models\Akun;
@@ -126,13 +127,20 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/belanja', [BelanjaController::class, 'index'])->name('belanja')->middleware('can:belanja_read');
     Route::get('/belanja/create', [BelanjaController::class, 'create'])->name('belanja.create')->middleware('can:belanja_create');
-    Route::get('/belanja/create/manual', [BelanjaController::class, 'createManual'])->name('belanja.create.manual')->middleware('can:belanja_create_manual');
     Route::post('/belanja/store', [BelanjaController::class, 'store'])->name('belanja.store')->middleware('can:belanja_create');
-    Route::post('/belanja/store/manual', [BelanjaController::class, 'storeManual'])->name('belanja.store.manual')->middleware('can:belanja_create_manual');
     Route::get('/belanja/edit/{id}', [BelanjaController::class, 'edit'])->name('belanja.edit')->middleware('can:belanja_edit');
     Route::put('/belanja/update/{id}', [BelanjaController::class, 'update'])->name('belanja.update')->middleware('can:belanja_edit');
     Route::delete('/belanja/delete/{id}', [BelanjaController::class, 'destroy'])->name('belanja.delete')->middleware('can:belanja_delete');
 
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/jurnal', [JurnalController::class, 'index'])->name('jurnal')->middleware('can:jurnal_read');
+    Route::get('/jurnal/create', [JurnalController::class, 'create'])->name('jurnal.create')->middleware('can:jurnal_create');
+    Route::post('/jurnal/store', [JurnalController::class, 'store'])->name('jurnal.store')->middleware('can:jurnal_create');
+    Route::get('/jurnal/edit/{id}', [JurnalController::class, 'edit'])->name('jurnal.edit')->middleware('can:jurnal_edit');
+    Route::put('/jurnal/update/{id}', [JurnalController::class, 'update'])->name('jurnal.update')->middleware('can:jurnal_edit');
+    Route::delete('/jurnal/delete/{id}', [JurnalController::class, 'destroy'])->name('jurnal.delete')->middleware('can:jurnal_delete');
 
 });
 
@@ -166,6 +174,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/show/{id}', [LaporanController::class, 'show'])->name('laporan.show')->middleware('can:laporan_read');
     Route::get('/laporan/penjualan/{id}', [LaporanController::class, 'penjualan'])->name('laporan.penjualan')->middleware('can:laporan_read');
     Route::get('/laporan/jurnal/{id}', [LaporanController::class, 'jurnal'])->name('laporan.jurnal')->middleware('can:laporan_read');
+    Route::get('/laporan/bukubesar/{id}', [LaporanController::class, 'bukuBesar'])->name('laporan.bukubesar')->middleware('can:laporan_read');
 
 });
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Akun;
+use App\Models\Belanja;
 use App\Models\Konsumsi;
 use App\Models\Laporan;
 use App\Models\Persedian;
@@ -13,6 +14,7 @@ use App\Models\Peralatan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class LaporanController extends Controller
 {
@@ -65,6 +67,7 @@ class LaporanController extends Controller
             'tahun' => [
                 'required',
                 'integer',
+                'min:2025',
                 'max:' . date('Y'),
             ],
             'bulan' => [
@@ -72,13 +75,38 @@ class LaporanController extends Controller
                 'integer',
                 'between:1,12',
                 function ($attribute, $value, $fail) use ($request) {
-                    if ($request->tahun == date('Y') && $value > date('n')) {
-                    $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
+                    $latestLaporan = Laporan::orderByDesc('tahun')
+                        ->orderByDesc('bulan')
+                        ->first();
+        
+                    if (!$latestLaporan) {
+                        // Laporan pertama harus Januari 2025
+                        if (!($request->tahun == 2025 && $value == 1)) {
+                            $fail('Laporan pertama harus untuk Januari 2025.');
+                        }
+                    } else {
+                        // Hitung bulan berikutnya yang valid
+                        $nextValid = Carbon::createFromDate($latestLaporan->tahun, $latestLaporan->bulan, 1)
+                            ->addMonth();
+        
+                        if (
+                            (int)$request->tahun !== (int)$nextValid->year ||
+                            (int)$value !== (int)$nextValid->month
+                        ) {
+                            $fail('Tahun dan bulan harus tepat satu bulan setelah laporan terakhir: ' .
+                                $nextValid->format('F Y') . '.');
+                        }
                     }
-                },    
+        
+                    // Cek jika tahun sekarang tapi bulan melebihi bulan saat ini
+                    if ($request->tahun == date('Y') && $value > date('n')) {
+                        $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
+                    }
+                },
                 Rule::unique('laporans')->where(function ($query) use ($request) {
-                    return $query->where('tahun', $request->tahun);
-                })
+                    return $query->where('tahun', $request->tahun)
+                                 ->where('bulan', $request->bulan);
+                }),
             ],
         ]);
         
@@ -150,9 +178,14 @@ class LaporanController extends Controller
         $bulan = nama_bulan($id->bulan);
 
         $jurnals = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('tipe','=',1)
             ->get();
 
-        $gaji = Gaji::whereBetween('tanggal', [$startDate, $endDate])
+        $belanjas = Belanja::whereBetween('tanggal', [$startDate, $endDate])
+            ->get();
+
+        $gaji = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('tipe','=',2)
             ->first();
 
         $previousMonth = $id->bulan - 1;
@@ -183,19 +216,15 @@ class LaporanController extends Controller
             });
         })->get();
 
-        // dump($peralatans);
-        // dump($persedians);
-        // dump($jurnals);
-        // dump($gaji);
-
         if($isFirstLaporan){
-            $kas = 1491000;
-            $data[] = [
-                'tanggal' => $startDate,
-                'nama'=> 'KAS',
-                'total'=> $kas,
-                'kredit' => 'MODAL' 
-            ];
+            foreach($jurnals as $jurnal){
+                $data[] = [
+                    'tanggal' => $jurnal->tanggal,
+                    'nama' => $jurnal->nama,
+                    'total' => $jurnal->total,
+                    'kredit' => $jurnal->kredit->nama
+                ];
+            }
         }
 
         foreach( $groupedPersedians as $key => $value ){
@@ -226,12 +255,12 @@ class LaporanController extends Controller
 
         }
 
-        foreach($jurnals as $jurnal){
+        foreach($belanjas as $belanja){
             $data[] = [
-                'tanggal' => $jurnal->tanggal,
-                'nama'=> $jurnal->nama,
-                'total'=> $jurnal->total,
-                'kredit' => $jurnal->kredit->nama 
+                'tanggal' => $belanja->tanggal,
+                'nama'=> $belanja->bahanProduksi->debet->nama." ( ".$belanja->bahanProduksi->nama." ) ",
+                'total'=> $belanja->total,
+                'kredit' => $belanja->bahanProduksi->kredit->nama 
             ];
         }
 
@@ -241,6 +270,20 @@ class LaporanController extends Controller
             'total'=> $gaji->total,
             'kredit' => $gaji->kredit->nama 
         ];
+
+        usort($data, function ($a, $b) {
+            return strtotime($a['tanggal']) - strtotime($b['tanggal']);
+        });
+
+        usort($data, function ($a, $b) {
+            if ($a['kredit'] === 'MODAL' && $b['kredit'] !== 'MODAL') {
+                return -1;
+            }
+            if ($a['kredit'] !== 'MODAL' && $b['kredit'] === 'MODAL') {
+                return 1;
+            }
+            return strtotime($a['tanggal']) - strtotime($b['tanggal']);
+        });
 
         $modalTotal = 0;
         $lastModalIndex = null;
@@ -262,10 +305,25 @@ class LaporanController extends Controller
         $data[$lastModalIndex]['kredit_total'] = $modalTotal;
         $data[$lastModalIndex]['kredit'] = 'MODAL';
 
+        // dump($data);
+
+        // dd('stop');
+        
         $pdf = Pdf::loadView('laporan.jurnal',compact('data','bulan'))->setPaper('A4', 'portrait');
         return $pdf->stream('Jurnal Bulan '.$bulan.'.pdf');
 
         // return view('laporan.jurnal',compact('data','bulan'));
+    }
+
+    public function bukuBesar(Laporan $id){
+        $bulan = nama_bulan($id->bulan);
+        
+        $mergedData = data_jurnal($id);
+
+        // return view('laporan.bukubesar',compact('mergedData','bulan'));
+        $pdf = Pdf::loadView('laporan.bukubesar',compact('mergedData','bulan'))->setPaper('A4', 'portrait');
+        return $pdf->stream('Jurnal Bulan '.$bulan.'.pdf');
+
     }
 
     /**

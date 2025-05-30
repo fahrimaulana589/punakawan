@@ -6,10 +6,12 @@ use App\Models\Absensi;
 use App\Models\Gaji;
 use App\Models\GajiKaryawan;
 use App\Models\GajiLainya;
+use App\Models\Jurnal;
 use App\Models\Pegawai;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
+use Illuminate\Support\Facades\Auth;
 
 class GajiController extends Controller
 {
@@ -22,7 +24,7 @@ class GajiController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $gajis = Gaji::paginate(10);
+        $gajis = jurnal::where('tipe','=',2)->paginate(10);
 
         return view('gaji.index', compact('gajis'));
     
@@ -46,8 +48,9 @@ class GajiController extends Controller
                 'before_or_equal:today',
                 function ($attribute, $value, $fail) {
                     $date = Carbon::parse($value);
-                    $exists = Gaji::whereYear('tanggal', $date->year)
+                    $exists = jurnal::whereYear('tanggal', $date->year)
                                   ->whereMonth('tanggal', $date->month)
+                                  ->where('tipe','=',2)
                                   ->exists();
         
                     if ($exists) {
@@ -155,8 +158,9 @@ class GajiController extends Controller
                 'before_or_equal:today',
                 function ($attribute, $value, $fail) {
                     $date = Carbon::parse($value);
-                    $exists = Gaji::whereYear('tanggal', $date->year)
+                    $exists = jurnal::whereYear('tanggal', $date->year)
                                   ->whereMonth('tanggal', $date->month)
+                                  ->where('tipe','=',2)
                                   ->exists();
         
                     if ($exists) {
@@ -174,12 +178,14 @@ class GajiController extends Controller
         $tanggal = Carbon::parse($request->tanggal);
         $nama = $tanggal->translatedFormat('F Y'); // Contoh: "Mei 2025"
 
-        Gaji::create([
+        jurnal::create([
             'tanggal' => $request->tanggal,
             'total' => $request->total,
             'nama' => "Gaji ".$nama,
-            'debet_id' => 1, // Ganti dengan ID akun debet yang sesuai
-            'kredit_id' => 2, // Ganti dengan ID akun kredit yang sesuai
+            'pegawai_id' => auth()->user()->pegawai_id,
+            'tipe' => 2,
+            'debet_id' => 8, // Ganti dengan ID akun debet yang sesuai
+            'kredit_id' => 1, // Ganti dengan ID akun kredit yang sesuai
         ]);
 
         return redirect()->route('gaji')->with('success', 'Gaji created successfully.');
@@ -197,8 +203,9 @@ class GajiController extends Controller
                 'before_or_equal:today',
                 function ($attribute, $value, $fail) {
                     $date = Carbon::parse($value);
-                    $exists = Gaji::whereYear('tanggal', $date->year)
+                    $exists = Jurnal::whereYear('tanggal', $date->year)
                                   ->whereMonth('tanggal', $date->month)
+                                  ->where('tipe','=',2)
                                   ->exists();
         
                     if ($exists) {
@@ -216,12 +223,14 @@ class GajiController extends Controller
         $tanggal = Carbon::parse($request->tanggal);
         $nama = $tanggal->translatedFormat('F Y'); // Contoh: "Mei 2025"
 
-        $gaji_bulanan = Gaji::create([
+        $gaji_bulanan = jurnal::create([
             'tanggal' => $request->tanggal,
             'total' => $request->total,
             'nama' => "Gaji ".$nama,
-            'debet_id' => 1, // Ganti dengan ID akun debet yang sesuai
-            'kredit_id' => 2, // Ganti dengan ID akun kredit yang sesuai
+            'pegawai_id' => auth()->user()->pegawai_id,
+            'tipe' => 2,
+            'debet_id' => 8, // Ganti dengan ID akun debet yang sesuai
+            'kredit_id' => 1, // Ganti dengan ID akun kredit yang sesuai
         ]);
 
         $tanggal = $request->get('tanggal');
@@ -319,7 +328,7 @@ class GajiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Gaji $gaji)
+    public function show(Jurnal $gaji)
     {
         return view('gaji.show',compact('gaji'));
     }
@@ -327,7 +336,7 @@ class GajiController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Gaji $gaji)
+    public function edit(Jurnal $gaji)
     {
         return view('gaji.edit',compact('gaji'));
     }
@@ -335,7 +344,7 @@ class GajiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Gaji $gaji)
+    public function update(Request $request, Jurnal $gaji)
     {
         $request->validate([
             'tanggal' => [
@@ -344,9 +353,10 @@ class GajiController extends Controller
                 'before_or_equal:today',
                 function ($attribute, $value, $fail) use ($gaji) {
                     $date = Carbon::parse($value);
-                    $exists = Gaji::whereYear('tanggal', $date->year)
+                    $exists = jurnal::whereYear('tanggal', $date->year)
                                 ->whereMonth('tanggal', $date->month)
                                 ->where('id', '!=', $gaji->id) // ❗ Pengecualian data yang sedang diupdate
+                                ->where('tipe','=',2)
                                 ->exists();
 
                     if ($exists) {
@@ -376,7 +386,7 @@ class GajiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Gaji $gaji)
+    public function destroy(Jurnal $gaji)
     {
         $gaji->delete();
 

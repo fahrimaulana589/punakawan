@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jurnals', function (Blueprint $table) {
+        Schema::create('belanjas', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('debet_id')->constrained('akuns')->onDelete('restrict');
-            $table->foreignId('kredit_id')->constrained('akuns')->onDelete('restrict');
-            
-            $table->string('nama');
-            $table->integer('tipe')->default(1);
-            
+            $table->date('tanggal');
+            $table->integer('total');
+            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('restrict');
+          
+            $table->foreignId('konsumsi_id')->constrained('konsumsis')->onDelete('restrict');
+          
+
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jurnals');
+        Schema::dropIfExists('belanjas');
     }
 };
