@@ -23,7 +23,7 @@
           ['name' => 'Laporan Penjualan '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.penjualan',$laporan->id)],
           ['name' => 'Jurnal '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.jurnal',$laporan->id)],
           ['name' => 'Buku Besar '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.bukubesar',$laporan->id)],
-          ['name' => 'Neraca Saldo '.$bulan, 'permission' => 'laporan_read', 'link' => '#'],
+          ['name' => 'Neraca Saldo '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.neracasaldo',$laporan->id)],
           ['name' => 'AJP '.$bulan, 'permission' => 'laporan_read', 'link' => '#'],
           ['name' => 'Neraca Lajur '.$bulan, 'permission' => 'laporan_read', 'link' => '#'],
           ['name' => 'Laporan '.$bulan, 'permission' => 'laporan_read', 'link' => '#'],

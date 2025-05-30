@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Laporan Penjualan Bulan {{ $bulan }}</title>
+    <title>Buku Besar Bulan {{ $bulan }}</title>
     <style>
         body {
             margin: 0;
