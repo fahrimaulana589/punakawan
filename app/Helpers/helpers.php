@@ -381,4 +381,37 @@ if (!function_exists('data_jurnal')) {
 
         return $data;
     }
+
+    if (!function_exists('data_saldo')) {
+        function data_saldo($data_akun)
+        {
+            $data = [];
+        
+            foreach($data_akun as $key => $items) {
+                $akun = Akun::find($key);
+                $totaldebet = 0;
+                $totalkredit = 0;
+
+                foreach($items as $item) {
+                    $total = $item['total'];
+                    if($item['status'] == 'debet'){
+                    $totaldebet += $total;
+                    $totalkredit -= $total;
+                    }else if($item['status'] == 'kredit'){
+                    $totaldebet -= $total;
+                    $totalkredit += $total;
+                    }  
+                }
+
+                $data[] = [
+                    'kode' => $akun->kode,
+                    'nama' => $akun->nama,
+                    'debet' =>$totaldebet,
+                    'kredit' => $totalkredit
+                ];
+            }
+
+            return $data;
+        }
+    }
 }

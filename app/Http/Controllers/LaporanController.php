@@ -184,32 +184,9 @@ class LaporanController extends Controller
     public function neracaSaldo(Laporan $id){
         $bulan = nama_bulan($id->bulan);
         
-        $data = [];
         $akuns = data_akun($id);
 
-        foreach($akuns as $key => $items) {
-            $akun = Akun::find($key);
-            $totaldebet = 0;
-            $totalkredit = 0;
-
-            foreach($items as $item) {
-                $total = $item['total'];
-                if($item['status'] == 'debet'){
-                $totaldebet += $total;
-                $totalkredit -= $total;
-                }else if($item['status'] == 'kredit'){
-                $totaldebet -= $total;
-                $totalkredit += $total;
-                }  
-            }
-
-            $data[] = [
-                'kode' => $akun->kode,
-                'nama' => $akun->nama,
-                'debet' =>$totaldebet,
-                'kredit' => $totalkredit
-            ];
-        }
+        $data = data_saldo($akuns);
 
         $pdf = Pdf::loadView('laporan.saldo',compact('data','bulan'))->setPaper('A4', 'portrait');
         return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
