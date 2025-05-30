@@ -192,6 +192,17 @@ class LaporanController extends Controller
         return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
     }
 
+    public function ajp(Laporan $id){
+        $bulan = nama_bulan($id->bulan);
+        
+        $data_akuns = data_akun($id);
+
+        $data = data_ajp($data_akuns,$id);
+        
+        $pdf = Pdf::loadView('laporan.ajp',compact('data','bulan'))->setPaper('A4', 'portrait');
+        return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

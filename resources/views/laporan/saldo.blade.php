@@ -54,10 +54,10 @@
             {{ $akun['nama'] }}
           </td>
             <td>
-            {{ $akun['debet'] > 0 ? format_uang($akun['debet']) : '' }}
+            {{ $akun['debet'] > 1 ? format_uang($akun['debet']) : '' }}
             </td>
             <td>
-            {{ $akun['kredit'] > 0 ? format_uang($akun['kredit']) : '' }}
+            {{ $akun['kredit'] > 1 ? format_uang($akun['kredit']) : '' }}
             </td>
           </tr>
           @endforeach
