@@ -163,164 +163,19 @@ class LaporanController extends Controller
     public function jurnal(Laporan $id)
     {
 
-        $data = [];
+        $data = data_jurnal($id);
 
-        $isFirstLaporan = Laporan::where('tahun', '<', $id->tahun)
-            ->orWhere(function ($query) use ($id) {
-                $query->where('tahun', $id->tahun)
-                      ->where('bulan', '<', $id->bulan);
-            })
-            ->doesntExist();
-
-        $startDate = tanggal_awal_laporan($id->tahun,$id->bulan);
-        $endDate = tanggal_akhir_laporan($id->tahun,$id->bulan);
-        
         $bulan = nama_bulan($id->bulan);
 
-        $jurnals = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
-            ->where('tipe','=',1)
-            ->get();
-
-        $belanjas = Belanja::whereBetween('tanggal', [$startDate, $endDate])
-            ->get();
-
-        $gaji = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
-            ->where('tipe','=',2)
-            ->first();
-
-        $previousMonth = $id->bulan - 1;
-        $previousYear = $id->tahun;
-
-        if ($previousMonth < 1) {
-            $previousMonth = 12;
-            $previousYear -= 1;
-        }
-
-        $persedians = Persedian::where('tahun','=',$previousYear)
-            ->where('bulan','=',$previousMonth)
-            ->get();
-
-        $groupedPersedians = $persedians->groupBy(function ($persedian) {
-            return $persedian->bahanProduksi->debet_id;
-        });
-
-        $peralatans = Peralatan::where(function ($query) use ($startDate) {
-            $query->where(function ($q) use ($startDate) {
-                $q->whereNotNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate)
-                  ->whereDate('tanggal_nonaktif', '>=', $startDate);
-            })
-            ->orWhere(function ($q) use ($startDate) {
-                $q->whereNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate);
-            });
-        })->get();
-
-        if($isFirstLaporan){
-            foreach($jurnals as $jurnal){
-                $data[] = [
-                    'tanggal' => $jurnal->tanggal,
-                    'nama' => $jurnal->nama,
-                    'total' => $jurnal->total,
-                    'kredit' => $jurnal->kredit->nama
-                ];
-            }
-        }
-
-        foreach( $groupedPersedians as $key => $value ){
-            $nama_akun = Akun::find($key)->nama;
-            $totalpersedian = $value->sum(function ($item) {
-                return $item->total;
-            });
-
-            $data[] = [
-                'tanggal' => $startDate,
-                'nama' => $nama_akun,
-                'total' => $totalpersedian,
-                'kredit' => 'MODAL'
-            ];
-        }
-
-        if($isFirstLaporan){
-
-            $totalperalatan = $peralatans->sum(function ($item) {
-                return $item->harga;
-            });
-            $data[] = [
-                'tanggal' => $startDate,
-                'nama'=> 'PERALATAN',
-                'total'=> $totalperalatan,
-                'kredit' => 'MODAL' 
-            ];
-
-        }
-
-        foreach($belanjas as $belanja){
-            $data[] = [
-                'tanggal' => $belanja->tanggal,
-                'nama'=> $belanja->bahanProduksi->debet->nama." ( ".$belanja->bahanProduksi->nama." ) ",
-                'total'=> $belanja->total,
-                'kredit' => $belanja->bahanProduksi->kredit->nama 
-            ];
-        }
-
-        $data[] = [
-            'tanggal' => $gaji->tanggal,
-            'nama'=> $gaji->nama,
-            'total'=> $gaji->total,
-            'kredit' => $gaji->kredit->nama 
-        ];
-
-        usort($data, function ($a, $b) {
-            return strtotime($a['tanggal']) - strtotime($b['tanggal']);
-        });
-
-        usort($data, function ($a, $b) {
-            if ($a['kredit'] === 'MODAL' && $b['kredit'] !== 'MODAL') {
-                return -1;
-            }
-            if ($a['kredit'] !== 'MODAL' && $b['kredit'] === 'MODAL') {
-                return 1;
-            }
-            return strtotime($a['tanggal']) - strtotime($b['tanggal']);
-        });
-
-        $modalTotal = 0;
-        $lastModalIndex = null;
-
-        $fixdata = [];
-
-        foreach($data as $index => $item){
-            $isModal = $item['kredit'] === 'MODAL';
-            if($isModal){
-                $modalTotal += $item['total'];
-                $lastModalIndex = $index;
-                $data[$index]['kredit_total'] = 0;
-                $data[$index]['kredit'] = '';
-            }else{
-                $data[$index]['kredit_total'] = $item['total'];
-            }
-        }
-
-        $data[$lastModalIndex]['kredit_total'] = $modalTotal;
-        $data[$lastModalIndex]['kredit'] = 'MODAL';
-
-        // dump($data);
-
-        // dd('stop');
-        
         $pdf = Pdf::loadView('laporan.jurnal',compact('data','bulan'))->setPaper('A4', 'portrait');
         return $pdf->stream('Jurnal Bulan '.$bulan.'.pdf');
-
-        // return view('laporan.jurnal',compact('data','bulan'));
     }
 
     public function bukuBesar(Laporan $id){
         $bulan = nama_bulan($id->bulan);
         
-        $mergedData = data_jurnal($id);
+        $mergedData = data_akun($id);
 
-        // return view('laporan.bukubesar',compact('mergedData','bulan'));
         $pdf = Pdf::loadView('laporan.bukubesar',compact('mergedData','bulan'))->setPaper('A4', 'portrait');
         return $pdf->stream('Jurnal Bulan '.$bulan.'.pdf');
 

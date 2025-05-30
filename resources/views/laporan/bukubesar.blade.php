@@ -29,13 +29,16 @@
     $totaldebet = 0;
     $totalkredit = 0;     
   @endphp
-  Nama Akun {{ $akun->nama }}
   <table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse; width:100%;">
     <thead>
       <tr>
+        <th colspan="6" style="text-align: left;">
+          Nama Akun : {{ $akun->nama }}
+        </th>
+      </tr>
+      <tr>
         <th rowspan="2">Tanggal</th>
         <th rowspan="2">Keterangan</th>
-        <th rowspan="2">Ref</th>
         <th rowspan="2">Debet (Rp)</th>
         <th rowspan="2">Kredit (Rp)</th>
         <th colspan="2">Saldo</th>
@@ -64,12 +67,9 @@
         <td>
           {{ $item['nama'] }}
         </td>
-        <td>
-          
-        </td>
         @if ($item['status'] == 'debet')
         <td>
-          {{ $item['total'] }}
+          {{ format_uang($item['total']) }}
         </td>
         <td>
           
@@ -79,26 +79,22 @@
           
         </td>
         <td>
-          {{ $item['total'] }}
+          {{ format_uang($item['total']) }}
         </td>
         @endif
         <td>
           @if ($totaldebet >= 0)
-            {{ $totaldebet }}
+            {{ format_uang($totaldebet) }}
           @endif
         </td>
         <td>
           @if ($totalkredit >= 0)
-            {{ $totalkredit }}
+            {{ format_uang($totalkredit) }}
           @endif
         </td>
       </tr>  
       @endforeach
     </tbody>
-
-    <tfoot>
-      
-    </tfoot>
   </table>
   <br>
   <br>
