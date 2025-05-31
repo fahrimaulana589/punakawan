@@ -40,6 +40,16 @@
         $keseluruhan_debet += $item['total'];
         $keseluruhan_kredit += $item['kredit_total'];
       @endphp  
+        @if ($item['kredit'] == 'AKUMULASI')
+          
+        <tr>
+          <td>{{ format_tanggal($item['tanggal']) }}</td>
+          <td colspan="1">{{ $item['nama'] }}</td>
+          <td></td>
+          <td></td>
+          <td>{{ format_uang($item['kredit_total']) }}</td>
+        </tr>
+        @else
         <tr>
           <td>{{ format_tanggal($item['tanggal']) }}</td>
           <td colspan="1">{{ $item['nama'] }}</td>
@@ -47,7 +57,9 @@
           <td>{{ format_uang($item['total']) }}</td>
           <td></td>
         </tr>
-        @if ($item['kredit'] != null)
+        
+        @endif
+        @if ($item['kredit'] != null && $item['kredit'] != 'AKUMULASI')
           
         <tr>
           <td></td>

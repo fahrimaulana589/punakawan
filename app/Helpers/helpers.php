@@ -9,6 +9,7 @@ use App\Models\Jurnal;
 use App\Models\Transaksi;
 use App\Models\Gaji;
 use App\Models\Peralatan;
+use Illuminate\Support\Carbon;
 
 if (!function_exists('format_uang')) {
     function format_uang($nilai)
@@ -49,20 +50,22 @@ if (!function_exists('nama_bulan')) {
 if (!function_exists('tanggal_awal_laporan')) {
     function tanggal_awal_laporan($tahun,$bulan)
     {
-        return now()->setYear($tahun)->setMonth($bulan)->startOfMonth()->toDateString();
+        return now()->setYear($tahun)->startOfMonth()->setMonth($bulan)->toDateString();
     }
 }
 
 if (!function_exists('tanggal_akhir_laporan')) {
     function tanggal_akhir_laporan($tahun,$bulan)
     {
-        return now()->setYear($tahun)->setMonth($bulan)->endOfMonth()->toDateString();
+        return now()->setYear($tahun)->startOfMonth()->setMonth($bulan)->endOfMonth()->toDateString();
     }
 }
 
 if (!function_exists('data_akun')) {
     function data_akun(Laporan $id):array{
         $data = [];
+
+        $laporan = $id;
 
         $isFirstLaporan = Laporan::where('tahun', '<', $id->tahun)
             ->orWhere(function ($query) use ($id) {
@@ -110,6 +113,7 @@ if (!function_exists('data_akun')) {
 
         $jurnals = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
             ->where('tipe','=',1)
+            ->where('kredit_id', '!=', 14)
             ->get();
 
         $belanjas = Belanja::whereBetween('tanggal', [$startDate, $endDate])
@@ -143,16 +147,14 @@ if (!function_exists('data_akun')) {
             });
         })->get();
 
-        if($isFirstLaporan){
-            foreach($jurnals as $jurnal){
-                $data[] = [
-                    'tanggal' => $jurnal->tanggal,
-                    'nama' => $jurnal->nama,
-                    'total' => $jurnal->total,
-                    'debet' => $jurnal->debet->id,
-                    'kredit' => $jurnal->kredit->id,
-                ];
-            }
+        foreach($jurnals as $jurnal){
+            $data[] = [
+                'tanggal' => $jurnal->tanggal,
+                'nama' => $jurnal->nama,
+                'total' => $jurnal->total,
+                'debet' => $jurnal->debet->id,
+                'kredit' => $jurnal->kredit->id,
+            ];
         }
 
         foreach( $persedians as $key => $value ){
@@ -232,8 +234,45 @@ if (!function_exists('data_akun')) {
             usort($items, function ($a, $b) {
                 return strtotime($a['tanggal']) - strtotime($b['tanggal']);
             });
+        }     
+        
+        $total = 0;
+        $modal = [];
+
+        foreach($mergedData[6] as $item) {
+            $total += $item['total'];
+            $modal = [
+                'tanggal' => $item['tanggal'],
+                'nama' => "Modal",
+                'total' => $total,
+                'debet' => $item['debet'],
+                'kredit' => $item['kredit'],
+                'status' => $item['status'],
+             ];
         }
 
+        if(!$isFirstLaporan){
+            $akumulasi = Jurnal::where('tanggal', $startDate)
+                ->where('kredit_id', 14)
+                ->where('debet_id', 6)
+                ->orderBy('id')
+                ->first();
+
+            $mergedData[14][] = [
+                'tanggal' => $startDate,
+                'nama'=> 'AKUMULASI PENYUSUTAN PERALATAN',
+                'total'=> $akumulasi->total,
+                'debet'=> 0,
+                'kredit' => 14,
+                "status" => "kredit"
+            ];
+
+            $modal['total'] -= $akumulasi->total;
+        }
+
+        $mergedData[6] = [];
+        $mergedData[6][] = $modal;
+        
         return $mergedData;
     }
 }
@@ -292,15 +331,13 @@ if (!function_exists('data_jurnal')) {
             });
         })->get();
 
-        if($isFirstLaporan){
-            foreach($jurnals as $jurnal){
-                $data[] = [
-                    'tanggal' => $jurnal->tanggal,
-                    'nama' => $jurnal->nama,
-                    'total' => $jurnal->total,
-                    'kredit' => $jurnal->kredit->nama
-                ];
-            }
+        foreach($jurnals as $jurnal){
+            $data[] = [
+                'tanggal' => $jurnal->tanggal,
+                'nama' => $jurnal->nama,
+                'total' => $jurnal->total,
+                'kredit' => $jurnal->kredit->nama
+            ];
         }
 
         foreach( $groupedPersedians as $key => $value ){
@@ -317,19 +354,36 @@ if (!function_exists('data_jurnal')) {
             ];
         }
 
-        if($isFirstLaporan){
+        $data_akuns = data_akun($id);
 
-            $totalperalatan = $peralatans->sum(function ($item) {
-                return $item->harga;
-            });
+        $ajp = total_ajp($data_akuns,$id);
+        
+        if(!$isFirstLaporan){
+
+            $modal = Jurnal::where('tanggal', $startDate)
+                ->where('kredit_id', 14)
+                ->where('debet_id', 6)
+                ->orderBy('id')
+                ->first();
+
             $data[] = [
                 'tanggal' => $startDate,
-                'nama'=> 'PERALATAN',
-                'total'=> $totalperalatan,
-                'kredit' => 'MODAL' 
+                'nama'=> 'AKUMULASI PENYUSUTAN PERALATAN',
+                'kredit_total'=> $modal->total,
+                'total'=> 0,
+                'kredit' => 'AKUMULASI'
             ];
-
         }
+
+        $totalperalatan = $peralatans->sum(function ($item) {
+        return $item->harga;
+        });
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama'=> 'PERALATAN',
+            'total'=> $totalperalatan,
+            'kredit' => 'MODAL' 
+        ];
 
         foreach($belanjas as $belanja){
             $data[] = [
@@ -352,11 +406,14 @@ if (!function_exists('data_jurnal')) {
         });
 
         usort($data, function ($a, $b) {
-            if ($a['kredit'] === 'MODAL' && $b['kredit'] !== 'MODAL') {
-                return -1;
-            }
-            if ($a['kredit'] !== 'MODAL' && $b['kredit'] === 'MODAL') {
-                return 1;
+            // Prioritaskan 'MODAL' paling atas, lalu 'AKUMULASI', lalu lainnya
+            $priority = ['MODAL' => 2, 'AKUMULASI' => 1];
+
+            $aPriority = $priority[$a['kredit']] ?? 3;
+            $bPriority = $priority[$b['kredit']] ?? 3;
+
+            if ($aPriority !== $bPriority) {
+            return $aPriority - $bPriority;
             }
             return strtotime($a['tanggal']) - strtotime($b['tanggal']);
         });
@@ -366,15 +423,23 @@ if (!function_exists('data_jurnal')) {
 
         foreach($data as $index => $item){
             $isModal = $item['kredit'] === 'MODAL';
+            $isAkumulasi = $item['kredit'] === 'AKUMULASI';
             if($isModal){
                 $modalTotal += $item['total'];
                 $lastModalIndex = $index;
                 $data[$index]['kredit_total'] = 0;
                 $data[$index]['kredit'] = '';
-            }else{
+            }else if ($isAkumulasi){
+                $modalTotal -= $item['kredit_total'];
+                $lastModalIndex = $index;
+                $data[$index]['kredit'] = "AKUMULASI";
+            }
+            else{
                 $data[$index]['kredit_total'] = $item['total'];
             }
         }
+
+        // dd($data);
 
         $data[$lastModalIndex]['kredit_total'] = $modalTotal;
         $data[$lastModalIndex]['kredit'] = 'MODAL';
@@ -406,7 +471,7 @@ if (!function_exists('data_saldo')) {
 
             $tipe = "";
 
-            if(in_array($key, [1, 4, 5, 6])){
+            if(in_array($key, [1, 5, 6,4,14])){
                 // lakukan sesuatu khusus untuk akun dengan id 1, 4, 5, atau 6
                 // contoh: set nilai debet dan kredit ke 0
                 $tipe = 'asset';
@@ -621,7 +686,12 @@ if (!function_exists('total_ajp')) {
     {
         $data = [];
 
-        $data_akuns = data_akun($laporan);
+        $isFirstLaporan = Laporan::where('tahun', '<', $laporan->tahun)
+            ->orWhere(function ($query) use ($laporan) {
+                $query->where('tahun', $laporan->tahun)
+                      ->where('bulan', '<', $laporan->bulan);
+            })
+            ->doesntExist();
 
         $total_persediaan = total_persediaan($laporan);
         $total_persediaan_awal = total_persediaan_awal($laporan);
@@ -749,7 +819,7 @@ if (!function_exists('total_ajp')) {
             'debet' => $pemakaian_perlengkapan,
             'kredit' => 0,
             "status" => "debet",
-            "tipe" => "asset",
+            "tipe" => "beban",
             "ref" => "0"
         ];
 
@@ -773,7 +843,7 @@ if (!function_exists('total_ajp')) {
 
         $data[] = [
             'tanggal' => $startDate,
-            'nama' => "Beban Penyusutan Peralatan ".$peralatan->nama,
+            'nama' => "Beban Penyusutan Peralatan",
             'debet' => $total_beban_penyusutan,
             'kredit' => 0,
             "status" => "debet",
@@ -781,15 +851,27 @@ if (!function_exists('total_ajp')) {
             "ref" => "0"
         ];
 
-        $data[] = [
-            'tanggal' => $startDate,
-            'nama' => "Akumulasi Penyusutan Peralatan ".$peralatan->nama,
-            'debet' => 0,
-            'kredit' => $total_beban_penyusutan,
-            "status" => "kredit",
-            "tipe" => "asset",
-            "ref" => 0
-        ];
+        if($isFirstLaporan){
+            $data[] = [
+                'tanggal' => $startDate,
+                'nama' => "Akumulasi Penyusutan Peralatan",
+                'debet' => 0,
+                'kredit' => $total_beban_penyusutan,
+                "status" => "kredit",
+                "tipe" => "asset",
+                "ref" => 0
+            ];
+        }else{
+            $data[] = [
+                'tanggal' => $startDate,
+                'nama' => "Akumulasi Penyusutan Peralatan",
+                'debet' => 0,
+                'kredit' => $total_beban_penyusutan,
+                "status" => "kredit",
+                "tipe" => "asset",
+                "ref" => 14
+            ];
+        }
 
         $split = [];
 
@@ -821,11 +903,15 @@ if (!function_exists('data_neracasaldo')) {
                 "debet" => 0,
                 "kredit" => 0
             ];
+            $debet = ($saldo['debet'] + $penyesuian['debet']) - ($penyesuian['kredit'] + $saldo['kredit']);
+            $kredit = ($saldo['kredit'] + $penyesuian['kredit']) - ($penyesuian['debet'] + $saldo['debet']);
+            if ($debet < 0) $debet = 0;
+            if ($kredit < 0) $kredit = 0;
             $saldo_penyesuiana = [
                 "kode" => $saldo['kode'],
                 "nama" => $saldo["nama"],
-                "debet" => $saldo['debet'] - $penyesuian['kredit'],
-                "kredit" => $saldo['kredit'] - $penyesuian['debet'],
+                "debet" => $debet,
+                "kredit" => $kredit,
             ];
             $laba_rugi = $saldo['tipe'] == "beban" ? $saldo_penyesuiana : [
                 "kode" => $saldo['kode'],

@@ -79,11 +79,11 @@
       <td></td>
       <td></td>
       @elseif ($debet > $kredit)
+      <td></td>
       <td>{{ ($debet - $kredit) != 0 ? format_uang($debet - $kredit) : '' }}</td>
-      <td></td>
       @elseif ($debet < $kredit)
-      <td></td>
       <td>{{ ($kredit - $debet) != 0 ? format_uang($kredit - $debet) : '' }}</td>
+      <td></td>
       @endif
     @endforeach
     </tr>

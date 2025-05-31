@@ -109,9 +109,80 @@ class LaporanController extends Controller
                 }),
             ],
         ]);
-        
-        Laporan::create($request->all());
 
+        $laporan = Laporan::create($request->all());
+
+        $akuns = data_akun($laporan);
+        $data = data_saldo($akuns);
+
+        $nextMonth = Carbon::createFromDate($laporan->tahun, $laporan->bulan, 1)->addMonth();
+        $month = Carbon::createFromDate($laporan->tahun, $laporan->bulan, 1); 
+
+        $firstDayNextMonth = $nextMonth->copy()->startOfMonth();
+        $firtDayMonth = $month->copy()->startOfMonth();
+        
+        $Bulan = nama_bulan($nextMonth->month);
+
+        $isFirstLaporan = Laporan::where('tahun', '<', $laporan->tahun)
+            ->orWhere(function ($query) use ($laporan) {
+                $query->where('tahun', $laporan->tahun)
+                      ->where('bulan', '<', $laporan->bulan);
+            })
+            ->doesntExist();
+
+        $data_akun = data_akun($laporan);
+        $ajp = total_ajp($data_akun,$laporan);
+            
+        if($isFirstLaporan){
+            Jurnal::updateOrCreate(
+                [
+                    'tanggal' => $firstDayNextMonth,
+                    'debet_id' => 6,
+                    'nama' => "Akumulasi Penyusutan Peralatan Bulan " . $Bulan,
+                    'kredit_id' => 14,
+                    'tipe' => 1,
+                ],
+                [
+                    'pegawai_id' => auth()->user()->pegawai_id,
+                    'total' => $ajp["ref"][14]["kredit"],
+                ]
+            );
+        }else{
+            $modal = Jurnal::where('tanggal', $firtDayMonth)
+                ->where('kredit_id', 14)
+                ->where('debet_id', 6)
+                ->orderBy('id')
+                ->first();
+
+            Jurnal::updateOrCreate(
+                [
+                    'tanggal' => $firstDayNextMonth,
+                    'debet_id' => 6,
+                    'nama' => "Akumulasi Penyusutan Peralatan Bulan " . $Bulan,
+                    'kredit_id' => 14,
+                    'tipe' => 1,
+                ],
+                [
+                    'pegawai_id' => auth()->user()->pegawai_id,
+                    'total' => $ajp["ref"][14]["kredit"] + $modal->total,
+                ]
+            );
+        }
+
+        Jurnal::updateOrCreate(
+            [
+                'tanggal' => $firstDayNextMonth,
+                'debet_id' => 1,
+                'nama' => "Saldo Awal Bulan " . $Bulan,
+                'kredit_id' => 6,
+                'tipe' => 1,
+            ],
+            [
+                'pegawai_id' => auth()->user()->pegawai_id,
+                'total' => $data[1]['debet'],
+            ]
+        );
+        
         return redirect()->route('laporan')->with('success', 'Laporan created successfully.');
     
     }
