@@ -404,6 +404,16 @@ if (!function_exists('data_saldo')) {
                 }  
             }
 
+            $tipe = "";
+
+            if(in_array($key, [1, 4, 5, 6])){
+                // lakukan sesuatu khusus untuk akun dengan id 1, 4, 5, atau 6
+                // contoh: set nilai debet dan kredit ke 0
+                $tipe = 'asset';
+            }else{
+                $tipe = 'beban';
+            }
+
             if ($totaldebet < 0) {
                 $totaldebet = 0;
             }
@@ -413,10 +423,12 @@ if (!function_exists('data_saldo')) {
             }
 
             $data[$key] = [
+                'id' => $akun->id,
                 'kode' => $akun->kode,
                 'nama' => $akun->nama,
                 'debet' =>$totaldebet,
-                'kredit' => $totalkredit
+                'kredit' => $totalkredit,
+                'tipe' => $tipe
             ];
         }
 
@@ -506,7 +518,7 @@ if (!function_exists('data_ajp')) {
             'nama' => "Persedian ".$total_persediaan[2]['nama']." (akhir)",
             'debet' => $bahan_baku_akhir,
             'kredit' => 0,
-            "status" => "debet"
+            "status" => "debet",
         ];
 
         $data[] = [
@@ -600,6 +612,276 @@ if (!function_exists('data_ajp')) {
             ];  
         }
                
+        return $data;
+    }
+}
+
+if (!function_exists('total_ajp')) {
+    function total_ajp($data_akuns,Laporan $laporan)
+    {
+        $data = [];
+
+        $data_akuns = data_akun($laporan);
+
+        $total_persediaan = total_persediaan($laporan);
+        $total_persediaan_awal = total_persediaan_awal($laporan);
+        $total_pembelian = total_pembelian($laporan);
+        $data_saldo = data_saldo($data_akuns);
+
+        $saldo_bahan_baku = $data_saldo[2]['debet'];
+
+        $bahan_baku_akhir = $total_persediaan[2]['total'];
+        $pemakian_bahan_baku = $saldo_bahan_baku - $bahan_baku_akhir;
+        $pembelian_bahan_baku = $total_pembelian[2]['total'];
+        $bahan_baku_awal = $total_persediaan_awal[2]['total'];
+        
+        $saldo_bahan_penolong = $data_saldo[3]['debet'];
+
+        $bahan_penolong_akhir = $total_persediaan[3]['total'];
+        $pemakaian_bahan_penolong = $saldo_bahan_penolong - $bahan_penolong_akhir;
+        $pembelian_bahan_penolong = $total_pembelian[3]['total'];
+        $bahan_penolong_awal = $total_persediaan_awal[3]['total'];
+
+        $saldo_perlengkapan = $data_saldo[4]['debet'];
+
+        $perlengkapan_akhir = $total_persediaan[4]['total'];
+        $pemakaian_perlengkapan = $saldo_perlengkapan - $perlengkapan_akhir;
+        
+        $startDate = tanggal_awal_laporan($laporan->tahun,$laporan->bulan);
+        $endDate = tanggal_akhir_laporan($laporan->tahun,$laporan->bulan);
+        
+        $peralatans = Peralatan::where(function ($query) use ($startDate) {
+            $query->where(function ($q) use ($startDate) {
+                $q->whereNotNull('tanggal_nonaktif')
+                  ->whereDate('tanggal_aktif', '<=', $startDate)
+                  ->whereDate('tanggal_nonaktif', '>=', $startDate);
+            })
+            ->orWhere(function ($q) use ($startDate) {
+                $q->whereNull('tanggal_nonaktif')
+                  ->whereDate('tanggal_aktif', '<=', $startDate);
+            });
+        })->get();
+
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[2]['nama']." (akhir)",
+            'debet' => $bahan_baku_akhir,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "asset",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Pemakaian ".$total_persediaan[2]['nama'],
+            'debet' => $pemakian_bahan_baku,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "beban",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Pembelian ".$total_persediaan[2]['nama'],
+            'debet' => 0,
+            'kredit' => $pembelian_bahan_baku,
+            "status" => "kredit",
+            "tipe" => "beban",
+            "ref" => 2
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[2]['nama']." (awal)",
+            'debet' => 0,
+            'kredit' => $bahan_baku_awal,
+            "status" => "kredit",
+            "tipe" => "beban",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[3]['nama']." (akhir)",
+            'debet' => $bahan_penolong_akhir,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "asset",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Pemakaian ".$total_persediaan[3]['nama'],
+            'debet' => $pemakaian_bahan_penolong,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "beban",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Pembelian ".$total_persediaan[3]['nama'],
+            'debet' => 0,
+            'kredit' => $pembelian_bahan_penolong,
+            "status" => "kredit",
+            "tipe" => "beban",
+            "ref" => 3
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[3]['nama']." (awal)",
+            'debet' => 0,
+            'kredit' => $bahan_penolong_awal,
+            "status" => "kredit",
+            "tipe" => "beban",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Beban ".$total_persediaan[4]['nama'],
+            'debet' => $pemakaian_perlengkapan,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "asset",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => $total_persediaan[4]['nama'],
+            'debet' => 0,
+            'kredit' => $pemakaian_perlengkapan,
+            "status" => "kredit",
+            "tipe" => "asset",
+            "ref" => 4
+        ];
+
+        $total_beban_penyusutan = 0;
+        foreach($peralatans as $peralatan){
+            $beban_penyusutan = ($peralatan->harga - $peralatan->nilai_sisa) / $peralatan->umur_ekonomis;
+            $beban_penyusutan = (int) round($beban_penyusutan);
+              
+            $total_beban_penyusutan += $beban_penyusutan; 
+        }
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Beban Penyusutan Peralatan ".$peralatan->nama,
+            'debet' => $total_beban_penyusutan,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "beban",
+            "ref" => "0"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Akumulasi Penyusutan Peralatan ".$peralatan->nama,
+            'debet' => 0,
+            'kredit' => $total_beban_penyusutan,
+            "status" => "kredit",
+            "tipe" => "asset",
+            "ref" => 0
+        ];
+
+        $split = [];
+
+        foreach($data as $item){
+            if($item['ref'] == 0){
+                $split['noref'][] = $item;
+            }else{
+                $split['ref'][$item['ref']] = $item;
+            }
+        }
+               
+        return $split;
+    }
+}
+
+if (!function_exists('data_neracasaldo')) {
+    function data_neracasaldo($data_akuns,Laporan $laporan)
+    {
+        $data = [];
+
+        $data_saldo = data_saldo($data_akuns);
+        $total_ajp = total_ajp($data_akuns,$laporan);
+        
+        foreach($data_saldo as $saldo){
+            $saldo_akun = $saldo;
+            $penyesuian = isset($total_ajp['ref'][$saldo['id']]) ? $total_ajp['ref'][$saldo['id']] : [
+                "kode" => $saldo['kode'],
+                "nama" => $saldo["nama"],
+                "debet" => 0,
+                "kredit" => 0
+            ];
+            $saldo_penyesuiana = [
+                "kode" => $saldo['kode'],
+                "nama" => $saldo["nama"],
+                "debet" => $saldo['debet'] - $penyesuian['kredit'],
+                "kredit" => $saldo['kredit'] - $penyesuian['debet'],
+            ];
+            $laba_rugi = $saldo['tipe'] == "beban" ? $saldo_penyesuiana : [
+                "kode" => $saldo['kode'],
+                "nama" => $saldo["nama"],
+                "debet" => 0,
+                "kredit" => 0
+            ];
+            $neraca = $saldo['tipe'] == "asset" ? $saldo_penyesuiana : [
+                "kode" => $saldo['kode'],
+                "nama" => $saldo["nama"],
+                "debet" => 0,
+                "kredit" => 0
+            ];
+            $data[] = [
+                "saldo" => $saldo_akun,
+                "penyesuian" => $penyesuian,
+                "saldo_penyesuaian" => $saldo_penyesuiana,
+                "laba rugi" => $laba_rugi,
+                "neraca" => $neraca
+            ];
+        }
+
+        foreach($total_ajp['noref'] as $ajp){
+            $ajp_akun = [
+                "kode" => "",
+                "nama" => $ajp["nama"],
+                "debet" => 0,
+                "kredit" => 0
+            ];
+            $penyesuian = [
+                "kode" => "",
+                "nama" => $ajp["nama"],
+                "debet" => $ajp['debet'],
+                "kredit" => $ajp["kredit"],
+            ];
+            $laba_rugi = $ajp['tipe'] == "beban" ? $penyesuian : [
+                "kode" => "",
+                "nama" => $ajp["nama"],
+                "debet" => 0,
+                "kredit" => 0
+            ];
+            $neraca = $ajp['tipe'] == "asset" ? $penyesuian : [
+                "kode" => "",
+                "nama" => $ajp["nama"],
+                "debet" => 0,
+                "kredit" => 0
+            ];
+            $data[] = [
+                "saldo" => $ajp_akun,
+                "penyesuian" => $penyesuian,
+                "saldo_penyesuaian" => $penyesuian,
+                "laba rugi" => $laba_rugi,
+                "neraca" => $neraca
+            ];
+        }
+
         return $data;
     }
 }

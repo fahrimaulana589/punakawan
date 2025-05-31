@@ -177,6 +177,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/bukubesar/{id}', [LaporanController::class, 'bukuBesar'])->name('laporan.bukubesar')->middleware('can:laporan_read');
     Route::get('/laporan/neracasaldo/{id}', [LaporanController::class, 'neracaSaldo'])->name('laporan.neracasaldo')->middleware('can:laporan_read');
     Route::get('/laporan/ajp/{id}', [LaporanController::class, 'ajp'])->name('laporan.ajp')->middleware('can:laporan_read');
+    Route::get('/laporan/neracalajur/{id}', [LaporanController::class, 'neracaLajur'])->name('laporan.neracalajur')->middleware('can:laporan_read');
 });
 
 Route::middleware('auth')->group(function () {
