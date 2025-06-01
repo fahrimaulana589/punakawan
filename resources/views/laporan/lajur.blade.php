@@ -39,9 +39,10 @@
     </tr>
   </thead>  
   <tbody>
-    @foreach ($data as $item)
-      <tr>
-        <td>{{ $item['saldo']['kode'] }}</td>
+    @foreach ($data as $key => $item)
+      <tr> 
+        <td>{{ $key }}</td>
+        {{-- <td>{{ $item['saldo']['kode'] }}</td> --}}
         <td>{{ $item['saldo']['nama'] }}</td>
         <td>{{ $item['saldo']['debet'] != 0 ? format_uang($item['saldo']['debet']) : '' }}</td>
         <td>{{ $item['saldo']['kredit'] != 0 ? format_uang($item['saldo']['kredit']) : '' }}</td>

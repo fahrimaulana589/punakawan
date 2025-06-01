@@ -740,7 +740,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => 0,
             "status" => "debet",
             "tipe" => "asset",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_1"
         ];
 
         $data[] = [
@@ -750,7 +751,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => 0,
             "status" => "debet",
             "tipe" => "beban",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_2"
         ];
 
         $data[] = [
@@ -760,7 +762,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => $pembelian_bahan_baku,
             "status" => "kredit",
             "tipe" => "beban",
-            "ref" => 2
+            "ref" => 2,
+            "index" => "ajp_3"
         ];
 
         $data[] = [
@@ -770,7 +773,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => $bahan_baku_awal,
             "status" => "kredit",
             "tipe" => "beban",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_4"
         ];
 
         $data[] = [
@@ -780,7 +784,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => 0,
             "status" => "debet",
             "tipe" => "asset",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_5"
         ];
 
         $data[] = [
@@ -790,7 +795,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => 0,
             "status" => "debet",
             "tipe" => "beban",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_6"
         ];
 
         $data[] = [
@@ -800,7 +806,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => $pembelian_bahan_penolong,
             "status" => "kredit",
             "tipe" => "beban",
-            "ref" => 3
+            "ref" => 3,
+            "index" => "ajp_7"
         ];
 
         $data[] = [
@@ -810,7 +817,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => $bahan_penolong_awal,
             "status" => "kredit",
             "tipe" => "beban",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_8"
         ];
 
         $data[] = [
@@ -820,7 +828,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => 0,
             "status" => "debet",
             "tipe" => "beban",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_9"
         ];
 
         $data[] = [
@@ -830,7 +839,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => $pemakaian_perlengkapan,
             "status" => "kredit",
             "tipe" => "asset",
-            "ref" => 4
+            "ref" => 4,
+            "index" => "ajp_10"
         ];
 
         $total_beban_penyusutan = 0;
@@ -848,7 +858,8 @@ if (!function_exists('total_ajp')) {
             'kredit' => 0,
             "status" => "debet",
             "tipe" => "beban",
-            "ref" => "0"
+            "ref" => "0",
+            "index" => "ajp_11"
         ];
 
         if($isFirstLaporan){
@@ -859,7 +870,8 @@ if (!function_exists('total_ajp')) {
                 'kredit' => $total_beban_penyusutan,
                 "status" => "kredit",
                 "tipe" => "asset",
-                "ref" => 0
+                "ref" => 0,
+                "index" => "ajp_12"
             ];
         }else{
             $data[] = [
@@ -869,7 +881,8 @@ if (!function_exists('total_ajp')) {
                 'kredit' => $total_beban_penyusutan,
                 "status" => "kredit",
                 "tipe" => "asset",
-                "ref" => 14
+                "ref" => 14,
+                "index" => "ajp_12"
             ];
         }
 
@@ -895,6 +908,7 @@ if (!function_exists('data_neracasaldo')) {
         $data_saldo = data_saldo($data_akuns);
         $total_ajp = total_ajp($data_akuns,$laporan);
         
+        $count = 0;
         foreach($data_saldo as $saldo){
             $saldo_akun = $saldo;
             $penyesuian = isset($total_ajp['ref'][$saldo['id']]) ? $total_ajp['ref'][$saldo['id']] : [
@@ -925,7 +939,7 @@ if (!function_exists('data_neracasaldo')) {
                 "debet" => 0,
                 "kredit" => 0
             ];
-            $data[] = [
+            $data["saldo_".$saldo['id']] = [
                 "saldo" => $saldo_akun,
                 "penyesuian" => $penyesuian,
                 "saldo_penyesuaian" => $saldo_penyesuiana,
@@ -959,7 +973,7 @@ if (!function_exists('data_neracasaldo')) {
                 "debet" => 0,
                 "kredit" => 0
             ];
-            $data[] = [
+            $data[$ajp["index"]] = [
                 "saldo" => $ajp_akun,
                 "penyesuian" => $penyesuian,
                 "saldo_penyesuaian" => $penyesuian,
