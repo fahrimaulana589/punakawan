@@ -125,7 +125,7 @@ class DatabaseSeeder extends Seeder
             'akun_create','akun_read','akun_edit','akun_delete',
         ]);
         
-        $path = storage_path('/app/data/data.xlsx');
+        $path = storage_path('/data/data.xlsx');
         Excel::import(new DataImport(), $path);
 
     }
