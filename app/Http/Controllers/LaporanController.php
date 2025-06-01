@@ -144,7 +144,7 @@ class LaporanController extends Controller
                 ],
                 [
                     'pegawai_id' => auth()->user()->pegawai_id,
-                    'total' => $ajp["ref"][14]["kredit"],
+                    'total' => $ajp["noref"][8]["kredit"],
                 ]
             );
         }else{
