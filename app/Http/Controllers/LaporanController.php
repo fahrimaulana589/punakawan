@@ -274,7 +274,7 @@ class LaporanController extends Controller
         return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
     }
 
-     public function neracaLajur(Laporan $id){
+    public function neracaLajur(Laporan $id){
         $bulan = nama_bulan($id->bulan);
         
         $data_akuns = data_akun($id);
@@ -293,6 +293,28 @@ class LaporanController extends Controller
         $pdf = Pdf::loadView('laporan.lajur',compact('data','split','bulan'))->setPaper('A3', 'landscape');
         return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
 
+    }
+
+    public function bulan(Laporan $id){
+        $bulan = nama_bulan($id->bulan);
+        
+        $data_akuns = data_akun($id);
+        $data = data_neracasaldo($data_akuns,$id);
+        
+        $split = [];
+
+        foreach ($data as $key => $item) {
+            $split['Neraca Saldo'][] = $item['saldo'];
+            $split['Penyesuaian'][] = $item['penyesuian'];
+            $split['Neraca Saldo Disesuikan'][] = $item['saldo_penyesuaian'];
+            $split['Laba Rugi'][] = $item['laba rugi'];
+            $split['Neraca'][] = $item['neraca'];
+        }
+
+        // $pdf = Pdf::loadView('laporan.lajur',compact('data','split','bulan'))->setPaper('A3', 'landscape');
+        // return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
+
+        return view('laporan.bulan',compact('split','bulan'));
     }
 
     /**
