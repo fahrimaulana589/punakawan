@@ -95,7 +95,8 @@ class DatabaseSeeder extends Seeder
         
         
         $kasir_role->givePermissionTo([
-            'dashboard','transaksi_kasir','produk_read'
+            'dashboard','transaksi_kasir','produk_read',
+            'transaksi_create','transaksi_edit','transaksi_delete',
         ]);
 
         $direktur_produksi_role->givePermissionTo([
