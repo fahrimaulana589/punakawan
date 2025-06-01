@@ -5,8 +5,6 @@
 /public/storage
 /storage/*.key
 /vendor
-!vendor/phpoffice/
-!vendor/maatwebsite/
 .env
 .env.backup
 .env.production
