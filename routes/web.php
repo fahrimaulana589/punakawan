@@ -113,9 +113,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaksi/void', [TransaksiController::class, 'void'])->name('penjualan.void')->middleware(['permission:transaksi_kasir|transaksi_read']);
     Route::get('/transaksi/riwayat', [TransaksiController::class, 'riwayat'])->name('penjualan.riwayat')->middleware(['permission:transaksi_kasir|transaksi_read']);    
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('penjualan.create')->middleware(['can:transaksi_kasir']);
-    Route::get('/transaksi/create/manual', [TransaksiController::class, 'createManual'])->name('penjualan.create.manual')->middleware(['can:transaksi_create']);
+    Route::get('/transaksi/create/selesai', [TransaksiController::class, 'create'])->name('penjualan.create.manual')->middleware(['can:transaksi_create']);
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('penjualan.store')->middleware(['can:transaksi_kasir']);
-    Route::post('/transaksi/store/manual', [TransaksiController::class, 'storeManual'])->name('penjualan.store.manual')->middleware(['can:transaksi_create']);
     Route::get('/transaksi/show/{id}', [TransaksiController::class, 'show'])->name('penjualan.show')->middleware(['permission:transaksi_kasir|transaksi_read']);
     Route::get('/transaksi/edit/{id}', [TransaksiController::class, 'edit'])->name('penjualan.edit')->middleware(['can:transaksi_edit']);
     Route::put('/transaksi/update/{id}', [TransaksiController::class, 'update'])->name('penjualan.update')->middleware(['can:transaksi_edit']);

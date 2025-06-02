@@ -46,10 +46,6 @@ class TransaksiController extends Controller
         return view('transaksi.riwayat',compact('transaksis'));
     }
 
-    public function createManual(){
-        return view('transaksi.manual');
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -80,43 +76,21 @@ class TransaksiController extends Controller
         return view('transaksi.create', compact('produks','old','messages'));
     }
 
-    public function storeManual(Request $request){
-        $request->validate([
-            'tanggal' => [
-                'required',
-                'date',
-                'before_or_equal:today'
-            ],
-            'total' => [
-                'required',
-                'numeric',
-                'min:0'
-            ]
-        ]);
-
-        $pegawai = auth()->user()->pegawai;
-
-        $lastId = Transaksi::max('id') ?? 0;
-        $kode = 'TSK' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
-
-        Transaksi::create([
-            'debet_id' => 7,
-            'kredit_id' => 1,
-            'total' => $request->total,
-            'tanggal' => $request->tanggal,
-            'status' => 'selesai',
-            'pegawai_id' => $pegawai->id,
-            'kode' => $kode
-        ]);
-
-        return redirect()->route('penjualan.riwayat')->with('success', 'Transaksi created successfully.');
-    }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        $tanggal = now();
+        $status = '';
+        $ismanual = url()->previous() === route('penjualan.create.manual');
+        if ($ismanual) {
+            $request->validate([
+                'tanggal'   => ['required', 'before_or_equal:now', 'date'],
+            ]);
+            $tanggal = $request->tanggal;
+            $status = 'selesai';
+        }
         $request->validate([
             'produk_ids'   => ['required', 'array', 'min:1'],
             'produk_ids.*' => ['required', 'exists:produks,id'],
@@ -184,9 +158,10 @@ class TransaksiController extends Controller
             'debet_id'   => 7,
             'kredit_id'  => 1,
             'pegawai_id' => $pegawai->id,
-            'tanggal'    => now(),
+            'tanggal'    => $tanggal,
             'total'      => $total,
             'kode'       => $kode,
+            'status'     => $status
         ]);
 
         foreach ($request->produk_ids as $key => $produkId) {
@@ -207,6 +182,10 @@ class TransaksiController extends Controller
             $produk = Produk::find($key);
             $produk->stok = $stok;
             $produk->save();
+        }
+
+        if($ismanual){
+            return redirect()->route('penjualan.riwayat')->with('success', 'Transaksi created successfully.');
         }
 
         return redirect()->route('penjualan')->with('success', 'Transaksi created successfully.');

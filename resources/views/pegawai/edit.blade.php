@@ -590,19 +590,19 @@
             </template>
 
             <div class="flex items-center justify-end gap-3">
-                {{-- <button
+              {{-- <button
                 @click.prevent="addItem('potongan')"
                 class="inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-yellow-600"
               >
                 Potongan
-              </button>
+              </button> --}}
               <div class="flex items-center justify-end gap-3">
                 <button
                 @click.prevent="addItem('tunjangan')"
                 class="inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-yellow-600"
               >
                 Tunjangan
-              </button> --}}
+              </button>
               <button
                 type="submit"
                 class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"

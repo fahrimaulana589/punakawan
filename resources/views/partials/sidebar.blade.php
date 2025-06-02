@@ -299,7 +299,7 @@
                   <a
                     href="{{ route('penjualan.riwayat') }}"
                     class="menu-dropdown-item group"
-                    :class="selected === 'penjualan.riwayat' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    :class="selected === 'penjualan.riwayat' || selected === 'penjualan.create.manual' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Riwayat
                   </a>
