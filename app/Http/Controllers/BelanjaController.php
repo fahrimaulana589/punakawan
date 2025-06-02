@@ -147,7 +147,11 @@ class BelanjaController extends Controller
     public function destroy(string $id)
     {
         $belanja = Belanja::findOrFail($id);
-        $belanja->delete();
+        try {
+            $belanja->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return redirect()->route('belanja')->with('success', 'Belanja deleted successfully.');
     }

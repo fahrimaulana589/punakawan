@@ -50,7 +50,11 @@ class ProfileController extends Controller
 
         Auth::logout();
 
-        $user->delete();
+        try {
+            $user->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

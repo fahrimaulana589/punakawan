@@ -315,7 +315,11 @@ class TransaksiController extends Controller
         $id->penjualan()->delete();
 
         //hapus transaski
-        $id->delete();
+        try {
+            $id->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return back()->with('success', 'Transaksi dealted successfully.');
     

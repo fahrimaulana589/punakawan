@@ -111,7 +111,11 @@ class JurnalController extends Controller
     public function destroy(string $id)
     {
         $jurnal = Jurnal::findOrFail($id);
-        $jurnal->delete();
+        try {
+            $jurnal->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return redirect()->route('jurnal')->with('success', 'Jurnal deleted successfully.');
     }

@@ -153,7 +153,11 @@ class PegawaiController extends Controller
     public function destroy($id)
     {
         $pegawai = Pegawai::findOrFail($id);
-        $pegawai->delete();
+        try {
+            $pegawai->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return redirect()->route('pegawai')->with('success', 'Karyawan deleted successfully.');
     }

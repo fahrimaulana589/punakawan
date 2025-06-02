@@ -165,7 +165,11 @@ class ProdukController extends Controller
     public function destroy($id)
     {
         $produk = Produk::findOrFail($id);
-        $produk->delete();
+        try {
+            $produk->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return redirect()->route('produk')->with('success', 'Produk deleted successfully.');
     }

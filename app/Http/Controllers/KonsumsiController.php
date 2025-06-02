@@ -59,7 +59,11 @@ class KonsumsiController extends Controller
     public function destroy($id)
     {
         $konsumsi = Konsumsi::findOrFail($id);
-        $konsumsi->delete();
+        try {
+            $konsumsi->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return back()->with('success', 'Bahan Produksi deleted successfully.');
     }

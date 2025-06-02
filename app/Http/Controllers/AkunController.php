@@ -55,8 +55,13 @@ class AkunController extends Controller
     public function destroy($id)
     {
         $akun = Akun::findOrFail($id);
-        $akun->delete();
-
-        return redirect()->route('akun')->with('success', 'Akun deleted successfully.');
+        
+        try {
+            $akun->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
+        
+        return back()->with('success', 'Akun deleted successfully.');
     }
 }

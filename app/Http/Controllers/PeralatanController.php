@@ -144,7 +144,11 @@ class PeralatanController extends Controller
      */
     public function destroy(Peralatan $id)
     {
-        $id->delete();
+        try {
+            $id->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
         return back()->with('success', 'Peralatan deleted successfully.');
     }
 }

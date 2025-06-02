@@ -110,7 +110,11 @@ class AbsensiController extends Controller
      */
     public function destroy(Absensi $id)
     {
-        $id->delete();
+        try {
+            $id->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
         
         return back()->with('success', 'Absensi deleted successfully.');
       

@@ -388,7 +388,11 @@ class GajiController extends Controller
      */
     public function destroy(Jurnal $gaji)
     {
-        $gaji->delete();
+        try {
+            $gaji->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return redirect()->route('gaji')->with('success', 'Gaji delated successfully.');
    

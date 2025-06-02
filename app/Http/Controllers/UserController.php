@@ -79,7 +79,11 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
+        try {
+            $user->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
+        }
 
         return redirect()->route('user')->with('success', 'User deleted successfully.');
     }
