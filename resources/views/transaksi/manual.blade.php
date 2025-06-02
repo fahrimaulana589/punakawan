@@ -27,7 +27,7 @@
         },
     
         getNamaProduk(p) {
-            return `Stok: ${p.stok.toString().padStart(3, '0')} - ${p.nama}`;
+            return `${p.nama}`;
         },
     
         getHarga(id) {
@@ -60,101 +60,7 @@
         },
     
         recalculateStok() {
-            // Reset produk list
-            this.produkList = JSON.parse(JSON.stringify(this.originalProdukList));
-    
-            // Kurangi stok produk yang dipilih
-            this.items.forEach(item => {
-                const produk = this.getProduk(item.produk_id);
-                const jumlah = Number(item.jumlah || 0);
-                if (!produk || !jumlah) return;
-    
-                // Kurangi stok produk utama
-                const pIndex = this.produkList.findIndex(p => p.id === produk.id);
-                if (pIndex >= 0) this.produkList[pIndex].stok -= jumlah;
-    
-                console.log(produk.nama);
-                if (produk.parent && Array.isArray(produk.parent)) {
-                    const childrenMap = new Map(); // key: id, value: produk anak
-                
-                    console.log(produk.parent);
-                    produk.parent.forEach(rel => {
-                        const parentIndex = this.produkList.findIndex(p => p.id === rel.id);
-                        
-                        if (parentIndex >= 0) {
-                            const parentProduk = this.produkList[parentIndex];
-                
-                            if (Array.isArray(parentProduk.children)) {
-                                parentProduk.children.forEach(child => {
-                                    // Masukkan hanya jika belum ada
-                                    if (!childrenMap.has(child.id)) {
-                                        childrenMap.set(child.id, child);
-                                    }
-                                });
-                            }
-                
-                            // Kurangi stok parent
-                            this.produkList[parentIndex].stok -= jumlah * rel.pivot.jumlah;
-                        }
-                    });
-                
-                    // Ambil array dari nilai anak-anak unik
-                    const children = Array.from(childrenMap.values());
-                    if(produk.children.length > 0){
-                        produk.children.forEach(child => {
-                            const childIndex = this.produkList.findIndex(p => p.id === child.id);
-                            const chd = this.produkList[childIndex];
-    
-                            const stok = [];
-                            
-                            chd.parent.forEach(rel => {
-                                const parentIndex = this.produkList.findIndex(p => p.id === rel.id);
-                                const stokasli = this.produkList[parentIndex].stok;
-                                const jumlahyangdibutuhkan = rel.pivot.jumlah;
-                                const ketersedian = Math.floor(stokasli / jumlahyangdibutuhkan);
-                               
-                                stok.push(ketersedian);
-                            });
-    
-                            // Ambil nilai stok terkecil dari semua parent
-                            const stokMinimum = Math.min(...stok);
-    
-                            // Update stok produk anak
-                            this.produkList[childIndex].stok = stokMinimum;
-                        });
-                    }
-
-                    //update stok produk anak
-                    children.forEach(child => {
-                        const childIndex = this.produkList.findIndex(p => p.id === child.id);
-                        const chd = this.produkList[childIndex];
-
-                        const stok = [];
-                        
-                        chd.parent.forEach(rel => {
-                            const parentIndex = this.produkList.findIndex(p => p.id === rel.id);
-                            const stokasli = this.produkList[parentIndex].stok;
-                            const jumlahyangdibutuhkan = rel.pivot.jumlah;
-                            const ketersedian = Math.floor(stokasli / jumlahyangdibutuhkan);
-                           
-                            stok.push(ketersedian);
-                        });
-
-                        // Ambil nilai stok terkecil dari semua parent
-                        const stokMinimum = Math.min(...stok);
-
-                        // Update stok produk anak
-                        this.produkList[childIndex].stok = stokMinimum;
-                    });
-              }
-              
-            });
-    
-            // Update stok produk lain agar tidak bisa dipilih kalau stoknya habis
-            this.produkList.forEach(p => {
-                p.stok = p.stok;
-            });
-
+            
         },
     
         init() {
@@ -163,6 +69,8 @@
     }">
         <form action="{{ route('penjualan.store') }}" method="POST">
             @csrf
+            
+            @if (Route::currentRouteName() == 'penjualan.create.manual')
             
             <!-- Elements -->
             <div class="mb-6">
@@ -176,7 +84,7 @@
                 <input
                   type="date"
                   name="tanggal"
-                  value="{{ old('tanggal',$transaksi->tanggal) }}"
+                  value="{{ old('tanggal') }}"
                   placeholder="Select date"
                   @error('tanggal')
                     class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
@@ -214,21 +122,7 @@
                 @enderror
             </div>
 
-            <!-- Elements -->
-            <div class="mb-6">
-              <label
-                class=" mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-              >
-                Total
-              </label>
-              <input
-                type="number"
-                name="total_transaksi"
-                value="{{ $transaksi->total }}"
-                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                readonly
-              />
-            </div>
+            @endif
 
             <template x-for="(item, index) in items" :key="index">
                 <div class="mb-6 space-y-6">
@@ -313,7 +207,7 @@
                     </div>
                 </div>
             </template>
-            
+    
             <!-- Total -->
             <div class="flex justify-between items-start mt-6 flex-col sm:flex-row sm:items-center sm:space-x-6">
                 <div class="space-y-1 text-sm font-medium text-gray-700 dark:text-white/80">
@@ -339,3 +233,5 @@
     </div>
   </div>
 </x-app-layout>
+
+

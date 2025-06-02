@@ -51,6 +51,8 @@ class TransaksiController extends Controller
      */
     public function create()
     {
+        $ismanual = \Route::currentRouteName() === 'penjualan.create.manual';
+
         // Menangkap data old dari session dan mengatur default jika tidak ada
         $oldProdukIds = old('produk_ids', [null]);  // Default produk_id null
         $oldJumlahs = old('jumlahs', [1]);  // Default jumlah 1
@@ -72,6 +74,10 @@ class TransaksiController extends Controller
         },'children' => function ($q) {
             $q->withPivot('jumlah'); // ini penting
         }])->get();
+
+        if ($ismanual) {
+            return view('transaksi.manual', compact('produks','old','messages'));
+        }
 
         return view('transaksi.create', compact('produks','old','messages'));
     }
@@ -146,7 +152,7 @@ class TransaksiController extends Controller
             }
         }
         // Jika ada error, lemparkan exception validasi
-        if (!empty($errors)) {
+        if (!empty($errors) && !$ismanual) {
             throw ValidationException::withMessages($errors);
         }
         // Update total transaksi
@@ -258,7 +264,31 @@ class TransaksiController extends Controller
     public function edit(Transaksi $id)
     {
         $transaksi = $id;
-        return view('transaksi.edit', compact('transaksi'));
+
+        // Menangkap data old dari session dan mengatur default jika tidak ada
+        $oldProdukIds = old('produk_ids', [null]);  // Default produk_id null
+        $oldJumlahs = old('jumlahs', [1]);  // Default jumlah 1
+
+        // Gabungkan produk_id dan jumlah ke dalam format yang diinginkan
+        $old = array_map(function ($produkId, $jumlah) {
+            return ['produk_id' => $produkId, 'jumlah' => $jumlah];
+        }, $oldProdukIds, $oldJumlahs);
+
+        dd($transaksi->penjualan);
+        $old = json_encode($old); // hasil asli: [{"produk_id":null,"jumlah":1}]
+
+        $errors = session('errors');
+        $messages = $errors ? $errors->messages() : [];
+
+        $messages = json_encode($messages); // hasil asli: {"produk_ids":["The produk ids field is required."]}
+
+        $produks = Produk::with(['parent' => function ($q) {
+            $q->withPivot('jumlah'); // ini penting
+        },'children' => function ($q) {
+            $q->withPivot('jumlah'); // ini penting
+        }])->get();
+
+        return view('transaksi.edit', compact('produks','old','messages','transaksi'));
     }
 
     /**
