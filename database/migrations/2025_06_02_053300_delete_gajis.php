@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Pegawai;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,10 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->foreignIdFor(Pegawai::class)->nullable()->onDelete('restrict')->after('id')->constrained('pegawais', 'id');
-        });
+        Schema::dropIfExists('gajis');
     }
 
     /**
@@ -23,8 +19,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users_table_', function (Blueprint $table) {
-            //
+         Schema::create('gajis', function (Blueprint $table) {
+            $table->id();
+
+            $table->date('tanggal');
+            $table->string('nama');
+            $table->integer('total');
+
+            $table->timestamps();
         });
     }
 };
