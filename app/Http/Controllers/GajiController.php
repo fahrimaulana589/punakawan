@@ -136,7 +136,7 @@ class GajiController extends Controller
                     $gaji = $gaji + ($penggajian->total * $hadirCount);
                 }               
             }
-            $total_gaji += $gaji;
+            $total_gaji += $gaji * $hadirCount;
             
             $rekapAlpa[$pegawai->id] = $alpaCount;
 

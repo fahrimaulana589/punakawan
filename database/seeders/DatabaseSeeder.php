@@ -112,6 +112,7 @@ class DatabaseSeeder extends Seeder
             'karyawan_create','karyawan_read','karyawan_edit','karyawan_delete',
             'absensi_create','absensi_read','absensi_edit','absensi_delete',
             'user_create','user_read','user_edit','user_delete',
+            'gaji_create','gaji_read','gaji_edit','gaji_delete',
         ]);
 
         $bagian_keuangan_role->givePermissionTo([
@@ -122,7 +123,6 @@ class DatabaseSeeder extends Seeder
             'belanja_read',
             'jurnal_create','jurnal_read','jurnal_edit','jurnal_delete',
             'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
-            'gaji_create','gaji_read','gaji_edit','gaji_delete',
             'akun_create','akun_read','akun_edit','akun_delete',
         ]);
         

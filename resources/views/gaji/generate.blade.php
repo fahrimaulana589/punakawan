@@ -121,14 +121,36 @@
                     class="flex flex-wrap justify-between gap-x-4"
                   >
                     <div x-ref="text" class="truncate text-sm">
-                      Gaji pokok
+                      Kehadiran
                     </div>
                     <div 
                       x-ref="price" 
                       :class="isBelow ? 'w-full flex justify-end' : ''" 
                       class="text-sm"
                     >
-                      {{ $karyawan->gajiRupiah }}
+                      {{ $rekapHadir[$karyawan->id] }} Hari
+                    </div>
+                  </div>
+                  <div 
+                    x-data="{ isBelow: false }" 
+                    x-init="
+                      $nextTick(() => {
+                          const textEl = $refs.text;
+                          const priceEl = $refs.price;
+                          isBelow = priceEl.offsetTop > textEl.offsetTop;
+                      })
+                    " 
+                    class="flex flex-wrap justify-between gap-x-4"
+                  >
+                    <div x-ref="text" class="truncate text-sm">
+                      Gaji
+                    </div>
+                    <div 
+                      x-ref="price" 
+                      :class="isBelow ? 'w-full flex justify-end' : ''" 
+                      class="text-sm"
+                    >
+                      {{ format_uang($karyawan->gaji * $rekapHadir[$karyawan->id]) }}
                     </div>
                   </div>
 
@@ -137,7 +159,7 @@
                   </div>
                   @php $alpaCount = $rekapAlpa[$karyawan->id] @endphp
                   @php $hadirCount = $rekapHadir[$karyawan->id] @endphp
-                  @php $gaji = $karyawan->gaji @endphp
+                  @php $gaji = $karyawan->gaji * $rekapHadir[$karyawan->id] @endphp
                   @php $lainya = 0 @endphp
                   @php $jenis = 0 @endphp
 
