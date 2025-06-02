@@ -159,6 +159,6 @@ class PegawaiController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return redirect()->route('pegawai')->with('success', 'Karyawan deleted successfully.');
+        return back()->with('success', 'Karyawan deleted successfully.');
     }
 }

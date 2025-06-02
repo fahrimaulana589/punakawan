@@ -85,6 +85,6 @@ class UserController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return redirect()->route('user')->with('success', 'User deleted successfully.');
+        return back()->with('success', 'User deleted successfully.');
     }
 }

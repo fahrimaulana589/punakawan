@@ -394,7 +394,7 @@ class GajiController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return redirect()->route('gaji')->with('success', 'Gaji delated successfully.');
+        return back()->with('success', 'Gaji delated successfully.');
    
     }
 }

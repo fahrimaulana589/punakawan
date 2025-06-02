@@ -54,8 +54,13 @@ class AkunController extends Controller
     }
     public function destroy($id)
     {
+        // Prevent deletion of Akun with id 1 to 14
+        if ($id <= 14) {
+            return back()->with('error', 'Akun default cannot be deleted.');
+        }
+    
         $akun = Akun::findOrFail($id);
-        
+    
         try {
             $akun->delete();
         } catch (\Exception $e) {

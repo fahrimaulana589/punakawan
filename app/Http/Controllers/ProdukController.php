@@ -171,6 +171,6 @@ class ProdukController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return redirect()->route('produk')->with('success', 'Produk deleted successfully.');
+        return back()->with('success', 'Produk deleted successfully.');
     }
 }

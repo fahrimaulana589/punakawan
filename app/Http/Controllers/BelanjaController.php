@@ -153,6 +153,6 @@ class BelanjaController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return redirect()->route('belanja')->with('success', 'Belanja deleted successfully.');
+        return back()->with('success', 'Belanja deleted successfully.');
     }
 }
