@@ -141,7 +141,7 @@
                     </p>
                   </div>
                 </th>
-                <th class="px-5 py-3 sm:px-6">
+                {{-- <th class="px-5 py-3 sm:px-6">
                   <div class="flex items-center">
                     <p
                       class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
@@ -149,7 +149,7 @@
                       Tipe
                     </p>
                   </div>
-                </th>
+                </th> --}}
                 <th class="px-5 py-3 sm:px-6">
                   <div class="flex items-center justify-end">
                     <p
@@ -194,25 +194,25 @@
                       </p>
                     </div>
                   </td>
-                  <td class="px-5 py-4 sm:px-6">
+                  {{-- <td class="px-5 py-4 sm:px-6">
                     <div class="flex items-center">
                       <p class="text-gray-500 text-theme-sm dark:text-gray-400">
                         {{ $produk->tipe }}
                       </p>
                     </div>
-                  </td>
+                  </td> --}}
                   
                   <td class="px-5 py-4 sm:px-6">
                     <div class="flex items-center justify-end mb-4 gap-2">
                       @can('produk_edit')
-                      @if (in_array($produk->tipe, ['tunggal', 'paket']))
+                      {{-- @if (in_array($produk->tipe, ['tunggal', 'paket']))
                       <a
                         href="{{ route('produk.paket', $produk->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         Paket
                       </a>
-                      @endif
+                      @endif --}}
                       <a
                         href="{{ route('produk.edit',$produk->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

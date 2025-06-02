@@ -69,8 +69,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create')->middleware('can:produk_create');
     Route::post('/produk/store', [ProdukController::class, 'store'])->name('produk.store')->middleware('can:produk_create');
     Route::get('/produk/edit/{id}', [ProdukController::class, 'edit'])->name('produk.edit')->middleware('can:produk_edit');
-    Route::get('/produk/paket/{id}', [ProdukController::class, 'paket'])->name('produk.paket')->middleware(['can:produk_edit']);
-    Route::post('/produk/paket/{id}/store', [ProdukController::class, 'storeToPaket'])->name('produk.paket.store')->middleware('can:produk_edit');
+    // Route::get('/produk/paket/{id}', [ProdukController::class, 'paket'])->name('produk.paket')->middleware(['can:produk_edit']);
+    // Route::post('/produk/paket/{id}/store', [ProdukController::class, 'storeToPaket'])->name('produk.paket.store')->middleware('can:produk_edit');
     Route::put('/produk/update/{id}', [ProdukController::class, 'update'])->name('produk.update')->middleware('can:produk_edit');
     Route::delete('/produk/delete/{id}', [ProdukController::class, 'destroy'])->name('produk.delete')->middleware('can:produk_delete');
 
