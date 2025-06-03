@@ -131,6 +131,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Profile Perusahaan
+    Route::get('/profile-perusahaan', [ProfileController::class, 'editProfile'])->name('profile.perusahaan')->middleware('can:profile_manage');
+    Route::post('/profile-perusahaan/update', [ProfileController::class, 'updateProfile'])->name('profile.perusahaan.update')->middleware('can:profile_manage');
+});
+
+
+Route::middleware('auth')->group(function () {
    // Bahan Produksi
    Route::get('/bahanproduksi', [KonsumsiController::class, 'index'])->name('bahankonsumsi')->middleware('can:bahan_produksi_read');
    Route::get('/bahanproduksi/create', [KonsumsiController::class, 'create'])->name('bahankonsumsi.create')->middleware('can:bahan_produksi_create');

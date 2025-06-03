@@ -93,6 +93,7 @@ class DatabaseSeeder extends Seeder
         $gaji_edit = Permission::create(['name' => 'gaji_edit']);
         $gaji_delete = Permission::create(['name' => 'gaji_delete']);
         
+        $profile_permission = Permission::create(['name' => 'profile_manage']);
         
         $kasir_role->givePermissionTo([
             'dashboard','transaksi_kasir','produk_read',
@@ -113,6 +114,7 @@ class DatabaseSeeder extends Seeder
             'absensi_create','absensi_read','absensi_edit','absensi_delete',
             'user_create','user_read','user_edit','user_delete',
             'gaji_create','gaji_read','gaji_edit','gaji_delete',
+            'profile_manage'
         ]);
 
         $bagian_keuangan_role->givePermissionTo([

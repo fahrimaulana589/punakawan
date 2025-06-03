@@ -68,10 +68,10 @@
       <!-- Hamburger Toggle BTN -->
 
       <a href="index.html" class="lg:hidden">
-        <img class="w-20 dark:hidden" src="{{ asset('images/punakawan_logo.png') }}" alt="Logo" />
+        <img class="w-20 dark:hidden" src="{{ $profile->logo_url }}" alt="Logo" />
         <img
           class="w-20 hidden dark:block"
-          src="{{ asset('images/punakawan_logo.png') }}"
+          src="{{ $profile->logo_url }}"
           alt="Logo"
         />
       </a>
