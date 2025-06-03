@@ -10,6 +10,8 @@ use Illuminate\Validation\ValidationException;
 use Psy\Util\Json;
 use RealRashid\SweetAlert\Facades\Alert;
 use function GuzzleHttp\json_encode;
+use Spatie\Browsershot\Browsershot;
+use Illuminate\Support\Facades\Response;
 
 class TransaksiController extends Controller
 {
@@ -210,6 +212,36 @@ class TransaksiController extends Controller
         // dd($transaksi->penjualan->first()->produk->nama);
      
         return view('transaksi.show', compact('transaksi'));
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function struk($id)
+    {
+        $transaksi = Transaksi::with(['penjualan.produk', 'pegawai'])->findOrFail($id);
+        $transaksi->tanggal = \Carbon\Carbon::parse($transaksi->tanggal)->format('d-m-Y');
+
+        $html = view('transaksi.struk', compact('transaksi'))->render();
+
+        $bodyHeight = Browsershot::html($html)
+            ->setOption('width', '58mm')
+            ->evaluate('document.body.scrollHeight');
+        // dd($bodyHeight);
+
+        // Generate PDF dan tampilkan langsung
+        $pdf = Browsershot::html($html)
+            ->setOption('width', '58mm')
+            ->setOption('height', $bodyHeight.'px')
+            ->pdf(); // return binary content
+
+        // Kirim ke browser
+        return Response::make($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="struk.pdf"',
+        ]);
+
+        // return view('transaksi.struk', compact('transaksi'));
     }
 
     /**

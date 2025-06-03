@@ -42,13 +42,21 @@
               <span class="text-gray-800 dark:text-gray-100">Total</span>
               <span class="text-gray-800 dark:text-gray-100">{{ $transaksi->totalRupiah }}</span>
             </div>
+
+            <div class="mt-6 flex justify-end">
+              <a href="{{ route('penjualan.struk', $transaksi->id) }}" target="_blank"
+                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 17l4 4 4-4m-4-5v9"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 12V7a2 2 0 00-2-2H6a2 2 0 00-2 2v5"/>
+                </svg>
+                Cetak Struk
+              </a>
+            </div>
           
           </div>        
         </div>
       </div>
-     
-      
-      
     </div>
   </div>
 </x-app-layout>

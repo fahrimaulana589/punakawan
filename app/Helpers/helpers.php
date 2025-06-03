@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 if (!function_exists('format_uang')) {
     function format_uang($nilai)
     {
-        return 'Rp. ' . number_format($nilai, 0, ',', '.');
+        return 'Rp.' . number_format($nilai, 0, ',', '.');
     }
 }
 
