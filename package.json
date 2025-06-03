@@ -47,6 +47,7 @@
         "flatpickr": "^4.6.13",
         "fullcalendar": "^6.1.15",
         "jsvectormap": "^1.6.0",
+        "puppeteer": "^24.10.0",
         "sweetalert2": "^11.21.0",
         "swiper": "^11.1.14"
     }

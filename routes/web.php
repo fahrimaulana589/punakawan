@@ -20,6 +20,8 @@ use App\Models\Akun;
 use Illuminate\Queue\Connectors\BeanstalkdConnector;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Browsershot\Browsershot;
+use iio\libmergepdf\Merger;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +39,39 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
+    $html = view('welcome')->render();
 
-    $path = storage_path('/app/data/data.xlsx');
-    Excel::import(new DataImport(), $path);
+    $bodyHeight = Browsershot::html($html)
+        ->setOption('width', '58mm')
+        ->evaluate('document.body.scrollHeight');
+    // dd($bodyHeight);
+
+    // Generate PDF dan tampilkan langsung
+    $pdf1 = Browsershot::html($html)
+        ->setOption('width', '58mm')
+        ->setOption('height', '123px')
+        ->pdf(); // return binary content
+
+    // Generate PDF dan tampilkan langsung
+    $pdf2 = Browsershot::html($html)
+        ->setOption('width', '58mm')
+        ->setOption('height', $bodyHeight . 'px')
+        ->pdf(); // return binary content
+
+    // Gabungkan menggunakan libmergepdf
+    $merger = new Merger();
+    $merger->addRaw($pdf1);
+    $merger->addRaw($pdf2);
+
+    // Ambil hasil PDF gabungan
+    $mergedPdf = $merger->merge();
+
+    // Kirim ke browser
+    return Response::make($mergedPdf, 200, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="gabungan.pdf"',
+    ]);
+
 });
 Route::get('/dashboard', function () {
     return view('dashboard');
