@@ -9,7 +9,7 @@
       <div x-data="{ 
         pageName: `Add Transaksi`,
         urls:[
-          {name: 'Transaksi', url: '{{ route('penjualan') }}'},
+          {name: 'Transaksi', url: '{{ route('penjualan.riwayat') }}'},
         ]
       }">
         @include('partials.breadcrumb')

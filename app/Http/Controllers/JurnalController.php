@@ -18,7 +18,11 @@ class JurnalController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $jurnals = Jurnal::where('tipe','=',1)->paginate(10);
+        // Filter Jurnal based on type
+        $query = Jurnal::query();
+        $query->where('tipe', '=', 1);
+
+        $jurnals = filter($query);
         return view('jurnal.index', compact('jurnals'));
     }
 

@@ -68,10 +68,10 @@
       <!-- Hamburger Toggle BTN -->
 
       <a href="index.html" class="lg:hidden">
-        <img class="dark:hidden" src="./images/logo/logo.svg" alt="Logo" />
+        <img class="w-20 dark:hidden" src="{{ asset('images/punakawan_logo.png') }}" alt="Logo" />
         <img
-          class="hidden dark:block"
-          src="./images/logo/logo-dark.svg"
+          class="w-20 hidden dark:block"
+          src="{{ asset('images/punakawan_logo.png') }}"
           alt="Logo"
         />
       </a>

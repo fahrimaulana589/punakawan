@@ -18,9 +18,9 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        $transaksis = Transaksi::where(function($query) {
-            $query->whereNull('status')->orWhere('status', '');
-        })->orderBy('tanggal', 'desc')->paginate(10);
+        $query = Transaksi::query();
+        $query->where('status', '');
+        $transaksis = filter($query);
         return view('transaksi.index',compact('transaksis'));
     }
 
@@ -29,9 +29,9 @@ class TransaksiController extends Controller
      */
     public function void()
     {
-        $transaksis = Transaksi::where(function($query) {
-            $query->where('status', 'batal');
-        })->orderBy('tanggal', 'desc')->paginate(10);
+        $query = Transaksi::query();
+        $query->where('status', 'batal');
+        $transaksis = filter($query);
         return view('transaksi.void',compact('transaksis'));
     }
 
@@ -40,9 +40,9 @@ class TransaksiController extends Controller
      */
     public function riwayat()
     {
-        $transaksis = Transaksi::where(function($query) {
-            $query->where('status', 'selesai');
-        })->orderBy('tanggal', 'desc')->paginate(10);
+        $query = Transaksi::query();
+        $query->where('status', 'selesai');
+        $transaksis = filter($query);
         return view('transaksi.riwayat',compact('transaksis'));
     }
 
@@ -184,10 +184,12 @@ class TransaksiController extends Controller
             ]);
         }
 
-        foreach ($produkdanstok as $key => $stok){
-            $produk = Produk::find($key);
-            $produk->stok = $stok;
-            $produk->save();
+        if (!empty($errors) && !$ismanual) {
+            foreach ($produkdanstok as $key => $stok){
+                $produk = Produk::find($key);
+                $produk->stok = $stok;
+                $produk->save();
+            }
         }
 
         if($ismanual){
@@ -274,7 +276,16 @@ class TransaksiController extends Controller
             return ['produk_id' => $produkId, 'jumlah' => $jumlah];
         }, $oldProdukIds, $oldJumlahs);
 
-        dd($transaksi->penjualan);
+        if($oldProdukIds == [null]){
+            $old = [];
+            foreach ($transaksi->penjualan as $penjualan) {
+                $old[] = [
+                    'produk_id' => $penjualan->produk_id,
+                    'jumlah' => $penjualan->jumlah
+                ];
+            }
+        }
+
         $old = json_encode($old); // hasil asli: [{"produk_id":null,"jumlah":1}]
 
         $errors = session('errors');
@@ -296,23 +307,52 @@ class TransaksiController extends Controller
      */
     public function update(Request $request, Transaksi $id)
     {
+        $transaksi = $id;
+
         $request->validate([
-            'tanggal' => [
-                'required',
-                'date',
-                'before_or_equal:today'
-            ],
-            'total' => [
-                'required',
-                'numeric',
-                'min:0'
-            ]
+                'tanggal'   => ['required', 'before_or_equal:now', 'date'],
+            ]);
+            
+        $tanggal = $request->tanggal;
+        
+        $request->validate([
+            'produk_ids'   => ['required', 'array', 'min:1'],
+            'produk_ids.*' => ['required', 'exists:produks,id'],
+            'jumlahs'      => ['required', 'array'],
+            'jumlahs.*'    => ['required', 'integer', 'min:1'],
         ]);
 
-        $id->fill($request->all())->save();
+        $total = 0;
+        foreach ($request->produk_ids as $key => $produkId) {
+            $produk = Produk::find($produkId);
+            $jumlah = $request->jumlahs[$key];
 
-        return back()->with('success', 'Transaksi berhasil diupdate.');
-   
+            // Hitung total untuk setiap produk
+            $total += $produk->harga * $jumlah;
+        }
+
+        $transaksi->update([
+            'tanggal'    => $tanggal,
+            'total'      => $total,
+        ]);
+
+        $transaksi->penjualan()->delete(); // Hapus penjualan lama
+
+        foreach ($request->produk_ids as $key => $produkId) {
+            $produk = Produk::find($produkId);
+            $jumlah = $request->jumlahs[$key];
+
+            // Simpan penjualan
+            Penjualan::create([
+                'produk_id' => $produkId,
+                'jumlah'    => $jumlah,
+                'harga'     => $produk->harga,
+                'total'     => $produk->harga * $jumlah,
+                'transaksi_id' => $transaksi->id
+            ]);
+        }
+
+        return back()->with('success', 'Transaksi updated successfully.');
     }
 
     /**

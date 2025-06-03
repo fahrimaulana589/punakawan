@@ -18,7 +18,8 @@ class AbsensiController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $absensis = Absensi::paginate(10);
+        $query = Absensi::query();
+        $absensis = filter($query);
         return view('absensi.index', compact('absensis'));
     
     }

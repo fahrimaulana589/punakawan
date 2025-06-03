@@ -7,8 +7,8 @@
     :class="sidebarToggle ? 'justify-center' : 'justify-between'"
     class="flex items-center gap-2 pt-8 sidebar-header pb-7"
   >
-    <a href="index.html">
-      <span class="logo" :class="sidebarToggle ? 'hidden' : ''">
+    <a href="{{ route('dashboard') }}">
+      <span class="logo w-20" :class="sidebarToggle ? 'hidden' : ''">
         <img class="w-20 dark:hidden" src="{{ asset('images/punakawan_logo.png') }}" alt="Logo" />
         <img
           class="w-20 hidden dark:block"
@@ -18,9 +18,9 @@
       </span>
 
       <img
-        class="logo-icon"
+        class="logo-icon w-20"
         :class="sidebarToggle ? 'lg:block' : 'hidden'"
-        src="./images/logo/logo-icon.svg"
+        src="{{ asset('images/punakawan_logo.png') }}"
         alt="Logo"
       />
     </a>
@@ -299,7 +299,7 @@
                   <a
                     href="{{ route('penjualan.riwayat') }}"
                     class="menu-dropdown-item group"
-                    :class="selected === 'penjualan.riwayat' || selected === 'penjualan.create.manual' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
+                    :class="selected === 'penjualan.edit' || selected === 'penjualan.riwayat' || selected === 'penjualan.create.manual' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
                     Riwayat
                   </a>

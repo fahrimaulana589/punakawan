@@ -19,7 +19,8 @@ class BelanjaController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $belanjas = Belanja::paginate(10);
+        $query = Belanja::query();
+        $belanjas = filter($query);
         return view('belanja.index', compact('belanjas'));
     }
 

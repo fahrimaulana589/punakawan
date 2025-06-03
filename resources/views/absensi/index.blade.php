@@ -96,6 +96,10 @@
       </div>  
       @endcan
       
+      <!-- Filter Start -->
+      @include('partials.filter')
+      <!-- Filter End -->
+
       <!-- ====== Table Six Start -->
         <div
           class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"

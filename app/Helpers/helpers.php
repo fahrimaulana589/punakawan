@@ -61,6 +61,28 @@ if (!function_exists('tanggal_akhir_laporan')) {
     }
 }
 
+if (!function_exists('filter')) {
+    function filter($query)
+    {
+        $perPage = request()->get('per_page', 10);
+        $tanggalAwal = request()->get('start_date');
+        $tanggalAkhir = request()->get('end_date');
+
+        if ($tanggalAwal && $tanggalAkhir) {
+            $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
+        } elseif ($tanggalAwal) {
+            $query->where('tanggal', '>=', $tanggalAwal);
+        } elseif ($tanggalAkhir) {
+            $query->where('tanggal', '<=', $tanggalAkhir);
+        }
+
+        $query->orderBy('tanggal', 'desc');
+
+        return $query->paginate($perPage)->withQueryString(); // <- ini penting
+    }
+
+}
+
 if (!function_exists('data_akun')) {
     function data_akun(Laporan $id):array{
         $data = [];

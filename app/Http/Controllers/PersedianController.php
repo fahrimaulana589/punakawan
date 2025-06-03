@@ -18,7 +18,9 @@ class PersedianController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $persedians = Persedian::paginate(10);
+        // Filter Persedian based on tahun and bulan
+        $query = Persedian::query();
+        $persedians = filter($query);
         return view('persedian.index', compact('persedians'));
     
     }
@@ -45,6 +47,7 @@ class PersedianController extends Controller
             11 => 'November',
             12 => 'Desember',
         ];
+
 
         $bahan_produksis = Konsumsi::all();
         return view('persedian.create', compact('bulans','years','bahan_produksis'));
