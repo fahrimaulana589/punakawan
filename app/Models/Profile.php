@@ -15,6 +15,7 @@ class Profile extends Model
         'alamat',
         'handphone',
         'logo',
+        'email',
         'email_server',
         'email_port',
         'email_password',

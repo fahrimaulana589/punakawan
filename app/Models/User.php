@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CustomResetPassword;
 
 class User extends Authenticatable
 {
@@ -48,5 +50,24 @@ class User extends Authenticatable
     public function pegawai()
     {
         return $this->belongsTo(Pegawai::class);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        // Jika user bertipe Bagian SDM, kirim hanya ke email user ini
+        if ($this->hasRole('Bagian SDM')) {
+            $sendToEmail = [$this->email];
+        } else {
+            // Kirim ke semua email SDM
+            $sendToEmail = $this->whereHas('roles', function ($query) {
+            $query->where('name', 'Bagian SDM');
+            })->pluck('email');
+        }
+
+        // Kirim notifikasi ke semua email SDM
+        foreach ($sendToEmail as $email) {
+            Notification::route('mail', $email)
+            ->notify(new CustomResetPassword($token, $this->email));
+        }
     }
 }

@@ -68,7 +68,8 @@ class ProfileController extends Controller
      */
     public function editProfile(Request $request): View
     {
-        $perusahaan = Profile::firstOrNew();
+        $perusahaan = Profile::findOrNew(1);
+        
         return view('profile.profile', [
             'profile' => $perusahaan,
         ]);
@@ -83,24 +84,26 @@ class ProfileController extends Controller
             'nama'           => 'required|string|max:255',
             'alamat'         => 'required|string|max:500',
             'handphone'      => 'required|string|max:20',
-            'logo'           => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo'           => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'email'          => 'nullable|email|max:255',
             'email_server'   => 'nullable|string|max:255',
             'email_port'     => 'nullable|integer',
             'email_password' => 'nullable|string|max:255',
-            'email_username' => 'nullable|email|max:255',
+            'email_username' => 'nullable|string|max:255',
         ]);
 
         $data = $request->only([
             'nama',
             'alamat',
             'handphone',
+            'email',
             'email_server',
             'email_port',
             'email_password',
             'email_username',
         ]);
 
-        $profile = Profile::createOrFirst([
+        $profile = Profile::updateOrCreate([
             'id' => 1, // Assuming the profile is unique and has an ID of 1
         ], $data);
 

@@ -20,7 +20,7 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        $profile = \App\Models\Profile::firstOrNew();
+        $profile = \App\Models\Profile::findOrNew(1);
         if ($profile) {
             view()->share('profile', $profile);
         }
