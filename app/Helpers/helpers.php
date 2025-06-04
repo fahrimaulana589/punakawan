@@ -68,16 +68,58 @@ if (!function_exists('filter')) {
         $tanggalAwal = request()->get('start_date');
         $tanggalAkhir = request()->get('end_date');
 
-        if ($tanggalAwal && $tanggalAkhir) {
-            $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
-        } elseif ($tanggalAwal) {
-            $query->where('tanggal', '>=', $tanggalAwal);
-        } elseif ($tanggalAkhir) {
-            $query->where('tanggal', '<=', $tanggalAkhir);
+        $tahun = null;
+        $bulan = null;
+        $tahunAkhir = null;
+        $bulanAkhir = null;
+
+        if ($tanggalAwal) {
+            try {
+            $carbonAwal = \Carbon\Carbon::parse($tanggalAwal);
+            $tahun = $carbonAwal->year;
+            $bulan = $carbonAwal->month;
+            } catch (\Exception $e) {
+            $tahun = null;
+            $bulan = null;
+            }
         }
 
-        $query->orderBy('tanggal', 'desc');
+        if ($tanggalAkhir) {
+            try {
+            $carbonAkhir = \Carbon\Carbon::parse($tanggalAkhir);
+            $tahunAkhir = $carbonAkhir->year;
+            $bulanAkhir = $carbonAkhir->month;
+            } catch (\Exception $e) {
+            $tahunAkhir = null;
+            $bulanAkhir = null;
+            }
+        }
 
+        if (request()->route() && request()->route()->getName() === 'persedian') {
+            if ($tahun && $bulan && $tahunAkhir && $bulanAkhir) {
+                $query->where(function ($q) use ($tahun, $bulan, $tahunAkhir, $bulanAkhir) {
+                    $start = sprintf('%04d%02d', $tahun, $bulan);
+                    $end = sprintf('%04d%02d', $tahunAkhir, $bulanAkhir);
+                    $q->whereRaw("CONCAT(tahun, LPAD(bulan, 2, '0')) >= ?", [$start])
+                      ->whereRaw("CONCAT(tahun, LPAD(bulan, 2, '0')) <= ?", [$end]);
+                });
+            } elseif ($tahun && $bulan) {
+                $query->where('tahun', $tahun)->where('bulan', $bulan);
+            } elseif ($tahunAkhir && $bulanAkhir) {
+                $query->where('tahun', $tahunAkhir)->where('bulan', $bulanAkhir);
+            }
+            $query->orderByRaw("tahun desc, bulan desc");
+        } else{
+            if ($tanggalAwal && $tanggalAkhir) {
+                $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
+            } elseif ($tanggalAwal) {
+                $query->where('tanggal', '>=', $tanggalAwal);
+            } elseif ($tanggalAkhir) {
+                $query->where('tanggal', '<=', $tanggalAkhir);
+            }
+
+            $query->orderBy('tanggal', 'desc');
+        }
         return $query->paginate($perPage)->withQueryString(); // <- ini penting
     }
 
