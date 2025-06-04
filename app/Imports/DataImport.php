@@ -22,6 +22,8 @@ class DataImport implements WithMultipleSheets
             'persedian' => new PersedianImport(),
             'peralatan' => new PeralatanImport(),
             'jurnal' => new JurnalImport(),
+            'profile' => new ProfileImport(),
+            'absensi' => new AbsensiImport(),
         ];
     }
 }
