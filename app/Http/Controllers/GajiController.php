@@ -12,6 +12,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Browsershot\Browsershot;
+use iio\libmergepdf\Merger;
+use Illuminate\Support\Facades\Response;
 
 class GajiController extends Controller
 {
@@ -327,7 +330,8 @@ class GajiController extends Controller
                     'gaji_karyawan_id' => $gaji_karyawan->id,
                     'type' => $penggajian->type,
                     'nama' => $penggajian->nama,
-                    'total' => $lainya
+                    'total' => $lainya,
+                    'lainya_pokok' => $penggajian->total
                 ]);
             }
         }
@@ -379,6 +383,103 @@ class GajiController extends Controller
         }
 
         return view('gaji.show',compact('gaji','tanggal_awal','tanggal_akhir','rekapHadir'));
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function slip(Jurnal $gaji)
+    {
+
+        $tanggal_akhir = Carbon::parse($gaji->tanggal);
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
+
+        if ($is_akhir_bulan) {
+            $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+        } else {
+            $target_day = $tanggal_akhir->day + 1;
+            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
+            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            if ($tanggal_awal->month !== $bulan_lalu->month) {
+                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            }
+        }
+
+        $tanggal_awal = $tanggal_awal->toDateString();
+        $tanggal_akhir = $tanggal_akhir->toDateString();
+
+        $rekapHadir = [];
+        $karyawans = Pegawai::all();
+        $absensis = Absensi::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
+        $tanggal_range = [];
+        $periode = Carbon::parse($tanggal_awal)->copy();
+        while ($periode->lte($tanggal_akhir)) {
+            $tanggal_range[] = $periode->toDateString();
+            $periode->addDay();
+        }
+        foreach ($karyawans as $pegawai) {
+            $hadirCount = 0;
+            foreach ($tanggal_range as $tanggal) {
+                $absen = $absensis->firstWhere(fn ($a) => $a->pegawai_id === $pegawai->id && $a->tanggal === $tanggal);
+                if ($absen && ($absen->status == 'hadir' || $absen->status == 'terlambat')) {
+                    $hadirCount++;
+                }
+            }
+            $rekapHadir[$pegawai->id] = $hadirCount;
+        }
+
+        $slip = [];
+
+        foreach($gaji->karyawans as $gajiKaryawan){
+            $slipgaji = [
+                'nama' => $gajiKaryawan->karyawan->nama,
+                'total' => $gajiKaryawan->totalRupiah,
+                'tanggal_awal' => $tanggal_awal,
+                'tanggal_akhir' => $tanggal_akhir,
+                'gaji_pokok' => $gajiKaryawan->gaji_pokok,
+                'hari_kerja' => $rekapHadir[$gajiKaryawan->pegawai_id] ?? 0,
+                'lainya' => []
+            ];
+            foreach($gajiKaryawan->gajiLainyas as $lainya){
+                $slipgaji['lainya'][] = [
+                    'lainya_pokok' => $lainya->lainya_pokok,
+                    'nama' => $lainya->nama,
+                    'total' => $lainya->totalRupiah,
+                    'type' => $lainya->type
+                ];
+            }
+
+            $html = view('gaji.slip',compact('slipgaji'))->render();
+
+            $bodyHeight = Browsershot::html($html)
+                ->setOption('width', '58mm')
+                ->evaluate('document.body.scrollHeight');
+            // dd($bodyHeight);
+
+            // Generate PDF dan tampilkan langsung
+            $pdf = Browsershot::html($html)
+                ->setOption('width', '58mm')
+                ->setOption('height', $bodyHeight . 'px')
+                ->pdf(); // return binary content
+
+            $slip[] = $pdf;
+        }
+
+        $merger = new Merger();
+        foreach ($slip as $pdf) {
+            $merger->addRaw($pdf);
+        }
+
+        // Ambil hasil PDF gabungan
+        $mergedPdf = $merger->merge();
+
+        // Kirim ke browser
+        return Response::make($mergedPdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="gabungan.pdf"',
+        ]);
+
+        // return view('gaji.slip',compact('gaji','tanggal_awal','tanggal_akhir','rekapHadir'));
     }
 
     /**

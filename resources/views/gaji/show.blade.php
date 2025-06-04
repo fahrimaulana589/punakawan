@@ -190,7 +190,7 @@
                         :class="isBelow ? 'w-full flex justify-end' : ''" 
                         class="text-sm"
                       >
-                        {{ $penggajian->totalRupiah }}
+                        {{ $penggajian->lainyaPokokRupiah }}
                       </div>
                     </div>
                   @endforeach
@@ -255,13 +255,19 @@
             <div class="flex items-center justify-end gap-2">
               <a
                 href="{{ route('gaji') }}"
-                type="submit"
+                type="button"
                 class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"
               >
                 Kembali
               </a>
-            </div>
-          </form>
+              <a
+                href="{{ route('gaji.slip', $gaji->id) }}"
+                target="_blank"
+                class="inline-flex items-center gap-2 rounded-lg bg-green-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-green-600"
+              >
+                Cetak Slip
+              </a>
+            </div>  </form>
         </div>
       </div>
       

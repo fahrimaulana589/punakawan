@@ -202,7 +202,7 @@
                         :class="isBelow ? 'w-full flex justify-end' : ''" 
                         class="text-sm"
                       >
-                        {{ format_uang($lainya) }}
+                        {{ format_uang($penggajian->total) }}
                       </div>
                     </div>
                   @endforeach

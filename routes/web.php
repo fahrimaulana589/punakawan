@@ -240,7 +240,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gaji/show/{gaji}', [GajiController::class, 'show'])->name('gaji.show')->middleware('can:gaji_read');
     Route::put('/gaji/update/{gaji}', [GajiController::class, 'update'])->name('gaji.update')->middleware('can:gaji_edit');
     Route::delete('/gaji/delete/{gaji}', [GajiController::class, 'destroy'])->name('gaji.delete')->middleware('can:gaji_delete');
-
+    Route::get('/gaji/slip/{gaji}', [GajiController::class, 'slip'])->name('gaji.slip')->middleware('can:gaji_read');
 });
 
 require __DIR__.'/auth.php';
