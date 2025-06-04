@@ -75,6 +75,18 @@ class LaporanController extends Controller
                 'integer',
                 'between:1,12',
                 function ($attribute, $value, $fail) use ($request) {
+                    $startDate = tanggal_awal_laporan($request->tahun, $value);
+                    $endDate = tanggal_akhir_laporan($request->tahun, $value);
+
+                    $gaji = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+                        ->where('tipe','=',2)
+                        ->first();
+
+                    if (!$gaji) {
+                        $fail('Belum ada data gaji pada tahun dan bulan tersebut.');
+                    }
+                },
+                function ($attribute, $value, $fail) use ($request) {
                     $latestLaporan = Laporan::orderByDesc('tahun')
                         ->orderByDesc('bulan')
                         ->first();
@@ -332,25 +344,10 @@ class LaporanController extends Controller
     public function edit(Laporan $id)
     {
         $laporan = $id;
-        $currentYear = now()->year;
-        $years = range($currentYear, $currentYear - 9); // 10 tahun terakhir (dari sekarang ke belakang)
+        
+        $this->recalculateAfter($laporan);
 
-        $bulans = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ];
-
-        return view('laporan.edit', compact('laporan','years','bulans'));
+       return back()->with('success', 'Laporan updated successfully.');
     }
 
     /**
@@ -391,6 +388,13 @@ class LaporanController extends Controller
      */
     public function destroy(Laporan $id)
     {
+        // Cek apakah laporan ini adalah laporan terakhir (bulan & tahun terbesar)
+        $latestLaporan = Laporan::orderByDesc('tahun')->orderByDesc('bulan')->first();
+
+        if ($id->id !== $latestLaporan->id) {
+            return back()->with('error', 'Hanya laporan bulan terakhir yang boleh dihapus.');
+        }
+
         try {
             $id->delete();
         } catch (\Exception $e) {
@@ -398,4 +402,80 @@ class LaporanController extends Controller
         }
         return back()->with('success', 'Laporan deleted successfully.');
     }
+
+    function recalculateAfter(Laporan $laporanAwal)
+{
+    // Ambil semua laporan setelah bulan yang diedit (termasuk bulan itu)
+    $laporans = Laporan::where(function ($query) use ($laporanAwal) {
+        $query->where('tahun', '>', $laporanAwal->tahun)
+              ->orWhere(function ($q) use ($laporanAwal) {
+                  $q->where('tahun', $laporanAwal->tahun)
+                    ->where('bulan', '>=', $laporanAwal->bulan);
+              });
+    })->orderBy('tahun')->orderBy('bulan')->get();
+
+    foreach ($laporans as $laporan) {
+        $akuns = data_akun($laporan);
+        $data = data_saldo($akuns);
+
+        $nextMonth = Carbon::createFromDate($laporan->tahun, $laporan->bulan, 1)->addMonth();
+        $month = Carbon::createFromDate($laporan->tahun, $laporan->bulan, 1); 
+
+        $firstDayNextMonth = $nextMonth->copy()->startOfMonth();
+        $firstDayMonth = $month->copy()->startOfMonth();
+        $bulanNama = nama_bulan($nextMonth->month);
+
+        $isFirstLaporan = Laporan::where('tahun', '<', $laporan->tahun)
+            ->orWhere(function ($query) use ($laporan) {
+                $query->where('tahun', $laporan->tahun)
+                      ->where('bulan', '<', $laporan->bulan);
+            })
+            ->doesntExist();
+
+        $data_akun = data_akun($laporan);
+        $ajp = total_ajp($data_akun, $laporan);
+
+        if ($isFirstLaporan) {
+            $totalAjp = $ajp["noref"][8]["kredit"] ?? 0;
+        } else {
+            $modal = Jurnal::where('tanggal', $firstDayMonth)
+                ->where('kredit_id', 14)
+                ->where('debet_id', 6)
+                ->orderBy('id')
+                ->first();
+
+            $totalAjp = ($ajp["ref"][14]["kredit"] ?? 0) + ($modal->total ?? 0);
+        }
+
+        // Simpan akumulasi penyusutan
+        Jurnal::updateOrCreate(
+            [
+                'tanggal' => $firstDayNextMonth,
+                'debet_id' => 6,
+                'nama' => "Akumulasi Penyusutan Peralatan Bulan " . $bulanNama,
+                'kredit_id' => 14,
+                'tipe' => 1,
+            ],
+            [
+                'pegawai_id' => auth()->user()->pegawai_id,
+                'total' => $totalAjp,
+            ]
+        );
+
+        // Simpan saldo awal
+        Jurnal::updateOrCreate(
+            [
+                'tanggal' => $firstDayNextMonth,
+                'debet_id' => 1,
+                'nama' => "Saldo Awal Bulan " . $bulanNama,
+                'kredit_id' => 6,
+                'tipe' => 1,
+            ],
+            [
+                'pegawai_id' => auth()->user()->pegawai_id,
+                'total' => $data[1]['debet'] ?? 0,
+            ]
+        );
+    }
+}
 }
