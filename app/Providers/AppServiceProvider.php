@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         // Check if database connection is available before accessing Profile
-        if (\DB::connection()->getDatabaseName()) {
+        if (DB::connection()->getDatabaseName()) {
             
             $profile = \App\Models\Profile::findOrNew(1);
 

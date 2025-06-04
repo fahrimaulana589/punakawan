@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -20,7 +21,7 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        if (\DB::connection()->getDatabaseName()) {
+        if (DB::connection()->getDatabaseName()) {
             $profile = \App\Models\Profile::findOrNew(1);
             if ($profile) {
             view()->share('profile', $profile);
