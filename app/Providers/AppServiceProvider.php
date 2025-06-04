@@ -21,27 +21,24 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         // Check if database connection is available before accessing Profile
-        try {
-            \DB::connection()->getPdo();
-
+        if (\DB::connection()->getDatabaseName()) {
+            
             $profile = \App\Models\Profile::findOrNew(1);
 
             if ($profile->email && $profile->email_port && $profile->email_username && $profile->email_password) {
-            config([
-                'mail.mailers.smtp.host' => $profile->email_server,
-                'mail.mailers.smtp.port' => $profile->email_port,
-                'mail.mailers.smtp.username' => $profile->email_username,
-                'mail.mailers.smtp.password' => $profile->email_password,
-                'mail.from.address' => $profile->email,
-                'mail.from.name' => $profile->nama,
-            ]);
+                config([
+                    'mail.mailers.smtp.host' => $profile->email_server,
+                    'mail.mailers.smtp.port' => $profile->email_port,
+                    'mail.mailers.smtp.username' => $profile->email_username,
+                    'mail.mailers.smtp.password' => $profile->email_password,
+                    'mail.from.address' => $profile->email,
+                    'mail.from.name' => $profile->nama,
+                ]);
             }
 
             if ($profile->nama) {
-            config(['app.name' => $profile->nama]);
+                config(['app.name' => $profile->nama]);
             }
-        } catch (\Exception $e) {
-            // Database connection not available, skip dynamic config
         }
 
     }
