@@ -20,9 +20,11 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        $profile = \App\Models\Profile::findOrNew(1);
-        if ($profile) {
+        if (\DB::connection()->getDatabaseName()) {
+            $profile = \App\Models\Profile::findOrNew(1);
+            if ($profile) {
             view()->share('profile', $profile);
+            }
         }
     }
 }

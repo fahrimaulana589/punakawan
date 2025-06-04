@@ -20,9 +20,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        $profile = \App\Models\Profile::findOrNew(1);
+        // Check if database connection is available before accessing Profile
+        try {
+            \DB::connection()->getPdo();
 
-        if ($profile->email && $profile->email_port && $profile->email_username && $profile->email_password) {
+            $profile = \App\Models\Profile::findOrNew(1);
+
+            if ($profile->email && $profile->email_port && $profile->email_username && $profile->email_password) {
             config([
                 'mail.mailers.smtp.host' => $profile->email_server,
                 'mail.mailers.smtp.port' => $profile->email_port,
@@ -31,10 +35,13 @@ class AppServiceProvider extends ServiceProvider
                 'mail.from.address' => $profile->email,
                 'mail.from.name' => $profile->nama,
             ]);
-        }
+            }
 
-        if ($profile->nama) {
+            if ($profile->nama) {
             config(['app.name' => $profile->nama]);
+            }
+        } catch (\Exception $e) {
+            // Database connection not available, skip dynamic config
         }
 
     }
