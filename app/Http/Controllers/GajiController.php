@@ -233,24 +233,30 @@ class GajiController extends Controller
             'kredit_id' => 1, // Ganti dengan ID akun kredit yang sesuai
         ]);
 
+        // Ambil tanggal dari input
         $tanggal = $request->get('tanggal');
         $tanggal_akhir = Carbon::parse($tanggal);
 
-        $tanggal = $request->get('tanggal');
-        $tanggal_akhir = Carbon::parse($tanggal);
+        // Cek apakah tanggal akhir adalah hari terakhir di bulan
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
 
-        $target_hari = $tanggal_akhir->day + 1;
-        $bulan_lalu = $tanggal_akhir->copy()->subMonth();
-
-        // jika target_hari < 1, pakai hari terakhir bulan sebelumnya
-        if ($target_hari < 1) {
-            $tanggal_awal = $bulan_lalu->endOfMonth();
-        } elseif ($target_hari > $bulan_lalu->daysInMonth) {
-            $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
+        if ($is_akhir_bulan) {
+            // Jika hari terakhir bulan ini → ambil tanggal 1 di bulan ini
+            $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
         } else {
-            $tanggal_awal = $bulan_lalu->copy()->setDay($target_hari);
+            // Bukan hari terakhir → coba ambil hari +1 di bulan sebelumnya
+            $target_day = $tanggal_akhir->day + 1;
+            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
+
+            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+
+            // Jika tidak valid (keluar dari bulan sebelumnya), fallback ke tanggal 1 bulan ini
+            if ($tanggal_awal->month !== $bulan_lalu->month) {
+                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            }
         }
 
+        // Format hasil
         $tanggal_awal = $tanggal_awal->toDateString();
         $tanggal_akhir = $tanggal_akhir->toDateString();
  
@@ -283,6 +289,9 @@ class GajiController extends Controller
                     $hadirCount++;
                 }
             }
+
+            $gaji = $pegawai->gaji * $hadirCount;
+            
             foreach($pegawai->penggajians as $penggajian){
                 if($penggajian->type == 'potongan_bulanan'){
                     $gaji = $gaji - $penggajian->total;
@@ -294,12 +303,13 @@ class GajiController extends Controller
                     $gaji = $gaji + ($penggajian->total * $hadirCount);
                 }               
             }
+            
             $total_gaji += $gaji;
             $gaji_karyawan = GajiKaryawan::create([
                 'tanggal' => $tanggal,
                 'pegawai_id' => $pegawai->id,
                 'gaji_id' => $gaji_bulanan->id,
-                'total' => $total_gaji,
+                'total' => $gaji,
                 'gaji_pokok'=> $pegawai->gaji
             ]);
 
@@ -330,7 +340,45 @@ class GajiController extends Controller
      */
     public function show(Jurnal $gaji)
     {
-        return view('gaji.show',compact('gaji'));
+
+        $tanggal_akhir = Carbon::parse($gaji->tanggal);
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
+
+        if ($is_akhir_bulan) {
+            $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+        } else {
+            $target_day = $tanggal_akhir->day + 1;
+            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
+            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            if ($tanggal_awal->month !== $bulan_lalu->month) {
+                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            }
+        }
+
+        $tanggal_awal = $tanggal_awal->toDateString();
+        $tanggal_akhir = $tanggal_akhir->toDateString();
+
+        $rekapHadir = [];
+        $karyawans = Pegawai::all();
+        $absensis = Absensi::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
+        $tanggal_range = [];
+        $periode = Carbon::parse($tanggal_awal)->copy();
+        while ($periode->lte($tanggal_akhir)) {
+            $tanggal_range[] = $periode->toDateString();
+            $periode->addDay();
+        }
+        foreach ($karyawans as $pegawai) {
+            $hadirCount = 0;
+            foreach ($tanggal_range as $tanggal) {
+                $absen = $absensis->firstWhere(fn ($a) => $a->pegawai_id === $pegawai->id && $a->tanggal === $tanggal);
+                if ($absen && ($absen->status == 'hadir' || $absen->status == 'terlambat')) {
+                    $hadirCount++;
+                }
+            }
+            $rekapHadir[$pegawai->id] = $hadirCount;
+        }
+
+        return view('gaji.show',compact('gaji','tanggal_awal','tanggal_akhir','rekapHadir'));
     }
 
     /**
@@ -338,7 +386,40 @@ class GajiController extends Controller
      */
     public function edit(Jurnal $gaji)
     {
-        return view('gaji.edit',compact('gaji'));
+        $pegawais = Pegawai::select('id', 'nama')->get()->toArray();
+        $pegawais = json_encode($pegawais);
+
+        // Menangkap data old dari session dan mengatur default jika tidak ada
+        $oldPegawaiId = old('pegawai_id', []);    // Default pegawai_id kosong
+        $oldNominal = old('nominal', []);         // Default nominal kosong
+
+        // Gabungkan pegawai_id dan nominal menjadi array asosiatif
+        $old = [];
+        foreach ($oldPegawaiId as $idx => $pegawaiId) {
+            $old[] = [
+            'pegawai_id' => $pegawaiId,
+            'nominal' => $oldNominal[$idx] ?? null,
+            ];
+        }
+
+        // Jika tidak ada old input, isi dari data gaji karyawan terkait (jika ada relasi)
+        if (empty($oldPegawaiId) && empty($oldNominal) && isset($gaji->karyawans)) {
+            foreach ($gaji->karyawans as $gajiKaryawan) {
+                $old[] = [
+                    'pegawai_id' => $gajiKaryawan->pegawai_id,
+                    'nominal' => $gajiKaryawan->total,
+                ];
+            }
+        }
+
+        $old = json_encode($old);
+
+        $errors = session('errors');
+        $messages = $errors ? $errors->messages() : [];
+
+        $messages = json_encode($messages);
+
+        return view('gaji.edit',compact('old','gaji', 'pegawais','messages'));
     }
 
     /**
@@ -346,6 +427,14 @@ class GajiController extends Controller
      */
     public function update(Request $request, Jurnal $gaji)
     {
+
+        $request->validate([
+            'pegawai_id'   => ['nullable', 'array'],
+            'pegawai_id.*' => 'required|integer|exists:pegawais,id',
+            'nominal'      => ['nullable', 'array'],
+            'nominal.*'    => 'required|numeric|min:1',
+        ]);
+
         $request->validate([
             'tanggal' => [
                 'required',
@@ -379,6 +468,29 @@ class GajiController extends Controller
             'total' => $request->total,
             'nama' => "Gaji " . $nama,
         ])->save();
+
+        $gaji->karyawans()->delete(); // Hapus data gaji karyawan lama
+
+        $totalGajiBaru = 0;
+
+        if ($request->has('pegawai_id') && $request->has('nominal')) {
+            foreach ($request->pegawai_id as $idx => $pegawaiId) {
+            $nominal = $request->nominal[$idx];
+            GajiKaryawan::create([
+                'tanggal' => $request->tanggal,
+                'gaji_id' => $gaji->id,
+                'pegawai_id' => $pegawaiId,
+                'total' => $nominal,
+            ]);
+            $totalGajiBaru += $nominal;
+            }
+
+            // Update total gaji di jurnal sesuai jumlah total GajiKaryawan
+            $gaji->total = $totalGajiBaru;
+            $gaji->save();
+        }
+
+
 
         return back()->with('success', 'Gaji updated successfully.');
     }

@@ -96,7 +96,10 @@
       <div
         class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]" 
         x-data="{
-          tanggal : '{{ old('tanggal',$gaji->tanggal) }}'
+          tanggal : '{{ old('tanggal',$gaji->tanggal) }}',
+          items : {{ $old }},
+          pegawais : {{ $pegawais }},
+          messages : {{ $messages }}
         }"
       >
        <form 
@@ -171,7 +174,7 @@
             </div>
 
              <!-- Elements -->
-             <div>
+            <div>
               <label
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
               >
@@ -181,6 +184,7 @@
                 type="number"
                 name="total"
                 value="{{ old('total',$gaji->total) }}"
+                :readonly="items.length > 0"
                 @error('total')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else
@@ -194,7 +198,88 @@
               @enderror
             </div>
 
+            <template x-for="(item, index) in items" :key="index">
+              <div class="flex flex-col gap-1 mb-4">
+                <div class="flex items-center gap-4">
+                  <div class="w-full">
+                    <label
+                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    >
+                      Pegawai
+                    </label>
+                    <select
+                      x-model="item.pegawai_id"
+                      name="pegawai_id[]"
+                      :class="messages[`pegawai_id.${index}`] 
+                        ? 'border-error-300 focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800'
+                        : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
+                      "
+                      class="dark:bg-dark-900 shadow-theme-xs h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                    >
+                      <option value="">Pilih Pegawai</option>
+                        <template x-for="pegawai in pegawais.filter(p => !items.some((it, idx) => it.pegawai_id == p.id && idx !== index))" :key="pegawai.id">
+                        <option 
+                          :value="pegawai.id" 
+                          x-text="pegawai.nama"
+                          :selected="item.pegawai_id == pegawai.id"
+                        ></option>
+                        </template>
+                    </select>
+                    <template x-if="messages[`pegawai_id.${index}`]">
+                      <p class="text-theme-xs text-error-500" x-text="messages[`pegawai_id.${index}`][0]"></p>
+                    </template>
+                  </div>
+                  <div class="w-full">
+                    <label
+                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    >
+                      Nominal
+                    </label>
+                    <input
+                      type="number"
+                      x-model.number="item.nominal"
+                      name="nominal[]"
+                      :class="messages[`nominal.${index}`] 
+                        ? 'border-error-300 focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800'
+                        : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
+                      "
+                      class="dark:bg-dark-900 shadow-theme-xs h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                    />
+                    <template x-if="messages[`nominal.${index}`]">
+                      <p class="text-theme-xs text-error-500" x-text="messages[`nominal.${index}`][0]"></p>
+                    </template>
+                  </div>
+                  <button
+                    type="button"
+                    @click="items.splice(index, 1)"
+                    class="text-red-500 hover:text-red-600 transition duration-150 ease-in-out"
+                  >
+                    X
+                  </button>
+                </div>
+              </div>
+            </template>
+
+            <template x-if="items.length > 0">
+              <div class="my-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  Total Seluruh Gaji Karyawan
+                </label>
+                <div class="text-lg font-semibold text-gray-800 dark:text-white/90">
+                  <span>Rp. </span>
+                  <span x-text="items.reduce((sum, item) => sum + (parseInt(item.nominal) || 0), 0).toLocaleString('id-ID')"></span>
+                </div>
+              </div>
+            </template>
+
             <div class="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                @click="if(items.length < pegawais.length) items.push({ pegawai_id: '', nominal: '' })"
+                class="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-5 py-3.5 text-sm font-medium text-gray-800 shadow-theme-xs transition hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+              >
+                Tambah Pegawai
+              </button>
               <button
                 type="submit"
                 class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"

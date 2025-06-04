@@ -96,6 +96,10 @@
             @enderror
             </div>
 
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              {{ $tanggal_awal }} - {{ $tanggal_akhir }}
+            </div>
+
             <div class="grid grid-cols-12 gap-2">
               @foreach($gaji->karyawans as $karyawan)
               
@@ -118,7 +122,29 @@
                     class="flex flex-wrap justify-between gap-x-4"
                   >
                     <div x-ref="text" class="truncate text-sm">
-                      Gaji pokok
+                      Kehadiran
+                    </div>
+                    <div 
+                      x-ref="price" 
+                      :class="isBelow ? 'w-full flex justify-end' : ''" 
+                      class="text-sm"
+                    >
+                      {{ $rekapHadir[$karyawan->karyawan->id] ?? '0' }}
+                    </div>
+                  </div>
+                  <div 
+                    x-data="{ isBelow: false }" 
+                    x-init="
+                      $nextTick(() => {
+                          const textEl = $refs.text;
+                          const priceEl = $refs.price;
+                          isBelow = priceEl.offsetTop > textEl.offsetTop;
+                      })
+                    " 
+                    class="flex flex-wrap justify-between gap-x-4"
+                  >
+                    <div x-ref="text" class="truncate text-sm">
+                      Gaji
                     </div>
                     <div 
                       x-ref="price" 
@@ -172,6 +198,8 @@
                   <div class="my-2 h-1 dark:bg-white bg-gray-500">
                   </div>
                   
+                  
+                  @endif
                   <div 
                     x-data="{ isBelow: false }" 
                     x-init="
@@ -194,8 +222,6 @@
                       {{ $karyawan->totalRupiah }}
                     </div>
                   </div>
-                  @endif
-                  
                 </div>
               @endforeach
 

@@ -150,19 +150,20 @@
                       :class="isBelow ? 'w-full flex justify-end' : ''" 
                       class="text-sm"
                     >
-                      {{ format_uang($karyawan->gaji * $rekapHadir[$karyawan->id]) }}
+                      {{ format_uang($karyawan->gaji) }}
                     </div>
                   </div>
 
-                  @if (!$karyawan->penggajians->isEmpty())
-                  <div class="my-2 h-1 dark:bg-white bg-gray-500">
-                  </div>
                   @php $alpaCount = $rekapAlpa[$karyawan->id] @endphp
                   @php $hadirCount = $rekapHadir[$karyawan->id] @endphp
                   @php $gaji = $karyawan->gaji * $rekapHadir[$karyawan->id] @endphp
                   @php $lainya = 0 @endphp
                   @php $jenis = 0 @endphp
 
+                  @if (!$karyawan->penggajians->isEmpty())
+                  <div class="my-2 h-1 dark:bg-white bg-gray-500">
+                  </div>
+                  
                   @foreach($karyawan->penggajians as $penggajian)
                     @if($penggajian->type == 'potongan_bulanan')
                       @php $lainya = $penggajian->total @endphp    
@@ -209,6 +210,7 @@
                   <div class="my-2 h-1 dark:bg-white bg-gray-500">
                   </div>
                   
+                  @endif
                   <div 
                     x-data="{ isBelow: false }" 
                     x-init="
@@ -231,8 +233,6 @@
                       {{ format_uang($gaji) }}
                     </div>
                   </div>
-                  @endif
-                  
                 </div>
               @endforeach
 
