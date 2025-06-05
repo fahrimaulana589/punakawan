@@ -59,7 +59,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255|unique:users,name,'.$id,
             'email' => 'required|string|max:255|unique:users,email,'.$id,
             'password' => 'string|max:255|nullable',
-            'role' => ['required', 'string', Rule::in(['Kasir', 'Direktur SDM','Direktur Produksi','Direktur Keuangan'])],
+            'role' => ['required', 'string', Rule::in(['Kasir', 'Bagian SDM','Bagian Produksi','Bagian Keuangan'])],
             'pegawai_id' => 'required|string|max:255|unique:users,pegawai_id,'.$id,
         ]);
 

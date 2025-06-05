@@ -219,33 +219,33 @@
                     Kasir
                   </option>
                   <option
-                    value="Direktur Keuangan"
-                    @if (old('role',$user->roles->first()->name) == 'Direktur Keuangan')
+                    value="Bagian Keuangan"
+                    @if (old('role',$user->roles->first()->name) == 'Bagian Keuangan')
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
-                    Direktur Keuangan
+                    Bagian Keuangan
                   </option>
 
                   <option
-                    value="Direktur SDM"
-                    @if (old('role',$user->roles->first()->name) == 'Direktur SDM')
+                    value="Bagian SDM"
+                    @if (old('role',$user->roles->first()->name) == 'Bagian SDM')
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
-                    Direktur SDM
+                    Bagian SDM
                   </option>
 
                   <option
-                    value="Direktur Produksi"
-                    @if (old('role',$user->roles->first()->name) == 'Direktur Produksi')
+                    value="Bagian Produksi"
+                    @if (old('role',$user->roles->first()->name) == 'Bagian Produksi')
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
-                    Direktur Produksi
+                    Bagian Produksi
                   </option>
                 </select>
                 <span
