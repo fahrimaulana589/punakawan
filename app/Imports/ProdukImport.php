@@ -23,6 +23,7 @@ class ProdukImport implements ToModel,WithStartRow
             'nama' => $row[1],
             'harga' => $row[2],
             'stok' => $row[3],
+            'status' => $row[5],
         ]);
 
         // Coba decode string sebagai JSON

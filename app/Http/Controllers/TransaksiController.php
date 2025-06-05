@@ -72,10 +72,10 @@ class TransaksiController extends Controller
         $messages = json_encode($messages); // hasil asli: {"produk_ids":["The produk ids field is required."]}
 
         $produks = Produk::with(['parent' => function ($q) {
-            $q->withPivot('jumlah'); // ini penting
-        },'children' => function ($q) {
-            $q->withPivot('jumlah'); // ini penting
-        }])->get();
+            $q->withPivot('jumlah');
+        }, 'children' => function ($q) {
+            $q->withPivot('jumlah');
+        }])->where('status', 'aktif')->get();
 
         if ($ismanual) {
             return view('transaksi.manual', compact('produks','old','messages'));
@@ -329,7 +329,7 @@ class TransaksiController extends Controller
             $q->withPivot('jumlah'); // ini penting
         },'children' => function ($q) {
             $q->withPivot('jumlah'); // ini penting
-        }])->get();
+        }])->where('status', 'aktif')->get();
 
         return view('transaksi.edit', compact('produks','old','messages','transaksi'));
     }

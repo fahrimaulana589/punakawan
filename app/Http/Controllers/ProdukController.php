@@ -34,6 +34,15 @@ class ProdukController extends Controller
                 'required',
                 'regex:/^[1-9][0-9]*$/',
             ],
+            'stok' => [
+                'nullable',
+                'integer',
+                'min:0'
+            ],
+            'status' => [
+                'required',
+                Rule::in(['aktif', 'nonaktif']),
+            ],
         ]);
 
         Produk::create($request->all());
@@ -134,10 +143,10 @@ class ProdukController extends Controller
                 'integer',
                 'min:0'
             ],
-            'stok_kurang' => [
-                'nullable',
-                'integer',
-                'min:0'
+            'status' => [
+                'required',
+                'string',
+                'in:aktif,nonaktif'
             ],
         ]);
         

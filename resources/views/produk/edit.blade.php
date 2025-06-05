@@ -136,6 +136,31 @@
               @enderror
             </div>
 
+            <!-- Elements -->
+            <div>
+              <label
+                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                Status
+              </label>
+              <select
+                name="status"
+                @error('status')
+                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @else
+                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @enderror
+              >
+                <option value="" {{ old('status', $produk->status) == '' ? 'selected' : '' }}>Pilih Status</option>
+                <option value="aktif" {{ old('status', $produk->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                <option value="nonaktif" {{ old('status', $produk->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option></select>
+              @error('status')
+                <p class="text-theme-xs text-error-500">
+                  {{ $message }}
+                </p>
+              @enderror
+            </div>
+
              <!-- Elements -->
              <div>
               <label

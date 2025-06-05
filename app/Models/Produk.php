@@ -14,6 +14,7 @@ class Produk extends Model
         'harga',
         'kode',
         'stok',
+        'status',
     ];
 
     // App\Models\Produk.php
