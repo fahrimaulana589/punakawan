@@ -582,6 +582,7 @@ class GajiController extends Controller
                 'gaji_id' => $gaji->id,
                 'pegawai_id' => $pegawaiId,
                 'total' => $nominal,
+                'gaji_pokok' => Pegawai::find($pegawaiId)->gaji, // Ambil gaji pokok dari pegawai
             ]);
             $totalGajiBaru += $nominal;
             }
