@@ -276,7 +276,7 @@
                 type="submit"
                 class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600"
               >
-                Simpan
+                Tambah
               </button>
             </div>
           </form>
