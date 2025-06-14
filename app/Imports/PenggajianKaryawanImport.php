@@ -2,11 +2,12 @@
 
 namespace App\Imports;
 
-use App\Models\Akun;
+use App\Models\GajiKaryawan;
+use App\Models\Penggajian;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class AkunImport implements ToModel,WithStartRow
+class PenggajianKaryawanImport implements ToModel, WithStartRow
 {
     /**
     * @param array $row
@@ -15,13 +16,11 @@ class AkunImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
-        $lastId = Akun::max('id') ?? 0;
-        $kode = 'AKN' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
-        return new Akun([
-            'id' => $row[0],
-            'kode' => $kode,
+        return new Penggajian([
+            'pegawai_id' => $row[0],
             'nama' => $row[1],
-            'tipe' => $row[2] ? $row[2] : '',
+            'type' => $row[2],
+            'total' => $row[3],
         ]);
     }
 

@@ -96,7 +96,7 @@
       </div>
       @endcan
       <!-- ====== Table Six Start -->
-      
+
       <div
         class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
       >
@@ -138,6 +138,24 @@
                       class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                     >
                       Stok
+                    </p>
+                  </div>
+                </th>
+                 <th class="px-5 py-3 sm:px-6">
+                  <div class="flex items-center">
+                    <p
+                      class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                    >
+                      Stok Terjual
+                    </p>
+                  </div>
+                </th>
+                <th class="px-5 py-3 sm:px-6">
+                  <div class="flex items-center">
+                    <p
+                      class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                    >
+                      Stok Sisa
                     </p>
                   </div>
                 </th>
@@ -191,6 +209,20 @@
                     <div class="flex items-center">
                       <p class="text-gray-500 text-theme-sm dark:text-gray-400">
                         {{ $produk->stok }}
+                      </p>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4 sm:px-6">
+                    <div class="flex items-center">
+                      <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                        {{ $produk->stokTerjual }}
+                      </p>
+                    </div>
+                  </td>
+                  <td class="px-5 py-4 sm:px-6">
+                    <div class="flex items-center">
+                      <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                        {{ $produk->stokSisa }}
                       </p>
                     </div>
                   </td>

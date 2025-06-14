@@ -15,7 +15,16 @@ class ProdukController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $produks = Produk::paginate(10);
+        $tahun = now()->year;
+        $bulan = now()->month;
+
+        $total = Produk::count();
+        $produks = Produk::paginate($total);
+
+        $produks->each(function ($produk) use ($tahun, $bulan) {
+            $produk->setPeriode($tahun, $bulan);
+        });
+        
         return view('produk.index', compact('produks'));
     }
 

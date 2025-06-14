@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Persedian') }}
+    {{ __('Persediaan Produk') }}
   </x-slot>
   
   
@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Persedian`}">
+      <div x-data="{ pageName: `Persediaan Produk`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
@@ -88,10 +88,10 @@
       @endsession
       
       
-      @can('persedian_create')
+      @can('persedianproduk_create')
       <div class="flex items-center justify-end mb-4">
-        <a href="{{ route('persedian.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add Persedian
+        <a href="{{ route('persedianproduk.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Add Persediaan Produk
         </a>
       </div>
       @endcan
@@ -141,7 +141,25 @@
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                       >
-                        Total
+                        Stok
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Stok Terjual
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Stok Sisa
                       </p>
                     </div>
                   </th>
@@ -178,33 +196,47 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $persedian->bahanProduksi->nama }}
+                          {{ $persedian->produk->nama }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $persedian->totalRupiah }}
+                          {{ $persedian->stok }}
+                        </p>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ $persedian->stokTerjualProduk }}
+                        </p>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ $persedian->stokSisaProduk }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center justify-end mb-4">
-                        @can('persedian_edit')
+                        @can('persedianproduk_edit')
                         <a
-                        href="{{ route('persedian.edit',$persedian->id) }}"
+                        href="{{ route('persedianproduk.edit',$persedian->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Edit
                         </a>  
                         @endcan
                        
-                        @can('persedian_delete')
-                        <form action="{{ route('persedian.delete', $persedian->id) }}" method="POST" class="inline">
+                        @can('persedianproduk_delete')
+                        <form action="{{ route('persedianproduk.delete', $persedian->id) }}" method="POST" class="inline">
                           @csrf
                           @method('DELETE')
-                          <a href="{{ route('persedian.delete', $persedian->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                          <a href="{{ route('persedianproduk.delete', $persedian->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Delete
                           </a>
                         </form>

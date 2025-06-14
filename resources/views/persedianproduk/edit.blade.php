@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Edit Persedian') }}
+    {{ __('Edit Persedian Produk Jadi') }}
   </x-slot>
   
   
@@ -9,9 +9,9 @@
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Edit Persedian`,
+        pageName: `Edit Persedian Produk Jadi`,
         urls:[
-          {name: 'Persedian', url: '{{ route('persedian') }}'},
+          {name: 'Persedian Produk Jadi', url: '{{ route('persedianproduk') }}'},
         ]
       }">
         @include('partials.breadcrumb')
@@ -100,13 +100,13 @@
           <h3
             class="text-base font-medium text-gray-800 dark:text-white/90"
           >
-            Data Persedian
+            Data Persedian Produk Jadi
           </h3>
         </div>
         <div class="grid grid-cols-12 border border-gray-100 dark:border-gray-800">
           <form
             class="space-y-6 col-span-12 lg:col-span-7 md:col-span-8  p-5 sm:p-6"
-            action="{{ route('persedian.update',$persedian->id) }}"
+            action="{{ route('persedianproduk.update',$persedian->id) }}"
             method="POST"
           >
             @csrf
@@ -250,19 +250,19 @@
               <label
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
               >
-                Bahan Produksi
+                Produk
               </label>
               <div
                 x-data="{ isOptionSelected: false }"
                 class="relative z-20 bg-transparent"
               >
                 <select
-                  @error('konsumsi_id')
+                  @error('produk_id')
                     class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                   @else
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                   @enderror:class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
-                  name="konsumsi_id"
+                  name="produk_id"
                   @change="isOptionSelected = true"
                 >
                   <option
@@ -271,16 +271,16 @@
                   >
                     Select Option
                   </option>
-                  @foreach ($bahan_produksis as $bahan_produksi)
+                  @foreach ($produks as $produk)
                   
                   <option
-                    value="{{ $bahan_produksi->id }}"
-                    @if (old('konsumsi_id',$persedian->konsumsi_id) == $bahan_produksi->id)
+                    value="{{ $produk->id }}"
+                    @if (old('produk_id',$persedian->produk_id) == $produk->id)
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
-                    {{ $bahan_produksi->nama }}
+                    {{ $produk->nama }}
                   </option>  
                   @endforeach
                 </select>
@@ -305,7 +305,7 @@
                   </svg>
                 </span>
               </div>
-              @error('konsumsi_id')
+              @error('produk_id')
                 <p class="text-theme-xs text-error-500">
                   {{ $message }}
                 </p>
@@ -317,19 +317,61 @@
               <label
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
               >
-                Total
+                Stok
               </label>
               <input
                 type="number"
-                name="total"
-                value="{{ old('total',$persedian->total) }}"
-                @error('total')
+                name="stok"
+                value="{{ old('stok',$persedian->stok) }}"
+                @error('stok')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else
                   class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @enderror
               />
-              @error('total')
+              @error('stok')
+                <p class="text-theme-xs text-error-500">
+                  {{ $message }}
+                </p>
+              @enderror
+            </div>
+
+            <!-- Elements -->
+            <div>
+              <label
+                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                Stok Sisa
+              </label>
+              <input
+                type="number"
+                value="{{ $persedian->stokSisaProduk }}"
+                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                readonly
+              />
+            </div>
+
+            <!-- Elements -->
+            <div>
+              <label
+                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                Ubah Stok Sisa
+              </label>
+              <input
+                type="number"
+                name="stok_sisa"
+                value=""
+                @error('stok_sisa')
+                  class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @else
+                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                @enderror
+              />
+              <p class="text-theme-xs font-medium text-gray-700 dark:text-gray-400">
+                Untuk mengembalikan ke perhitungan otomtasi masukan (-1)
+              </p>
+              @error('stok_sisa')
                 <p class="text-theme-xs text-error-500">
                   {{ $message }}
                 </p>

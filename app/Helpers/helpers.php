@@ -95,7 +95,7 @@ if (!function_exists('filter')) {
             }
         }
 
-        if (request()->route() && request()->route()->getName() === 'persedian') {
+        if (request()->route() && (request()->route()->getName() === 'persedian' || request()->route()->getName() === 'persedianproduk')) {
             if ($tahun && $bulan && $tahunAkhir && $bulanAkhir) {
                 $query->where(function ($q) use ($tahun, $bulan, $tahunAkhir, $bulanAkhir) {
                     $start = sprintf('%04d%02d', $tahun, $bulan);
@@ -120,6 +120,27 @@ if (!function_exists('filter')) {
 
             $query->orderBy('tanggal', 'desc');
         }
+        return $query->paginate($perPage)->withQueryString(); // <- ini penting
+    }
+
+}
+
+if (!function_exists('filter2')) {
+    function filter2($query)
+    {
+        $perPage = request()->get('per_page', 10);
+        $tahun = request()->get('year');
+        $bulan = request()->get('month');
+
+        if ($tahun) {
+            $query->where('tahun', $tahun);
+        }
+        if ($bulan) {
+            $query->where('bulan', $bulan);
+        }
+
+        $query->orderByDesc('tahun')->orderByDesc('bulan');
+
         return $query->paginate($perPage)->withQueryString(); // <- ini penting
     }
 

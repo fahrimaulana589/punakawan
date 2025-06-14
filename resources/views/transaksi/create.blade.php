@@ -27,7 +27,7 @@
         },
     
         getNamaProduk(p) {
-            return `Stok: ${p.stok.toString().padStart(3, '0')} - ${p.nama}`;
+            return `Stok: ${p.stok_sisa.toString().padStart(3, '0')} - ${p.nama}`;
         },
     
         getHarga(id) {
@@ -71,7 +71,7 @@
     
                 // Kurangi stok produk utama
                 const pIndex = this.produkList.findIndex(p => p.id === produk.id);
-                if (pIndex >= 0) this.produkList[pIndex].stok -= jumlah;
+                if (pIndex >= 0) this.produkList[pIndex].stok_sisa -= jumlah;
     
                 console.log(produk.nama);
                 if (produk.parent && Array.isArray(produk.parent)) {
@@ -94,7 +94,7 @@
                             }
                 
                             // Kurangi stok parent
-                            this.produkList[parentIndex].stok -= jumlah * rel.pivot.jumlah;
+                            this.produkList[parentIndex].stok_sisa -= jumlah * rel.pivot.jumlah;
                         }
                     });
                 
@@ -109,7 +109,7 @@
                             
                             chd.parent.forEach(rel => {
                                 const parentIndex = this.produkList.findIndex(p => p.id === rel.id);
-                                const stokasli = this.produkList[parentIndex].stok;
+                                const stokasli = this.produkList[parentIndex].stok_sisa;
                                 const jumlahyangdibutuhkan = rel.pivot.jumlah;
                                 const ketersedian = Math.floor(stokasli / jumlahyangdibutuhkan);
                                
@@ -117,10 +117,10 @@
                             });
     
                             // Ambil nilai stok terkecil dari semua parent
-                            const stokMinimum = Math.min(...stok);
+                            const stokMinimum = Math.min(...stok_sisa);
     
                             // Update stok produk anak
-                            this.produkList[childIndex].stok = stokMinimum;
+                            this.produkList[childIndex].stok_sisa = stokMinimum;
                         });
                     }
 
@@ -133,7 +133,7 @@
                         
                         chd.parent.forEach(rel => {
                             const parentIndex = this.produkList.findIndex(p => p.id === rel.id);
-                            const stokasli = this.produkList[parentIndex].stok;
+                            const stokasli = this.produkList[parentIndex].stok_sisa;
                             const jumlahyangdibutuhkan = rel.pivot.jumlah;
                             const ketersedian = Math.floor(stokasli / jumlahyangdibutuhkan);
                            
@@ -141,10 +141,10 @@
                         });
 
                         // Ambil nilai stok terkecil dari semua parent
-                        const stokMinimum = Math.min(...stok);
+                        const stokMinimum = Math.min(...stok_sisa);
 
                         // Update stok produk anak
-                        this.produkList[childIndex].stok = stokMinimum;
+                        this.produkList[childIndex].stok_sisa = stokMinimum;
                     });
               }
               
@@ -152,7 +152,7 @@
     
             // Update stok produk lain agar tidak bisa dipilih kalau stoknya habis
             this.produkList.forEach(p => {
-                p.stok = p.stok;
+                p.stok_sisa = p.stok_sisa;
             });
 
         },
@@ -240,7 +240,7 @@
                                             :value="produk.id" 
                                             x-text="getNamaProduk(produk)"
                                             :selected="item.produk_id == produk.id"
-                                            :disabled="produk.stok <= 0 && item.produk_id != produk.id"
+                                            :disabled="produk.stok_sisa <= 0 && item.produk_id != produk.id"
                                         ></option>
                                     </template>
                                 </select>
@@ -286,7 +286,7 @@
                                         @click="
                                             const produk = getProduk(item.produk_id);
                                            
-                                            if (produk && 0 < produk.stok) {
+                                            if (produk && 0 < produk.stok_sisa) {
                                                 item.jumlah++;
                                                 recalculateStok();
                                             }

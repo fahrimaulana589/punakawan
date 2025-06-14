@@ -45,6 +45,7 @@ class AkunController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255|unique:akuns,nama,'.$id,
+            'tipe' => 'nullable|string|max:255'
         ]);
         
         $akun = Akun::findOrFail($id);

@@ -146,7 +146,6 @@
                                             :value="produk.id" 
                                             x-text="getNamaProduk(produk)"
                                             :selected="item.produk_id == produk.id"
-                                            :disabled="produk.stok <= 0 && item.produk_id != produk.id"
                                         ></option>
                                     </template>
                                 </select>
@@ -177,7 +176,6 @@
                                         class="px-3 py-2 text-sm font-bold border rounded-lg text-gray-700 dark:text-white disabled:opacity-50"
                                         @click="
                                             if (item.jumlah > 1) item.jumlah--;
-                                            recalculateStok();
                                         "
                                     >-</button>
                             
@@ -192,10 +190,7 @@
                                         @click="
                                             const produk = getProduk(item.produk_id);
                                            
-                                            if (produk && 0 < produk.stok) {
-                                                item.jumlah++;
-                                                recalculateStok();
-                                            }
+                                             item.jumlah++;
                                         "
                                     >
                                         +

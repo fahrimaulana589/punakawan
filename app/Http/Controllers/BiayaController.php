@@ -7,7 +7,7 @@ use App\Models\Jurnal;
 use App\Models\Konsumsi;
 use Illuminate\Http\Request;
 
-class JurnalController extends Controller
+class BiayaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,10 +20,10 @@ class JurnalController extends Controller
 
         // Filter Jurnal based on type
         $query = Jurnal::query();
-        $query->whereIn('tipe', [1, 3]);
+        $query->where('tipe', '=', 3);
 
-        $jurnals = filter($query);
-        return view('jurnal.index', compact('jurnals'));
+        $biayas = filter($query);
+        return view('biaya.index', compact('biayas'));
     }
 
     /**
@@ -35,8 +35,8 @@ class JurnalController extends Controller
      */
     public function create()
     {
-        $akuns = Akun::all();
-        return view('jurnal.create', compact('akuns'));
+        $biayas = Akun::where("tipe","=","biaya")->get();
+        return view('biaya.create', compact('biayas'));
     }
 
     public function store(Request $request)
@@ -47,24 +47,25 @@ class JurnalController extends Controller
                 'date',
                 'before_or_equal:today'
             ],
-            'nama' => 'required|string|max:255',
             'debet_id' => 'required|exists:akuns,id',
-            'kredit_id' => 'required|exists:akuns,id',
             'total' => 'required|numeric|min:0',
         ]);
 
+        $akun = Akun::find($request->debet_id);
+
         $data =[
             'debet_id' => $request->debet_id, // Assuming 1 is the ID for the "Jurnal" account
-            'kredit_id' => $request->kredit_id, // Assuming 2 is the ID for the "Kas" account
+            'kredit_id' => 1, // Assuming 2 is the ID for the "Kas" account
             'pegawai_id' => auth()->user()->pegawai_id,
             'tanggal' => $request->tanggal,
-            'nama' => $request->nama,
+            'nama' => $akun->nama,
             'total' => $request->total,
+            'tipe' => 3
         ];
 
         Jurnal::create($data);
 
-        return redirect()->route('jurnal')->with('success', 'Jurnal created successfully.');
+        return redirect()->route('biaya')->with('success', 'Biaya created successfully.');
         
     }
 
@@ -82,8 +83,8 @@ class JurnalController extends Controller
     public function edit(string $id)
     {
         $jurnal = Jurnal::findOrFail($id);
-        $akuns = Akun::all();
-        return view('jurnal.edit', compact('jurnal','akuns'));
+        $biayas = Akun::where("tipe","=","biaya")->get();
+        return view('biaya.edit', compact('jurnal','biayas'));
     
     }
 
@@ -98,15 +99,13 @@ class JurnalController extends Controller
                 'date',
                 'before_or_equal:today'
             ],
-            'nama' => 'required|string|max:255',
             'debet_id' => 'required|exists:akuns,id',
-            'kredit_id' => 'required|exists:akuns,id',
             'total' => 'required|numeric|min:0',
         ]);
 
         $jurnal = Jurnal::findOrFail($id);
         $jurnal->update($request->all());
-        return back()->with('success', 'Jurnal updated successfully.');
+        return back()->with('success', 'Biaya updated successfully.');
     }
 
     /**
@@ -121,6 +120,6 @@ class JurnalController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return back()->with('success', 'Jurnal deleted successfully.');
+        return back()->with('success', 'Biaya deleted successfully.');
     }
 }

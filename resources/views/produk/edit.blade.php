@@ -184,7 +184,7 @@
               @enderror
             </div>
 
-            <!-- Elements -->
+            {{-- <!-- Elements -->
             <div>
               <label
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
@@ -247,7 +247,7 @@
                   </p>
                 @enderror
               </div>
-            @endif
+            @endif --}}
             <div class="flex items-center justify-end">
               <button
                 type="submit"

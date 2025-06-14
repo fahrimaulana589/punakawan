@@ -8,12 +8,14 @@ use App\Http\Controllers\KonsumsiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PeralatanController;
+use App\Http\Controllers\PersediaanProdukJadiController;
 use App\Http\Controllers\PersedianController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JurnalController;
+use App\Http\Controllers\BiayaController;
 use App\Imports\AkunImport;
 use App\Imports\DataImport;
 use App\Models\Akun;
@@ -184,6 +186,17 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/biaya', [BiayaController::class, 'index'])->name('biaya')->middleware('can:biaya_read');
+    Route::get('/biaya/create', [BiayaController::class, 'create'])->name('biaya.create')->middleware('can:biaya_create');
+    Route::post('/biaya/store', [BiayaController::class, 'store'])->name('biaya.store')->middleware('can:biaya_create');
+    Route::get('/biaya/edit/{id}', [BiayaController::class, 'edit'])->name('biaya.edit')->middleware('can:biaya_edit');
+    Route::put('/biaya/update/{id}', [BiayaController::class, 'update'])->name('biaya.update')->middleware('can:biaya_edit');
+    Route::delete('/biaya/delete/{id}', [BiayaController::class, 'destroy'])->name('biaya.delete')->middleware('can:biaya_delete');
+
+});
+
+
+Route::middleware('auth')->group(function () {
     Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi')->middleware('can:absensi_read');
     Route::get('/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create')->middleware('can:absensi_create');
     Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store')->middleware('can:absensi_create');
@@ -200,6 +213,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/persedian/edit/{id}', [PersedianController::class, 'edit'])->name('persedian.edit')->middleware('can:persedian_edit');
     Route::put('/persedian/update/{id}', [PersedianController::class, 'update'])->name('persedian.update')->middleware('can:persedian_edit');
     Route::delete('/persedian/delete/{id}', [PersedianController::class, 'destroy'])->name('persedian.delete')->middleware('can:persedian_delete');
+
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/persedianproduk', [PersediaanProdukJadiController::class, 'index'])->name('persedianproduk')->middleware('can:persedianproduk_read');
+    Route::get('/persedianproduk/create', [PersediaanProdukJadiController::class, 'create'])->name('persedianproduk.create')->middleware('can:persedianproduk_create');
+    Route::post('/persedianproduk/store', [PersediaanProdukJadiController::class, 'store'])->name('persedianproduk.store')->middleware('can:persedianproduk_create');
+    Route::get('/persedianproduk/edit/{id}', [PersediaanProdukJadiController::class, 'edit'])->name('persedianproduk.edit')->middleware('can:persedianproduk_edit');
+    Route::put('/persedianproduk/update/{id}', [PersediaanProdukJadiController::class, 'update'])->name('persedianproduk.update')->middleware('can:persedianproduk_edit');
+    Route::delete('/persedianproduk/delete/{id}', [PersediaanProdukJadiController::class, 'destroy'])->name('persedianproduk.delete')->middleware('can:persedianproduk_delete');
 
 });
 

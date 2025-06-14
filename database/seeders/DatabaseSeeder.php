@@ -68,6 +68,12 @@ class DatabaseSeeder extends Seeder
         $jurnal_edit = Permission::create(['name' => 'jurnal_edit']);
         $jurnal_delete = Permission::create(['name' => 'jurnal_delete']);
 
+        $biaya_create = Permission::create(['name' => 'biaya_create']);
+        $biaya_read = Permission::create(['name' => 'biaya_read']);
+        $biaya_edit = Permission::create(['name' => 'biaya_edit']);
+        $biaya_delete = Permission::create(['name' => 'biaya_delete']);
+
+
         $absensi_create = Permission::create(['name' => 'absensi_create']);
         $absensi_read = Permission::create(['name' => 'absensi_read']);
         $absensi_edit = Permission::create(['name' => 'absensi_edit']);
@@ -77,6 +83,11 @@ class DatabaseSeeder extends Seeder
         $persedian_read = Permission::create(['name' => 'persedian_read']);
         $persedian_edit = Permission::create(['name' => 'persedian_edit']);
         $persedian_delete = Permission::create(['name' => 'persedian_delete']);
+
+        $persedianproduk_create = Permission::create(['name' => 'persedianproduk_create']);
+        $persedianproduk_read = Permission::create(['name' => 'persedianproduk_read']);
+        $persedianproduk_edit = Permission::create(['name' => 'persedianproduk_edit']);
+        $persedianproduk_delete = Permission::create(['name' => 'persedianproduk_delete']);
 
         $laporan_create = Permission::create(['name' => 'laporan_create']);
         $laporan_read = Permission::create(['name' => 'laporan_read']);
@@ -104,6 +115,7 @@ class DatabaseSeeder extends Seeder
             'dashboard',
             'belanja_create','belanja_read','belanja_edit','belanja_delete',
             'persedian_create','persedian_read','persedian_edit','persedian_delete',
+            'persedianproduk_create','persedianproduk_read','persedianproduk_edit','persedianproduk_delete',
             'produk_create','produk_read','produk_edit','produk_delete',
             'bahan_produksi_create','bahan_produksi_read','bahan_produksi_edit','bahan_produksi_delete',
         ]);
@@ -120,10 +132,10 @@ class DatabaseSeeder extends Seeder
         $bagian_keuangan_role->givePermissionTo([
             'dashboard',
             'transaksi_read','transaksi_create','transaksi_edit','transaksi_delete',
-            'absensi_read',
             'laporan_create','laporan_read','laporan_edit','laporan_delete',
             'belanja_read',
             'jurnal_create','jurnal_read','jurnal_edit','jurnal_delete',
+            'biaya_create','biaya_read','biaya_edit','biaya_delete',
             'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
             'akun_create','akun_read','akun_edit','akun_delete',
         ]);

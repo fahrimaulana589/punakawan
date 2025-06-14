@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PersediaanProdukJadi;
 use App\Models\Konsumsi;
-use App\Models\Persedian;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class PersedianController extends Controller
+class PersediaanProdukJadiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $title = 'Delete Persedian!';
+        $title = 'Delete Persediaan Produk Jadi!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        // Filter Persedian based on tahun and bulan
-        $query = Persedian::query();
-        $persedians = filter2($query);
-        return view('persedian.index', compact('persedians'));
+        // Filter Persediaan Produk Jadi based on tahun and bulan
+        $query = PersediaanProdukJadi::query();
+        $persedians = filter2(query: $query);
+        return view('persedianproduk.index', compact('persedians'));
     
     }
 
@@ -49,8 +50,8 @@ class PersedianController extends Controller
         ];
 
 
-        $bahan_produksis = Konsumsi::all();
-        return view('persedian.create', compact('bulans','years','bahan_produksis'));
+        $produks = Produk::all();
+        return view('persedianproduk.create', compact('bulans','years','produks'));
     }
 
     /**
@@ -70,36 +71,38 @@ class PersedianController extends Controller
                 'between:1,12',
                 function ($attribute, $value, $fail) use ($request) {
                     if ($request->tahun == date('Y') && $value > date('n')) {
-                    $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
+                        $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
                     }
-                },    
+                },
             ],
-            'konsumsi_id' => [
+            'produk_id' => [
                 'required',
                 'string',
-                'exists:konsumsis,id',
-                Rule::unique('konsumsis')->where(function ($query) use ($request) {
+                'exists:produks,id',
+                Rule::unique('persediaan_produk_jadis')->where(function ($query) use ($request) {
                     return $query->where('tahun', $request->tahun)
                                 ->where('bulan', $request->bulan);
                 }),
             ],
-            'total' => [
+            'stok' => [
                 'required',
                 'numeric',
                 'min:1',
             ],
         ]);
         
-        Persedian::create($request->all());
+        $data = $request->all();
+        $data['stok_sisa'] = -1;
+        PersediaanProdukJadi::create($data);
 
-        return redirect()->route('persedian')->with('success', 'Persedian created successfully.');
+        return redirect()->route('persedianproduk')->with('success', 'Persediaan Produk Jadi created successfully.');
     
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Persedian $persedian)
+    public function show(PersediaanProdukJadi $persedian)
     {
         //
     }
@@ -107,7 +110,7 @@ class PersedianController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Persedian $id)
+    public function edit(PersediaanProdukJadi $id)
     {
         $persedian = $id;
         $currentYear = now()->year;
@@ -128,15 +131,15 @@ class PersedianController extends Controller
             12 => 'Desember',
         ];
 
-        $bahan_produksis = Konsumsi::all();
+        $produks = Produk::all();
         
-        return view('persedian.edit', compact('persedian','bahan_produksis','years','bulans'));
+        return view('persedianproduk.edit', compact('persedian','produks','years','bulans'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Persedian $id)
+    public function update(Request $request, PersediaanProdukJadi $id)
     {
         $persedian = $id;
 
@@ -152,42 +155,51 @@ class PersedianController extends Controller
                 'between:1,12',
                 function ($attribute, $value, $fail) use ($request) {
                     if ($request->tahun == date('Y') && $value > date('n')) {
-                    $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
+                        $fail('Bulan tidak boleh lebih dari bulan saat ini di tahun ini.');
                     }
-                },    
+                },
             ],
-            'konsumsi_id' => [
+            'produk_id' => [
                 'required',
                 'string',
-                'exists:konsumsis,id',
-                Rule::unique('konsumsis')->where(function ($query) use ($request,$persedian) {
+                'exists:produks,id',
+                Rule::unique('persediaan_produk_jadis')->where(function ($query) use ($request, $persedian) {
                     return $query->where('tahun', $request->tahun)
-                                ->where('bulan', $request->bulan)
-                                ->where('id', '!=', $persedian->id);
+                                 ->where('bulan', $request->bulan)
+                                 ->where('id', '!=', $persedian->id);
                 }),
             ],
-            'total' => [
+            'stok' => [
                 'required',
                 'numeric',
                 'min:1',
             ],
+            'stok_sisa' => [
+                'nullable',
+                'numeric',
+                'min:-1',
+            ],
         ]);
 
+        if (is_null($request->stok_sisa)) {
+            $request->merge(['stok_sisa' => $persedian->stok_sisa]);
+        }
+        
         $persedian->update( $request->all() );
 
-        return back()->with('success', 'Persedian updated successfully.');
+        return back()->with('success', 'Persediaan Produk Jadi updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Persedian $id)
+    public function destroy(PersediaanProdukJadi $id)
     {
         try {
             $id->delete();
         } catch (\Exception $e) {
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
-        return back()->with('success', 'Persedian deleted successfully.');
+        return back()->with('success', 'Persediaan Produk Jadi deleted successfully.');
     }
 }

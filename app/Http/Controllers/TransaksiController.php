@@ -71,11 +71,15 @@ class TransaksiController extends Controller
 
         $messages = json_encode($messages); // hasil asli: {"produk_ids":["The produk ids field is required."]}
 
-        $produks = Produk::with(['parent' => function ($q) {
-            $q->withPivot('jumlah'); // ini penting
-        },'children' => function ($q) {
-            $q->withPivot('jumlah'); // ini penting
-        }])->get();
+        $produks = Produk::all();
+
+        $tahun = (int) date('Y');
+        $bulan = (int) date('n');
+
+        $produks->each(function ($produk) use ($tahun, $bulan) {
+            $produk->setPeriode($tahun, $bulan);
+            $produk->stok_sisa = $produk->stokSisa; // tambahkan properti stok_sisa
+        });
 
         if ($ismanual) {
             return view('transaksi.manual', compact('produks','old','messages'));
@@ -121,6 +125,14 @@ class TransaksiController extends Controller
         $jumlahs   = $request->jumlahs;
 
         $produks = Produk::with(['parent', 'children'])->get();
+
+        $tahun = (int) date('Y');
+        $bulan = (int) date('n');
+
+        $produks->each(function ($produk) use ($tahun, $bulan) {
+            $produk->setPeriode($tahun, $bulan);
+            $produk->stok = $produk->stokSisa; // tambahkan properti stok_sisa
+        });
 
         // Buat array ID dan stok
         $stokMap = $produks->pluck('stok', 'id')->toArray(); // [produk_id => stok]
@@ -186,13 +198,13 @@ class TransaksiController extends Controller
             ]);
         }
 
-        if (!empty($errors) && !$ismanual) {
-            foreach ($produkdanstok as $key => $stok){
-                $produk = Produk::find($key);
-                $produk->stok = $stok;
-                $produk->save();
-            }
-        }
+        // if (!empty($errors) && !$ismanual) {
+        //     foreach ($produkdanstok as $key => $stok){
+        //         $produk = Produk::find($key);
+        //         $produk->stok = $stok;
+        //         $produk->save();
+        //     }
+        // }
 
         if($ismanual){
             return redirect()->route('penjualan.riwayat')->with('success', 'Transaksi created successfully.');
