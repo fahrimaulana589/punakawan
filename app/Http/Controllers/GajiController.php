@@ -71,24 +71,22 @@ class GajiController extends Controller
     
         // Ambil tanggal dari input
         $tanggal = $request->get('tanggal');
-        $tanggal_akhir = Carbon::parse($tanggal);
+        $tanggal_akhir = Carbon::parse($tanggal)->startOfDay(); // Hapus waktu
+        $end_of_month = $tanggal_akhir->copy()->endOfMonth()->startOfDay();
 
-        // Cek apakah tanggal akhir adalah hari terakhir di bulan
-        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
-
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($end_of_month);
         if ($is_akhir_bulan) {
-            // Jika hari terakhir bulan ini → ambil tanggal 1 di bulan ini
             $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
         } else {
-            // Bukan hari terakhir → coba ambil hari +1 di bulan sebelumnya
             $target_day = $tanggal_akhir->day + 1;
-            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
+            $bulan_lalu = $tanggal_akhir->copy()->startOfMonth()->subMonth();
 
-            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            $max_day_last_month = $bulan_lalu->copy()->endOfMonth()->day;
 
-            // Jika tidak valid (keluar dari bulan sebelumnya), fallback ke tanggal 1 bulan ini
-            if ($tanggal_awal->month !== $bulan_lalu->month) {
-                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            if ($target_day <= $max_day_last_month) {
+                $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            } else {
+                $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
             }
         }
 
@@ -238,24 +236,22 @@ class GajiController extends Controller
 
         // Ambil tanggal dari input
         $tanggal = $request->get('tanggal');
-        $tanggal_akhir = Carbon::parse($tanggal);
+        $tanggal_akhir = Carbon::parse($tanggal)->startOfDay(); // Hapus waktu
+        $end_of_month = $tanggal_akhir->copy()->endOfMonth()->startOfDay();
 
-        // Cek apakah tanggal akhir adalah hari terakhir di bulan
-        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
-
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($end_of_month);
         if ($is_akhir_bulan) {
-            // Jika hari terakhir bulan ini → ambil tanggal 1 di bulan ini
             $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
         } else {
-            // Bukan hari terakhir → coba ambil hari +1 di bulan sebelumnya
             $target_day = $tanggal_akhir->day + 1;
-            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
+            $bulan_lalu = $tanggal_akhir->copy()->startOfMonth()->subMonth();
 
-            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            $max_day_last_month = $bulan_lalu->copy()->endOfMonth()->day;
 
-            // Jika tidak valid (keluar dari bulan sebelumnya), fallback ke tanggal 1 bulan ini
-            if ($tanggal_awal->month !== $bulan_lalu->month) {
-                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            if ($target_day <= $max_day_last_month) {
+                $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            } else {
+                $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
             }
         }
 
@@ -345,17 +341,22 @@ class GajiController extends Controller
     public function show(Jurnal $gaji)
     {
 
-        $tanggal_akhir = Carbon::parse($gaji->tanggal);
-        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
+        $tanggal_akhir = Carbon::parse($gaji->tanggal)->startOfDay(); // Hapus waktu
+        $end_of_month = $tanggal_akhir->copy()->endOfMonth()->startOfDay();
 
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($end_of_month);
         if ($is_akhir_bulan) {
             $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
         } else {
             $target_day = $tanggal_akhir->day + 1;
-            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
-            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
-            if ($tanggal_awal->month !== $bulan_lalu->month) {
-                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            $bulan_lalu = $tanggal_akhir->copy()->startOfMonth()->subMonth();
+
+            $max_day_last_month = $bulan_lalu->copy()->endOfMonth()->day;
+
+            if ($target_day <= $max_day_last_month) {
+                $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            } else {
+                $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
             }
         }
 
@@ -391,17 +392,22 @@ class GajiController extends Controller
     public function slip(Jurnal $gaji)
     {
 
-        $tanggal_akhir = Carbon::parse($gaji->tanggal);
-        $is_akhir_bulan = $tanggal_akhir->isSameDay($tanggal_akhir->copy()->endOfMonth());
+        $tanggal_akhir = Carbon::parse($gaji->tanggal)->startOfDay(); // Hapus waktu
+        $end_of_month = $tanggal_akhir->copy()->endOfMonth()->startOfDay();
 
+        $is_akhir_bulan = $tanggal_akhir->isSameDay($end_of_month);
         if ($is_akhir_bulan) {
             $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
         } else {
             $target_day = $tanggal_akhir->day + 1;
-            $bulan_lalu = $tanggal_akhir->copy()->subMonth();
-            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
-            if ($tanggal_awal->month !== $bulan_lalu->month) {
-                $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
+            $bulan_lalu = $tanggal_akhir->copy()->startOfMonth()->subMonth();
+
+            $max_day_last_month = $bulan_lalu->copy()->endOfMonth()->day;
+
+            if ($target_day <= $max_day_last_month) {
+                $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+            } else {
+                $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
             }
         }
 
