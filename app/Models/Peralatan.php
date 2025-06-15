@@ -41,6 +41,17 @@ class Peralatan extends Model
         );
     }
 
+    public function bebanPenyusutan(): Attribute
+    {
+        return Attribute::make(
+            get: function ($key,$data) {
+                $peralatan = $this;
+
+                return (int) round(($peralatan->harga - $peralatan->nilai_sisa) / $peralatan->umur_ekonomis);
+            },
+        );
+    }        
+
     public function nilaisisaRupiah(): Attribute
     {
         return Attribute::make(

@@ -286,6 +286,29 @@ class LaporanController extends Controller
         return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
     }
 
+
+    public function hpp(Laporan $id) {
+        $bulan = nama_bulan($id->bulan);
+
+        $hari = tanggal_akhir_laporan($id->tahun,$id->bulan);
+        
+        $data_akuns = data_akun($id);
+        $data = data_neracasaldo($data_akuns,$id);
+        
+        $split = [];
+
+        foreach ($data as $key => $item) {
+            $split['Neraca Saldo'][$key] = $item['saldo'];
+            $split['Penyesuaian'][$key] = $item['penyesuian'];
+            $split['Neraca Saldo Disesuikan'][$key] = $item['saldo_penyesuaian'];
+            $split['Laba Rugi'][$key] = $item['laba rugi'];
+            $split['Neraca'][$key] = $item['neraca'];
+        }
+    
+        $pdf = Pdf::loadView('laporan.hpp',compact('hari','split','bulan'))->setPaper('A4', 'portrait');
+        return $pdf->stream('HPP Bulan '.$bulan.'.pdf');
+    }
+
     public function neracaLajur(Laporan $id){
         $bulan = nama_bulan($id->bulan);
         
@@ -325,7 +348,7 @@ class LaporanController extends Controller
             $split['Neraca'][$key] = $item['neraca'];
         }
 
-        $excludedKeys = [1, 2, 3, 4, 5, 6, 7, 13, 14,8];
+        $excludedKeys = [1, 2, 3, 4, 5, 6, 7, 13, 14,8,15];
 
         $filtered = array_filter($data_akuns, function($key) use ($excludedKeys) {
             return !in_array($key, $excludedKeys);

@@ -4,6 +4,7 @@ use App\Models\Akun;
 use App\Models\Belanja;
 use App\Models\Konsumsi;
 use App\Models\Laporan;
+use App\Models\PersediaanProdukJadi;
 use App\Models\Persedian;
 use App\Models\Jurnal;
 use App\Models\Transaksi;
@@ -197,7 +198,7 @@ if (!function_exists('data_akun')) {
         }
 
         $jurnals = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
-            ->where('tipe','=',1)
+            ->whereIn('tipe',[1,3])
             ->where('kredit_id', '!=', 14)
             ->get();
 
@@ -219,17 +220,25 @@ if (!function_exists('data_akun')) {
         $persedians = Persedian::where('tahun','=',$previousYear)
             ->where('bulan','=',$previousMonth)
             ->get();
+        
+        $persedianProduks = PersediaanProdukJadi::where('tahun','=',$previousYear)
+            ->where('bulan','=',$previousMonth)
+            ->get();
 
-        $peralatans = Peralatan::where(function ($query) use ($startDate) {
-            $query->where(function ($q) use ($startDate) {
-                $q->whereNotNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate)
-                  ->whereDate('tanggal_nonaktif', '>=', $startDate);
-            })
-            ->orWhere(function ($q) use ($startDate) {
-                $q->whereNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate);
-            });
+         $peralatans = Peralatan::where(function ($query) use ($startDate, $endDate) {
+            $query
+                // Kasus 1: tanggal_nonaktif TIDAK NULL
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereNotNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate)
+                    ->whereDate('tanggal_nonaktif', '>=', $startDate);
+                })
+
+                // Kasus 2: tanggal_nonaktif NULL dan tanggal_aktif <= endDate
+                ->orWhere(function ($q) use ($endDate) {
+                    $q->whereNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate);
+                });
         })->get();
 
         foreach($jurnals as $jurnal){
@@ -251,6 +260,19 @@ if (!function_exists('data_akun')) {
                 'debet' => $value->bahanProduksi->debet_id
             ];
         }
+
+        $akunProduk = Akun::find(15)->nama;
+        $totalsisaproduk = $persedianProduks->sum(function ($item) {
+            return $item->stokSisaProduk * $item->produk->harga;
+        });
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Saldo Awal ".$akunProduk,
+            'total' => $totalsisaproduk,
+            'kredit' => 6,
+            'debet' => 15
+        ];
 
         foreach($peralatans as $key => $value){
             $data[] = [
@@ -378,7 +400,7 @@ if (!function_exists('data_jurnal')) {
         $endDate = tanggal_akhir_laporan($id->tahun,$id->bulan);
         
         $jurnals = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
-            ->where('tipe','=',1)
+            ->whereIn('tipe',[1,3])
             ->get();
 
         $belanjas = Belanja::whereBetween('tanggal', [$startDate, $endDate])
@@ -400,20 +422,28 @@ if (!function_exists('data_jurnal')) {
             ->where('bulan','=',$previousMonth)
             ->get();
 
+        $persedianProduks = PersediaanProdukJadi::where('tahun','=',$previousYear)
+            ->where('bulan','=',$previousMonth)
+            ->get();
+
         $groupedPersedians = $persedians->groupBy(function ($persedian) {
             return $persedian->bahanProduksi->debet_id;
         });
 
-        $peralatans = Peralatan::where(function ($query) use ($startDate) {
-            $query->where(function ($q) use ($startDate) {
-                $q->whereNotNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate)
-                  ->whereDate('tanggal_nonaktif', '>=', $startDate);
-            })
-            ->orWhere(function ($q) use ($startDate) {
-                $q->whereNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate);
-            });
+        $peralatans = Peralatan::where(function ($query) use ($startDate, $endDate) {
+            $query
+                // Kasus 1: tanggal_nonaktif TIDAK NULL
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereNotNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate)
+                    ->whereDate('tanggal_nonaktif', '>=', $startDate);
+                })
+
+                // Kasus 2: tanggal_nonaktif NULL dan tanggal_aktif <= endDate
+                ->orWhere(function ($q) use ($endDate) {
+                    $q->whereNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate);
+                });
         })->get();
 
         foreach($jurnals as $jurnal){
@@ -439,10 +469,18 @@ if (!function_exists('data_jurnal')) {
             ];
         }
 
-        $data_akuns = data_akun($id);
+        $akunProduk = Akun::find(15)->nama;
+        $totalsisaproduk = $persedianProduks->sum(function ($item) {
+            return $item->stokSisaProduk * $item->produk->harga;
+        });
 
-        $ajp = total_ajp($data_akuns,$id);
-        
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => $akunProduk,
+            'total' => $totalsisaproduk,
+            'kredit' => 'MODAL'
+        ];
+
         if(!$isFirstLaporan){
 
             $modal = Jurnal::where('tanggal', $startDate)
@@ -650,18 +688,71 @@ if (!function_exists('data_ajp')) {
         $startDate = tanggal_awal_laporan($laporan->tahun,$laporan->bulan);
         $endDate = tanggal_akhir_laporan($laporan->tahun,$laporan->bulan);
         
-        $peralatans = Peralatan::where(function ($query) use ($startDate) {
-            $query->where(function ($q) use ($startDate) {
-                $q->whereNotNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate)
-                  ->whereDate('tanggal_nonaktif', '>=', $startDate);
-            })
-            ->orWhere(function ($q) use ($startDate) {
-                $q->whereNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate);
-            });
+        $peralatans = Peralatan::where(function ($query) use ($startDate, $endDate) {
+            $query
+                // Kasus 1: tanggal_nonaktif TIDAK NULL
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereNotNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate)
+                    ->whereDate('tanggal_nonaktif', '>=', $startDate);
+                })
+
+                // Kasus 2: tanggal_nonaktif NULL dan tanggal_aktif <= endDate
+                ->orWhere(function ($q) use ($endDate) {
+                    $q->whereNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate);
+                });
         })->get();
 
+        $totalBebanPenyustan = $peralatans->sum(function($peralatan){
+            return $peralatan->bebanPenyusutan;
+        });
+
+        $gaji = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('tipe','=',2)
+            ->first();
+
+        $saldo_akhir_bb = $pemakian_bahan_baku;
+        $total_biaya_bb = $gaji->total;
+        $total_bop = $totalBebanPenyustan + $pemakaian_bahan_penolong;
+
+        $persedian_awal_produk = $total_persediaan_awal[15]['total'];
+        $persedian_akhir_produk = $total_persediaan[15]['total'];
+
+        $total_biaya_produksi = $total_bop + $saldo_akhir_bb + $total_biaya_bb;         
+        $harga_pokok_penjualan = $total_biaya_produksi + $persedian_awal_produk - $persedian_akhir_produk;
+        
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Beban Pokok Penjualan",
+            'debet' => $harga_pokok_penjualan,
+            'kredit' => 0,
+            "status" => "debet",
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[15]['nama']." (akhir)",
+            'debet' => $persedian_akhir_produk,
+            'kredit' => 0,
+            "status" => "debet",
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Harga Pokok Produksi",
+            'debet' => 0,
+            'kredit' => $total_biaya_produksi,
+            "status" => "kredit",
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[15]['nama']." (awal)",
+            'debet' => 0,
+            'kredit' => $persedian_awal_produk,
+            "status" => "kredit"
+        ];
 
         $data[] = [
             'tanggal' => $startDate,
@@ -805,18 +896,39 @@ if (!function_exists('total_ajp')) {
         $startDate = tanggal_awal_laporan($laporan->tahun,$laporan->bulan);
         $endDate = tanggal_akhir_laporan($laporan->tahun,$laporan->bulan);
         
-        $peralatans = Peralatan::where(function ($query) use ($startDate) {
-            $query->where(function ($q) use ($startDate) {
-                $q->whereNotNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate)
-                  ->whereDate('tanggal_nonaktif', '>=', $startDate);
-            })
-            ->orWhere(function ($q) use ($startDate) {
-                $q->whereNull('tanggal_nonaktif')
-                  ->whereDate('tanggal_aktif', '<=', $startDate);
-            });
+        $peralatans = Peralatan::where(function ($query) use ($startDate, $endDate) {
+            $query
+                // Kasus 1: tanggal_nonaktif TIDAK NULL
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereNotNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate)
+                    ->whereDate('tanggal_nonaktif', '>=', $startDate);
+                })
+
+                // Kasus 2: tanggal_nonaktif NULL dan tanggal_aktif <= endDate
+                ->orWhere(function ($q) use ($endDate) {
+                    $q->whereNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate);
+                });
         })->get();
 
+        $totalBebanPenyustan = $peralatans->sum(function($peralatan){
+            return $peralatan->bebanPenyusutan;
+        });
+
+        $gaji = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('tipe','=',2)
+            ->first();
+
+        $saldo_akhir_bb = $pemakian_bahan_baku;
+        $total_biaya_bb = $gaji->total;
+        $total_bop = $totalBebanPenyustan + $pemakaian_bahan_penolong;
+
+        $persedian_awal_produk = $total_persediaan_awal[15]['total'];
+        $persedian_akhir_produk = $total_persediaan[15]['total'];
+
+        $total_biaya_produksi = $total_bop + $saldo_akhir_bb + $total_biaya_bb;         
+        $harga_pokok_penjualan = $total_biaya_produksi + $persedian_awal_produk - $persedian_akhir_produk;
 
         $data[] = [
             'tanggal' => $startDate,
@@ -971,6 +1083,50 @@ if (!function_exists('total_ajp')) {
             ];
         }
 
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Beban Pokok Penjualan",
+            'debet' => $harga_pokok_penjualan,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "beban",
+            "ref" => 0,
+            "index" => "ajp_13"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[15]['nama']." (akhir)",
+            'debet' => $persedian_akhir_produk,
+            'kredit' => 0,
+            "status" => "debet",
+            "tipe" => "asset",
+            "ref" => 0,
+            "index" => "ajp_14"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Harga Pokok Produksi",
+            'debet' => 0,
+            'kredit' => $total_biaya_produksi,
+            "status" => "kredit",
+            "tipe" => "beban",
+            "ref" => 0,
+            "index" => "ajp_15"
+        ];
+
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama' => "Persedian ".$total_persediaan[15]['nama']." (awal)",
+            'debet' => 0,
+            'kredit' => $persedian_awal_produk,
+            "status" => "kredit",
+            "tipe" => "asset",
+            "ref" => 15,
+            "index" => "ajp_16"
+        ];
+
         $split = [];
 
         foreach($data as $item){
@@ -1079,6 +1235,10 @@ if (!function_exists('total_persediaan')) {
             ->where('bulan', $laporan->bulan)
             ->get();
 
+        $persedianProduks = PersediaanProdukJadi::where('tahun','=',$laporan->tahun)
+            ->where('bulan','=',$laporan->bulan)
+            ->get();
+
         $groupedPersedians = $persedians->groupBy(function ($persedian) {
             return $persedian->bahanProduksi->debet_id;
         });
@@ -1094,6 +1254,14 @@ if (!function_exists('total_persediaan')) {
             $persedians[$key]['total'] = $totalpersedian; 
 
         }
+
+        $akunProduk = Akun::find(15)->nama;
+        $totalsisaproduk = $persedianProduks->sum(function ($item) {
+            return $item->stokSisaProduk * $item->produk->harga;
+        });
+
+        $persedians[15]['nama'] = $akunProduk;
+        $persedians[15]['total'] = $totalsisaproduk;
 
         return $persedians;
     }
@@ -1127,8 +1295,19 @@ if (!function_exists('total_persediaan_awal')) {
             
             $persedians[$key]['nama'] = $nama_akun;
             $persedians[$key]['total'] = $totalpersedian; 
-
         }
+
+        $persedianProduks = PersediaanProdukJadi::where('tahun','=',$previousYear)
+            ->where('bulan','=',$previousMonth)
+            ->get();
+
+        $akunProduk = Akun::find(15)->nama;
+        $totalsisaproduk = $persedianProduks->sum(function ($item) {
+            return $item->stokSisaProduk * $item->produk->harga;
+        });
+
+        $persedians[15]['nama'] = $akunProduk;
+        $persedians[15]['total'] = $totalsisaproduk;
 
         return $persedians;
     }

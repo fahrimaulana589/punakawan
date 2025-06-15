@@ -141,6 +141,15 @@
                       <p
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                       >
+                        Harga Satuan
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
                         Stok
                       </p>
                     </div>
@@ -160,6 +169,15 @@
                         class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
                       >
                         Stok Sisa
+                      </p>
+                    </div>
+                  </th>
+                  <th class="px-5 py-3 sm:px-6">
+                    <div class="flex items-center">
+                      <p
+                        class="font-medium text-gray-500 text-theme-xs dark:text-gray-400"
+                      >
+                        Persediaan
                       </p>
                     </div>
                   </th>
@@ -203,6 +221,13 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ $persedian->produk->hargaRupiah }}
+                        </p>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
                           {{ $persedian->stok }}
                         </p>
                       </div>
@@ -218,6 +243,13 @@
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
                           {{ $persedian->stokSisaProduk }}
+                        </p>
+                      </div>
+                    </td>
+                    <td class="px-5 py-4 sm:px-6">
+                      <div class="flex items-center">
+                        <p class="text-gray-500 text-theme-sm dark:text-gray-400">
+                          {{ format_uang($persedian->stokSisaProduk * $persedian->produk->harga) }}
                         </p>
                       </div>
                     </td>

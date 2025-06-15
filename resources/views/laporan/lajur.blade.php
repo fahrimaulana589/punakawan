@@ -69,7 +69,7 @@
     </tr>
     <tr>
       <td></td>
-      <td></td>
+      <td>Laba Rugi</td>
     @foreach ($split as $key => $saldo)
       @php
         $debet = collect($saldo)->sum('debet');
@@ -84,6 +84,26 @@
       @elseif ($debet < $kredit)
       <td>{{ ($kredit - $debet) != 0 ? format_uang($kredit - $debet) : '' }}</td>
       <td></td>
+      @endif
+    @endforeach
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    @foreach ($split as $key => $saldo)
+      @php
+        $debet = collect($saldo)->sum('debet');
+        $kredit = collect($saldo)->sum('kredit');  
+      @endphp
+      @if ($debet == $kredit)
+      <td>{{ format_uang($debet) }}</td>
+      <td>{{ format_uang($kredit) }}</td>
+      @elseif ($debet > $kredit)
+      <td>{{ format_uang($debet) }}</td>
+      <td>{{ (($debet - $kredit) + $kredit)  != 0 ? format_uang($debet - $kredit + $kredit)  : '' }}</td>
+      @elseif ($debet < $kredit)
+      <td>{{ (($kredit - $debet) + $debet) != 0 ? format_uang($kredit - $debet  + $debet) : '' }}</td>
+      <td>{{ format_uang($kredit) }}</td>
       @endif
     @endforeach
     </tr>
