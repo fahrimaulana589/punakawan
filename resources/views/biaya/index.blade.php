@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Biaya biaya') }}
+    {{ __('Biaya Biaya') }}
   </x-slot>
   
   
@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Biaya biaya`}">
+      <div x-data="{ pageName: `Biaya Biaya`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
@@ -92,7 +92,7 @@
       <div class="flex items-center justify-end mb-4 gap-2">
         @can('biaya_create')
         <a href="{{ route('biaya.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add Biaya biaya
+          Add Biaya Biaya
         </a>
         @endcan
       </div>  

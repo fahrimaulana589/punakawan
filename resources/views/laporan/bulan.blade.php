@@ -119,7 +119,7 @@
       <th colspan="2">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
     </tr>
     <tr>
-      <th colspan="2">LAPORAN LABA RUGI</th>
+      <th colspan="2">PERUBAHAN MODAL</th>
     </tr>
     <tr>
       <th colspan="2">PER {{ format_tanggal($hari) }}</th>
@@ -154,7 +154,7 @@
       <th colspan="4">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
     </tr>
     <tr>
-      <th colspan="4">NERACA</th>
+      <th colspan="4">POSISI KEUANGAN</th>
     </tr>
     <tr>
       <th colspan="4">PER {{ format_tanggal($hari) }}</th>

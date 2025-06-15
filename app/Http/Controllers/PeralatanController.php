@@ -12,7 +12,7 @@ class PeralatanController extends Controller
      */
     public function index()
     {
-        $title = 'Delete Peralatan!';
+        $title = 'Delete Aset Tetap!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -71,7 +71,7 @@ class PeralatanController extends Controller
         
         Peralatan::create($request->all());
 
-        return redirect()->route('peralatan')->with('success', 'Peralatan created successfully.');
+        return redirect()->route('peralatan')->with('success', 'Aset Tetapcreated successfully.');
     
     }
 
@@ -136,7 +136,7 @@ class PeralatanController extends Controller
 
         $peralatan->update( $request->all() );
 
-        return back()->with('success', 'Peralatan updated successfully.');
+        return back()->with('success', 'Aset Tetapupdated successfully.');
     }
 
     /**
@@ -149,6 +149,6 @@ class PeralatanController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
-        return back()->with('success', 'Peralatan deleted successfully.');
+        return back()->with('success', 'Aset Tetapdeleted successfully.');
     }
 }

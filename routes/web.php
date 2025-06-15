@@ -151,7 +151,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('penjualan')->middleware(['permission:transaksi_kasir|transaksi_read']); 
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('penjualan')->middleware(['permission:transaksi_kasir']); 
     Route::get('/transaksi/void', [TransaksiController::class, 'void'])->name('penjualan.void')->middleware(['permission:transaksi_kasir|transaksi_read']);
     Route::get('/transaksi/riwayat', [TransaksiController::class, 'riwayat'])->name('penjualan.riwayat')->middleware(['permission:transaksi_kasir|transaksi_read']);    
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('penjualan.create')->middleware(['can:transaksi_kasir']);

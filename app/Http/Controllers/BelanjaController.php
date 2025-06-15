@@ -15,7 +15,7 @@ class BelanjaController extends Controller
      */
     public function index()
     {
-        $title = 'Delete Belanja!';
+        $title = 'Delete Pengeluaran Bahan Produksi!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -69,7 +69,7 @@ class BelanjaController extends Controller
 
         Belanja::create($data);
 
-        return redirect()->route('belanja')->with('success', 'Belanja created successfully.');
+        return redirect()->route('belanja')->with('success', 'Pengeluaran Bahan Produksi created successfully.');
         
     }
 
@@ -98,7 +98,7 @@ class BelanjaController extends Controller
 
         Jurnal::create($data);
 
-        return redirect()->route('belanja')->with('success', 'Belanja created successfully.');
+        return redirect()->route('belanja')->with('success', 'Pengeluaran Bahan Produksi created successfully.');
         
     }
 
@@ -139,7 +139,7 @@ class BelanjaController extends Controller
 
         $belanja = Belanja::findOrFail($id);
         $belanja->update($request->all());
-        return back()->with('success', 'Belanja updated successfully.');
+        return back()->with('success', 'Pengeluaran Bahan Produksi updated successfully.');
     }
 
     /**
@@ -154,6 +154,6 @@ class BelanjaController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return back()->with('success', 'Belanja deleted successfully.');
+        return back()->with('success', 'Pengeluaran Bahan Produksi deleted successfully.');
     }
 }

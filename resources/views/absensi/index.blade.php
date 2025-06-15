@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Absensi') }}
+    {{ __('Kehadiran') }}
   </x-slot>
   
   
@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Absensi`}">
+      <div x-data="{ pageName: `Kehadiran`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->

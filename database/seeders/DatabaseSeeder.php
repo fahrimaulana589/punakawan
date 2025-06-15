@@ -145,7 +145,7 @@ class DatabaseSeeder extends Seeder
             'transaksi_read','transaksi_create','transaksi_edit','transaksi_delete',
             'laporan_create','laporan_read','laporan_edit','laporan_delete',
             'belanja_read',
-            'rekap_penjualan',
+            'rekap_penjualan','gaji_read',
             'jurnal_create','jurnal_read','jurnal_edit','jurnal_delete',
             'biaya_create','biaya_read','biaya_edit','biaya_delete',
             'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',

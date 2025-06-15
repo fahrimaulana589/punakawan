@@ -14,7 +14,7 @@ class AbsensiController extends Controller
      */
     public function index()
     {
-        $title = 'Delete Absensi!';
+        $title = 'Delete Kehadiran!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -56,7 +56,7 @@ class AbsensiController extends Controller
 
         Absensi::create($request->all());
 
-        return redirect()->route('absensi')->with('success', 'Absensi created successfully.');
+        return redirect()->route('absensi')->with('success', 'Kehadiran created successfully.');
     
     }
 
@@ -102,7 +102,7 @@ class AbsensiController extends Controller
 
         $id->update($request->all());
         
-        return back()->with('success', 'Absensi updated successfully.');
+        return back()->with('success', 'Kehadiran updated successfully.');
     
     }
 
@@ -117,7 +117,7 @@ class AbsensiController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
         
-        return back()->with('success', 'Absensi deleted successfully.');
+        return back()->with('success', 'Kehadiran deleted successfully.');
       
     }
 }

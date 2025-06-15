@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Persedian') }}
+    {{ __('Persediaan Bahan Produksi') }}
   </x-slot>
   
   
@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Persedian`}">
+      <div x-data="{ pageName: `Persediaan Bahan Produksi`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
@@ -91,7 +91,7 @@
       @can('persedian_create')
       <div class="flex items-center justify-end mb-4">
         <a href="{{ route('persedian.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add Persedian
+          Add Persediaan Bahan Produksi
         </a>
       </div>
       @endcan

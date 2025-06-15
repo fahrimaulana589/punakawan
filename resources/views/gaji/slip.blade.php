@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Slip Gaji</title>
+  <title>Slip Laporan Gaji</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -142,7 +142,7 @@
         $total = $slipgaji['gaji_pokok'] * $slipgaji['hari_kerja'];
       @endphp  
       <tr>
-        <td>{{ $index }}</td><td>Gaji Perhari {{ format_uang($slipgaji['gaji_pokok']) }} X {{ $slipgaji['hari_kerja'] }} Hari</td>
+        <td>{{ $index }}</td><td>Laporan Gaji Perhari {{ format_uang($slipgaji['gaji_pokok']) }} X {{ $slipgaji['hari_kerja'] }} Hari</td>
         <td>{{ format_uang($slipgaji['gaji_pokok'] * $slipgaji['hari_kerja']) }}</td>
       </tr>
       @foreach ($slipgaji['lainya'] as $lainya)

@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Buat Belanja') }}
+    {{ __('Buat Pengeluaran Bahan Produksi') }}
   </x-slot>
   
   
@@ -9,9 +9,9 @@
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Add Belanja`,
+        pageName: `Add Pengeluaran Bahan Produksi`,
         urls:[
-          {name: 'Belanja', url: '{{ route('belanja') }}'},
+          {name: 'Pengeluaran Bahan Produksi', url: '{{ route('belanja') }}'},
         ]
       }">
         @include('partials.breadcrumb')
@@ -25,7 +25,7 @@
           <h3
             class="text-base font-medium text-gray-800 dark:text-white/90"
           >
-            Data Belanja
+            Data Pengeluaran Bahan Produksi
           </h3>
         </div>
         <div class="grid grid-cols-12 border border-gray-100 dark:border-gray-800">

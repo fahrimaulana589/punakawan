@@ -14,7 +14,7 @@ class PersedianController extends Controller
      */
     public function index()
     {
-        $title = 'Delete Persedian!';
+        $title = 'Delete Persediaan Bahan Baku!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -92,7 +92,7 @@ class PersedianController extends Controller
         
         Persedian::create($request->all());
 
-        return redirect()->route('persedian')->with('success', 'Persedian created successfully.');
+        return redirect()->route('persedian')->with('success', 'Persediaan Bahan Baku created successfully.');
     
     }
 
@@ -175,7 +175,7 @@ class PersedianController extends Controller
 
         $persedian->update( $request->all() );
 
-        return back()->with('success', 'Persedian updated successfully.');
+        return back()->with('success', 'Persediaan Bahan Baku updated successfully.');
     }
 
     /**
@@ -188,6 +188,6 @@ class PersedianController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
-        return back()->with('success', 'Persedian deleted successfully.');
+        return back()->with('success', 'Persediaan Bahan Baku deleted successfully.');
     }
 }

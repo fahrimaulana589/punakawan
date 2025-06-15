@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    {{ __('Edit Gaji') }}
+    {{ __('Edit Laporan Gaji') }}
   </x-slot>
   
   
@@ -9,9 +9,9 @@
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
       <div x-data="{ 
-        pageName: `Edit Gaji`,
+        pageName: `Edit Laporan Gaji`,
         urls:[
-          {name: 'Gaji', url: '{{ route('gaji') }}'},
+          {name: 'Laporan Gaji', url: '{{ route('gaji') }}'},
         ]
       }">
         @include('partials.breadcrumb')
@@ -113,7 +113,7 @@
           <h3
             class="text-base font-medium text-gray-800 dark:text-white/90"
           >
-            Data Gaji
+            Data Laporan Gaji
           </h3>
         </div>
         <div class="grid grid-cols-12 border border-gray-100 dark:border-gray-800">
@@ -263,7 +263,7 @@
             <template x-if="items.length > 0">
               <div class="my-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
-                  Total Seluruh Gaji Karyawan
+                  Total Seluruh Laporan Gaji Karyawan
                 </label>
                 <div class="text-lg font-semibold text-gray-800 dark:text-white/90">
                   <span>Rp. </span>

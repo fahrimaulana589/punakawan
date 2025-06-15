@@ -113,7 +113,7 @@
           @endcan
 
           @can('absensi_read')
-          <!-- Menu Item Absensi -->
+          <!-- Menu Item Kehadiran -->
           <li>
             <a
               href="{{ route('absensi') }}"
@@ -140,11 +140,11 @@
                 class="menu-item-text"
                 :class="sidebarToggle ? 'lg:hidden' : ''"
               >
-                Absensi
+                Kehadiran
               </span>
             </a>
           </li>
-          <!-- Menu Item Absensi -->
+          <!-- Menu Item Kehadiran -->
           @endcan
 
           @can('laporan_read')
@@ -347,6 +347,7 @@
                 :class="sidebarToggle ? 'lg:hidden' : 'flex'"
                 class="flex flex-col gap-1 mt-2 menu-dropdown pl-9"
               >
+              @can('transaksi_kasir')
                 <li>
                   <a
                     href="{{ route('penjualan') }}"
@@ -356,6 +357,7 @@
                     Transaksi
                   </a>
                 </li>
+              @endcan
                 <li>
                   <a
                     href="{{ route('penjualan.void') }}"
@@ -448,7 +450,7 @@
                     class="menu-dropdown-item group"
                     :class="selected === 'belanja' || selected === 'belanja.create' || selected === 'belanja.create.manual' || selected === 'belanja.edit' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
-                    Belanja
+                    Pengeluaran Bahan Produksi
                   </a>
                 </li>  
                 @endcan
@@ -460,7 +462,7 @@
                     class="menu-dropdown-item group"
                     :class="selected === 'gaji' || selected === 'gaji.create' || selected === 'gaji.edit' || selected === 'gaji.generate' || selected === 'gaji.show' ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'"
                   >
-                    Gaji
+                   Laporan Gaji
                   </a>
                 </li>
                 @endcan
@@ -615,7 +617,7 @@
                 class="menu-item-text"
                 :class="sidebarToggle ? 'lg:hidden' : ''"
               >
-                Persediaan Akhir BB
+                Persediaan Bahan Produksi
               </span>
             </a>
           </li>
@@ -650,7 +652,7 @@
                 class="menu-item-text"
                 :class="sidebarToggle ? 'lg:hidden' : ''"
               >
-                Persedian Produk Jadi
+                Persediaan Produk Jadi
               </span>
             </a>
           </li>
@@ -658,7 +660,7 @@
           @endcan
 
           @can('peralatan_read')
-          <!-- Menu Item Peralatan -->
+          <!-- Menu Item Aset Tetap -->
           <li>
             <a
               href="{{ route('peralatan') }}"
@@ -685,11 +687,11 @@
                 class="menu-item-text"
                 :class="sidebarToggle ? 'lg:hidden' : ''"
               >
-                Peralatan
+                Aset Tetap
               </span>
             </a>
           </li>
-          <!-- Menu Item Peralatan -->
+          <!-- Menu Item Aset Tetap -->
           @endcan
 
           @can('akun_read')

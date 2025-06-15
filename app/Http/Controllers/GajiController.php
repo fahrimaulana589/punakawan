@@ -23,7 +23,7 @@ class GajiController extends Controller
      */
     public function index()
     {
-        $title = 'Delete Gaji!';
+        $title = 'Delete Laporan Gaji!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
@@ -182,14 +182,14 @@ class GajiController extends Controller
         jurnal::create([
             'tanggal' => $request->tanggal,
             'total' => $request->total,
-            'nama' => "Gaji ".$nama,
+            'nama' => "Laporan Gaji ".$nama,
             'pegawai_id' => auth()->user()->pegawai_id,
             'tipe' => 2,
             'debet_id' => 8, // Ganti dengan ID akun debet yang sesuai
             'kredit_id' => 1, // Ganti dengan ID akun kredit yang sesuai
         ]);
 
-        return redirect()->route('gaji')->with('success', 'Gaji created successfully.');
+        return redirect()->route('gaji')->with('success', 'Laporan Gaji created successfully.');
     }
 
     /**
@@ -227,7 +227,7 @@ class GajiController extends Controller
         $gaji_bulanan = jurnal::create([
             'tanggal' => $request->tanggal,
             'total' => $request->total,
-            'nama' => "Gaji ".$nama,
+            'nama' => "Laporan Gaji ".$nama,
             'pegawai_id' => auth()->user()->pegawai_id,
             'tipe' => 2,
             'debet_id' => 8, // Ganti dengan ID akun debet yang sesuai
@@ -332,7 +332,7 @@ class GajiController extends Controller
             }
         }
 
-        return redirect()->route('gaji')->with('success', 'Gaji created successfully.');
+        return redirect()->route('gaji')->with('success', 'Laporan Gaji created successfully.');
     }
 
     /**
@@ -577,7 +577,7 @@ class GajiController extends Controller
         $gaji->fill([
             'tanggal' => $request->tanggal,
             'total' => $request->total,
-            'nama' => "Gaji " . $nama,
+            'nama' => "Laporan Gaji " . $nama,
         ])->save();
 
         $gaji->karyawans()->delete(); // Hapus data gaji karyawan lama
@@ -603,7 +603,7 @@ class GajiController extends Controller
 
 
 
-        return back()->with('success', 'Gaji updated successfully.');
+        return back()->with('success', 'Laporan Gaji updated successfully.');
     }
 
     /**
@@ -617,7 +617,7 @@ class GajiController extends Controller
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }
 
-        return back()->with('success', 'Gaji delated successfully.');
+        return back()->with('success', 'Laporan Gaji delated successfully.');
    
     }
 }
