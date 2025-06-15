@@ -20,15 +20,14 @@
 
       @php
         $reports = [
-          ['name' => 'Laporan Penjualan '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.penjualan',$laporan->id)],
-          ['name' => 'Jurnal '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.jurnal',$laporan->id)],
-          ['name' => 'Buku Besar '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.bukubesar',$laporan->id)],
-          ['name' => 'Neraca Saldo '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.neracasaldo',$laporan->id)],
-          ['name' => 'AJP '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.ajp', $laporan->id)],
-          ['name' => 'Neraca Lajur '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.neracalajur', $laporan->id)],
-          ['name' => 'HPP '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.hpp', $laporan->id)],
-          ['name' => 'Laporan '.$bulan, 'permission' => 'laporan_read', 'link' => route('laporan.bulan', $laporan->id)],
-        ];
+            ['name' => 'Laporan Penjualan '.$bulan, 'permission' => 'laporan_penjualan', 'link' => route('laporan.penjualan',$laporan->id)],
+            ['name' => 'Jurnal '.$bulan, 'permission' => 'laporan_jurnal', 'link' => route('laporan.jurnal',$laporan->id)],
+            ['name' => 'Buku Besar '.$bulan, 'permission' => 'buku_besar', 'link' => route('laporan.bukubesar',$laporan->id)],
+            ['name' => 'Neraca Saldo '.$bulan, 'permission' => 'neraca_saldo', 'link' => route('laporan.neracasaldo',$laporan->id)],
+            ['name' => 'AJP '.$bulan, 'permission' => 'ajp', 'link' => route('laporan.ajp', $laporan->id)],
+            ['name' => 'Neraca Lajur '.$bulan, 'permission' => 'neraca_lajur', 'link' => route('laporan.neracalajur', $laporan->id)],
+            ['name' => 'HPP '.$bulan, 'permission' => 'hpp', 'link' => route('laporan.hpp', $laporan->id)],
+            ['name' => 'Laporan '.$bulan, 'permission' => 'laporan_bulan', 'link' => route('laporan.bulan', $laporan->id)],];
       @endphp
 
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

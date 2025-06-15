@@ -214,6 +214,15 @@ class LaporanController extends Controller
     /**
      * Display the specified resource.
      */
+    public function hppList(Laporan $id)
+    {
+        $laporans = Laporan::paginate(10);
+        return view('laporan.hpplist', compact('laporans'));    
+    }
+
+    /**
+     * Display the specified resource.
+     */
     public function penjualan(Laporan $id)
     {
 

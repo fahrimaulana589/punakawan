@@ -95,6 +95,15 @@ class DatabaseSeeder extends Seeder
         $laporan_edit = Permission::create(['name' => 'laporan_edit']);
         $laporan_delete = Permission::create(['name' => 'laporan_delete']);
 
+        $laporan_penjualan = Permission::create(['name' => 'laporan_penjualan']);
+        $laporan_jurnal = Permission::create(['name' => 'laporan_jurnal']);
+        $buku_besar = Permission::create(['name' => 'buku_besar']);
+        $neraca_saldo = Permission::create(['name' => 'neraca_saldo']);
+        $ajp = Permission::create(['name' => 'ajp']);
+        $neraca_lajur = Permission::create(['name' => 'neraca_lajur']);
+        $hpp = Permission::create(['name' => 'hpp']);
+        $laporan_bulan = Permission::create(['name' => 'laporan_bulan']);
+
         $peralatan_create = Permission::create(['name' => 'peralatan_create']);
         $peralatan_read = Permission::create(['name' => 'peralatan_read']);
         $peralatan_edit = Permission::create(['name' => 'peralatan_edit']);
@@ -119,6 +128,7 @@ class DatabaseSeeder extends Seeder
             'persedianproduk_create','persedianproduk_read','persedianproduk_edit','persedianproduk_delete',
             'produk_create','produk_read','produk_edit','produk_delete',
             'bahan_produksi_create','bahan_produksi_read','bahan_produksi_edit','bahan_produksi_delete',
+            'hpp',
         ]);
 
         $bagian_sdm_role->givePermissionTo([
@@ -140,6 +150,13 @@ class DatabaseSeeder extends Seeder
             'biaya_create','biaya_read','biaya_edit','biaya_delete',
             'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',
             'akun_create','akun_read','akun_edit','akun_delete',
+            'laporan_penjualan',
+            'laporan_jurnal',
+            'buku_besar',
+            'neraca_saldo',
+            'ajp',
+            'neraca_lajur',
+            'laporan_bulan',
         ]);
         
         $path = storage_path('/data/data.xlsx');
