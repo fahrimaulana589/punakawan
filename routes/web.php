@@ -243,6 +243,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/neracalajur/{id}', [LaporanController::class, 'neracaLajur'])->name('laporan.neracalajur')->middleware('can:laporan_read');
     Route::get('/laporan/bulan/{id}', [LaporanController::class, 'bulan'])->name('laporan.bulan')->middleware('can:laporan_read');
     Route::get('/laporan/hpp/{id}', [LaporanController::class, 'hpp'])->name('laporan.hpp')->middleware('can:laporan_read');
+    Route::get('/laporan/rekap_penjualan', [LaporanController::class, 'rekap'])->name('laporan.rekap')->middleware(['can:rekap_penjualan']);
+    Route::get('/laporan/rekap_penjualan/print', [LaporanController::class, 'rekap_print'])->name('laporan.rekap_print')->middleware(['can:rekap_penjualan']);
+
 });
 
 Route::middleware('auth')->group(function () {

@@ -11,6 +11,8 @@ use App\Models\Jurnal;
 use App\Models\Transaksi;
 use App\Models\Gaji;
 use App\Models\Peralatan;
+use App\Models\Produk;
+use App\Models\Penjualan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -286,6 +288,66 @@ class LaporanController extends Controller
         return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
     }
 
+    public function rekap(){
+        $produks = Produk::all();
+
+        $tanggalAwal = request()->get('start_date') ?: date('Y-m-d');
+        $tanggalAkhir = request()->get('end_date') ?: date('Y-m-d');
+
+        // Ambil penjualan sesuai rentang waktu
+        // Contoh: ambil semua penjualan produk dalam rentang tanggal
+        $penjualans = Penjualan::whereHas('transaksi', function ($query) use ($tanggalAwal, $tanggalAkhir) {
+            $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir])
+                ->where(function($q) {
+                    $q->where('status', '')->orWhere('status', 'selesai');
+                });
+        })->get();
+
+        // Kelompokkan penjualan berdasarkan produk_id
+        $terjualGrouped = $penjualans->groupBy('produk_id')->map(function ($item) {
+            return $item->sum('jumlah');
+        });
+
+        // Tambahkan properti `terjual` ke setiap produk
+        $produks->each(function ($produk) use ($terjualGrouped) {
+            $produk->terjual = $terjualGrouped[$produk->id] ?? 0;
+        });
+
+
+
+        return view('laporan.rekap', compact('produks'));
+    }
+
+    public function rekap_print(){
+        $produks = Produk::all();
+
+        $tanggalAwal = request()->get('start_date') ?: date('Y-m-d');
+        $tanggalAkhir = request()->get('end_date') ?: date('Y-m-d');
+
+        // Ambil penjualan sesuai rentang waktu
+        // Contoh: ambil semua penjualan produk dalam rentang tanggal
+        $penjualans = Penjualan::whereHas('transaksi', function ($query) use ($tanggalAwal, $tanggalAkhir) {
+            $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir])
+                ->where(function($q) {
+                    $q->where('status', '')->orWhere('status', 'selesai');
+                });
+        })->get();
+
+        // Kelompokkan penjualan berdasarkan produk_id
+        $terjualGrouped = $penjualans->groupBy('produk_id')->map(function ($item) {
+            return $item->sum('jumlah');
+        });
+
+        // Tambahkan properti `terjual` ke setiap produk
+        $produks->each(function ($produk) use ($terjualGrouped) {
+            $produk->terjual = $terjualGrouped[$produk->id] ?? 0;
+        });
+
+        $pdf = Pdf::loadView('laporan.rekap_print', compact('produks'))->setPaper('A4', 'portrait');
+        return $pdf->stream('Rekap Penjualan'.'pdf');
+
+        // return view('laporan.rekap_print', compact('produks'));
+    }
 
     public function hpp(Laporan $id) {
         $bulan = nama_bulan($id->bulan);

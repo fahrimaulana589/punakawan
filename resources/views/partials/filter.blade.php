@@ -7,6 +7,7 @@
     <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-white">Tanggal Akhir</label>
     <input onclick="this.showPicker()" type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
 </div>
+@if ($paginate)
 <div>
     <label for="per_page" class="block text-sm font-medium text-gray-700 dark:text-white">Per Page</label>
     <select name="per_page" id="per_page" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
@@ -17,6 +18,7 @@
     @endforeach
     </select>
 </div>
+@endif
 <div class="flex items-end">
     <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
     Filter

@@ -97,7 +97,8 @@
       @endcan
       
       <!-- Filter Start -->
-      @include('partials.filter')
+      @include('partials.filter',['paginate' => true])
+      
       <!-- Filter End -->
 
       <!-- ====== Table Six Start -->

@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $transaksi_kasir = Permission::create(['name' => 'transaksi_kasir']);
         $transaksi_create = Permission::create(['name' => 'transaksi_create']);
         $transaksi_read = Permission::create(['name' => 'transaksi_read']);
+        $rekap_penjualan = Permission::create(['name' => 'rekap_penjualan']);
         $transaksi_edit = Permission::create(['name' => 'transaksi_edit']);
         $transaksi_delete = Permission::create(['name' => 'transaksi_delete']);
 
@@ -134,6 +135,7 @@ class DatabaseSeeder extends Seeder
             'transaksi_read','transaksi_create','transaksi_edit','transaksi_delete',
             'laporan_create','laporan_read','laporan_edit','laporan_delete',
             'belanja_read',
+            'rekap_penjualan',
             'jurnal_create','jurnal_read','jurnal_edit','jurnal_delete',
             'biaya_create','biaya_read','biaya_edit','biaya_delete',
             'peralatan_create','peralatan_read','peralatan_edit','peralatan_delete',

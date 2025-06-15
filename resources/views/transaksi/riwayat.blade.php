@@ -95,7 +95,7 @@
       </div>
       @endcan
       
-      @include('partials.filter')
+      @include('partials.filter',['paginate' => true])
      
       <!-- ====== Table Six Start -->
       <div
