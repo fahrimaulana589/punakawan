@@ -433,6 +433,10 @@ class GajiController extends Controller
         foreach($gaji->karyawans as $gajiKaryawan){
             $slipgaji = [
                 'nama' => $gajiKaryawan->karyawan->nama,
+                'kode' => $gajiKaryawan->karyawan->kode,
+                'jabatan' => $gajiKaryawan->karyawan->jabatan,
+                'alamat' => $gajiKaryawan->karyawan->jabatan,
+                'no_hp' => $gajiKaryawan->karyawan->no_hp,
                 'total' => $gajiKaryawan->totalRupiah,
                 'tanggal_awal' => $tanggal_awal,
                 'tanggal_akhir' => $tanggal_akhir,
@@ -452,13 +456,13 @@ class GajiController extends Controller
             $html = view('gaji.slip',compact('slipgaji'))->render();
 
             $bodyHeight = Browsershot::html($html)
-                ->setOption('width', '58mm')
+                ->setOption('width', '210mm')
                 ->evaluate('document.body.scrollHeight');
             // dd($bodyHeight);
 
             // Generate PDF dan tampilkan langsung
             $pdf = Browsershot::html($html)
-                ->setOption('width', '58mm')
+                ->setOption('width', '210mm')
                 ->setOption('height', $bodyHeight . 'px')
                 ->pdf(); // return binary content
 

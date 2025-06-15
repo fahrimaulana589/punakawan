@@ -11,7 +11,7 @@ use App\Models\Pegawai;
 use App\Models\GajiKaryawan;
 use App\Models\GajiLainya;
 
-class DataImport implements WithMultipleSheets
+class DataImport implements WithMultipleSheets, WithEvents
 {
     public function sheets(): array
     {

@@ -41,39 +41,40 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
-    $html = view('welcome')->render();
+    // $html = view('welcome')->render();
 
-    $bodyHeight = Browsershot::html($html)
-        ->setOption('width', '58mm')
-        ->evaluate('document.body.scrollHeight');
-    // dd($bodyHeight);
+    // $bodyHeight = Browsershot::html($html)
+    //     ->setOption('width', '58mm')
+    //     ->evaluate('document.body.scrollHeight');
+    // // dd($bodyHeight);
 
-    // Generate PDF dan tampilkan langsung
-    $pdf1 = Browsershot::html($html)
-        ->setOption('width', '58mm')
-        ->setOption('height', '123px')
-        ->pdf(); // return binary content
+    // // Generate PDF dan tampilkan langsung
+    // $pdf1 = Browsershot::html($html)
+    //     ->setOption('width', '58mm')
+    //     ->setOption('height', '123px')
+    //     ->pdf(); // return binary content
 
-    // Generate PDF dan tampilkan langsung
-    $pdf2 = Browsershot::html($html)
-        ->setOption('width', '58mm')
-        ->setOption('height', $bodyHeight . 'px')
-        ->pdf(); // return binary content
+    // // Generate PDF dan tampilkan langsung
+    // $pdf2 = Browsershot::html($html)
+    //     ->setOption('width', '58mm')
+    //     ->setOption('height', $bodyHeight . 'px')
+    //     ->pdf(); // return binary content
 
-    // Gabungkan menggunakan libmergepdf
-    $merger = new Merger();
-    $merger->addRaw($pdf1);
-    $merger->addRaw($pdf2);
+    // // Gabungkan menggunakan libmergepdf
+    // $merger = new Merger();
+    // $merger->addRaw($pdf1);
+    // $merger->addRaw($pdf2);
 
-    // Ambil hasil PDF gabungan
-    $mergedPdf = $merger->merge();
+    // // Ambil hasil PDF gabungan
+    // $mergedPdf = $merger->merge();
 
-    // Kirim ke browser
-    return Response::make($mergedPdf, 200, [
-        'Content-Type' => 'application/pdf',
-        'Content-Disposition' => 'inline; filename="gabungan.pdf"',
-    ]);
+    // // Kirim ke browser
+    // return Response::make($mergedPdf, 200, [
+    //     'Content-Type' => 'application/pdf',
+    //     'Content-Disposition' => 'inline; filename="gabungan.pdf"',
+    // ]);
 
+    return view('gaji.slip');
 });
 Route::get('/dashboard', function () {
     return view('dashboard');
