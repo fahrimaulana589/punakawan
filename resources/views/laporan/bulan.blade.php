@@ -40,10 +40,7 @@
 
   <br>
   <br>
-  <br>
-  <br>
-  <br>
-  <table>
+  <table style="width: 100%">
     <tr>
       <th colspan="3">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
     </tr>
@@ -111,10 +108,7 @@
 
   <br>
   <br>
-  <br>
-  <br>
-  <br>
-  <table>
+  <table table style="width: 100%">
     <tr>
       <th colspan="2">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
     </tr>
@@ -143,9 +137,6 @@
   <div class="page-break"></div>
   Laporan Bulan {{ $bulan }}
 
-  <br>
-  <br>
-  <br>
   <br>
   <br>
   <table border="1" cellspacing="0" cellpadding="5">

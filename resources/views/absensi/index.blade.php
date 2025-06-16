@@ -91,7 +91,7 @@
       @can('absensi_create')
       <div class="flex items-center justify-end mb-4">
         <a href="{{ route('absensi.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Add absensi
+          Add Kehadiran
         </a>
       </div>  
       @endcan

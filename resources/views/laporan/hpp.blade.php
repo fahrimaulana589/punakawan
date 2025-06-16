@@ -155,9 +155,6 @@
 
   <br>
   <br>
-  <br>
-  <br>
-  <br>
   <table>
     <tr>
       <th colspan="2">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>

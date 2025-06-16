@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Spatie\Browsershot\Browsershot;
+use Illuminate\Support\Facades\Response;
 
 class LaporanController extends Controller
 {
@@ -396,8 +398,29 @@ class LaporanController extends Controller
             $split['Neraca'][] = $item['neraca'];
         }
 
-        $pdf = Pdf::loadView('laporan.lajur',compact('data','split','bulan'))->setPaper('A3', 'landscape');
-        return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
+        // $pdf = Pdf::loadView('laporan.lajur',compact('data','split','bulan'))->setPaper('A3', 'landscape');
+        
+        $html = view('laporan.lajur',compact('data','split','bulan'))->render();
+        
+        $bodyHeight = Browsershot::html($html)
+            ->setOption('width', '420mm')
+            ->fullPage()
+            // ->save('debug.png');
+            ->evaluate('document.body.scrollHeight');
+
+        // Generate PDF dan tampilkan langsung
+        $pdf = Browsershot::html($html)
+            ->setOption('width', '420mm')
+            ->setOption('height', $bodyHeight.'px')
+            ->pdf(); // return binary content
+
+        // Kirim ke browser
+        return Response::make($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="struk.pdf"',
+        ]);
+
+        // return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
 
     }
 

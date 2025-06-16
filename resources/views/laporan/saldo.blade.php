@@ -20,8 +20,6 @@
 
   <br>
   <br>
-  <br>
-  <br>
 
   <table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse; width:100%;">
     <thead>
