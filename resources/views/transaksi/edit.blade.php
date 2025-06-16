@@ -235,7 +235,6 @@
                                             :value="produk.id" 
                                             x-text="getNamaProduk(produk)"
                                             :selected="item.produk_id == produk.id"
-                                            :disabled="produk.stok <= 0 && item.produk_id != produk.id"
                                         ></option>
                                     </template>
                                 </select>
