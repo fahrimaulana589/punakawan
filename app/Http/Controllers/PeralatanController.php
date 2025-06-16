@@ -55,6 +55,7 @@ class PeralatanController extends Controller
                 'required',
                 'integer',
                 'min:1',
+                'max:100000000'
             ],
             'umur_ekonomis' => [
                 'required',
@@ -121,6 +122,7 @@ class PeralatanController extends Controller
                 'required',
                 'integer',
                 'min:1',
+                'max:100000000'
             ],
             'umur_ekonomis' => [
                 'required',

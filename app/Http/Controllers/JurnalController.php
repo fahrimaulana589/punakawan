@@ -50,7 +50,7 @@ class JurnalController extends Controller
             'nama' => 'required|string|max:255',
             'debet_id' => 'required|exists:akuns,id',
             'kredit_id' => 'required|exists:akuns,id',
-            'total' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0|max:100000000',
         ]);
 
         $data =[
@@ -101,7 +101,7 @@ class JurnalController extends Controller
             'nama' => 'required|string|max:255',
             'debet_id' => 'required|exists:akuns,id',
             'kredit_id' => 'required|exists:akuns,id',
-            'total' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0|max:100000000',
         ]);
 
         $jurnal = Jurnal::findOrFail($id);

@@ -87,6 +87,7 @@ class PersedianController extends Controller
                 'required',
                 'numeric',
                 'min:1',
+                'max:100000000'
             ],
         ]);
         
@@ -170,6 +171,7 @@ class PersedianController extends Controller
                 'required',
                 'numeric',
                 'min:1',
+                'max:100000000'
             ],
         ]);
 

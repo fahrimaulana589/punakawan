@@ -88,6 +88,7 @@ class PersediaanProdukJadiController extends Controller
                 'required',
                 'numeric',
                 'min:1',
+                'max:100000000'
             ],
         ]);
         
@@ -173,11 +174,13 @@ class PersediaanProdukJadiController extends Controller
                 'required',
                 'numeric',
                 'min:1',
+                'max:100000000'
             ],
             'stok_sisa' => [
                 'nullable',
                 'numeric',
                 'min:-1',
+                'max:100000000'
             ],
         ]);
 

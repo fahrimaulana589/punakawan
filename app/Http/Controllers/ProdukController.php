@@ -141,7 +141,8 @@ class ProdukController extends Controller
             'stok' => [
                 'nullable',
                 'integer',
-                'min:0'
+                'min:0',
+                'max:100000000'
             ],
             'stok_kurang' => [
                 'nullable',

@@ -50,7 +50,7 @@ class BelanjaController extends Controller
     {
         $request->validate([
             'konsumsi_id' => 'required|exists:konsumsis,id',
-            'total' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0|max:100000000',
             'tanggal' => [
                 'required',
                 'date',
@@ -84,7 +84,7 @@ class BelanjaController extends Controller
             'nama' => 'required|string|max:255',
             'debet_id' => 'required|exists:akuns,id',
             'kredit_id' => 'required|exists:akuns,id',
-            'total' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0|max:100000000',
         ]);
 
         $data =[
@@ -129,7 +129,7 @@ class BelanjaController extends Controller
     {
         $request->validate([
             'konsumsi_id' => 'required|exists:konsumsis,id',
-            'total' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0|max:100000000',
             'tanggal' => [
                 'required',
                 'date',

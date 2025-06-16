@@ -173,6 +173,7 @@ class GajiController extends Controller
                 'required',
                 'numeric',
                 'min:0',
+                'max:100000000'
             ],
         ]);
 
@@ -218,6 +219,7 @@ class GajiController extends Controller
                 'required',
                 'numeric',
                 'min:0',
+                'max:100000000'
             ],
         ]);
 
@@ -543,7 +545,7 @@ class GajiController extends Controller
             'pegawai_id'   => ['nullable', 'array'],
             'pegawai_id.*' => 'required|integer|exists:pegawais,id',
             'nominal'      => ['nullable', 'array'],
-            'nominal.*'    => 'required|numeric|min:1',
+            'nominal.*'    => 'required|numeric|min:1|max:100000000',
         ]);
 
         $request->validate([
@@ -568,6 +570,7 @@ class GajiController extends Controller
                 'required',
                 'numeric',
                 'min:0',
+                'max:100000000'
             ],
         ]);
 

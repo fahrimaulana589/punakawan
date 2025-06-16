@@ -48,7 +48,7 @@ class BiayaController extends Controller
                 'before_or_equal:today'
             ],
             'debet_id' => 'required|exists:akuns,id',
-            'total' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0|max:100000000',
         ]);
 
         $akun = Akun::find($request->debet_id);
@@ -100,7 +100,7 @@ class BiayaController extends Controller
                 'before_or_equal:today'
             ],
             'debet_id' => 'required|exists:akuns,id',
-            'total' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0|max:100000000',
         ]);
 
         $jurnal = Jurnal::findOrFail($id);
