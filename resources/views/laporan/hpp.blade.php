@@ -151,7 +151,7 @@
     </tr>
   </table>
   <div class="page-break"></div>
-  Laporan Bulan {{ $bulan }}
+  HPP Bulan {{ $bulan }}
 
   <br>
   <br>
@@ -163,7 +163,7 @@
       <th colspan="2">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
     </tr>
     <tr>
-      <th colspan="2">LAPORAN LABA RUGI</th>
+      <th colspan="2">LAPORAN HARGA POKOK PENJUALAN</th>
     </tr>
     <tr>
       <th colspan="2">PER {{ format_tanggal($hari) }}</th>
