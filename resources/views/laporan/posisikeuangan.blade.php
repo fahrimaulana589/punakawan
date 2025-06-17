@@ -35,107 +35,21 @@
     $produk_akhir = $split['Penyesuaian']['ajp_14']['debet'];
 
     $produksi = $harga_pokok_produksi + $produk_awal - $produk_akhir; 
+    $laba_kotor = $split['Neraca Saldo Disesuikan']['saldo_7']['kredit'] - $produksi;
+    $total_beban = $split['Neraca Saldo Disesuikan']['ajp_9']['debet'];
   @endphp
-  Laporan Bulan {{ $bulan }}
-
-  <br>
-  <br>
-  <table style="width: 100%">
-    <tr>
-      <th colspan="3">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
-    </tr>
-    <tr>
-      <th colspan="3">LAPORAN LABA RUGI</th>
-    </tr>
-    <tr>
-      <th colspan="3">PER {{ format_tanggal($hari) }}</th>
-    </tr>
-
-    <tr>
-      <td>PENJUALAN</td>
-      <td>{{ format_uang($split['Neraca Saldo Disesuikan']['saldo_7']['kredit']) }}</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td >Harga Pokok Penjualan</td>
-      <td >{{ format_uang($produksi) }}</td>
-      <td ></td>
-    </tr>
-    <tr>
-      <td>LABA KOTOR</td>
-      <td></td>
-      @php
-        $laba_kotor = $split['Neraca Saldo Disesuikan']['saldo_7']['kredit'] - $produksi; 
-      @endphp
-      <td>{{ format_uang($laba_kotor) }}</td>
-    </tr>
-    @php
-      $total_beban = $split['Neraca Saldo Disesuikan']['ajp_9']['debet'];
-    @endphp
-    @foreach ($bebans as $beban)
+  @foreach ($bebans as $beban)
     @php
       $total_beban += $beban['total'];
-    @endphp
-    <tr>
-      <td>{{ $beban['nama'] }}</td>
-      <td>{{ format_uang($beban['total']) }}</td>
-      <td></td> 
-    </tr>
-      
-    @endforeach
-    <tr>
-      <td>BIAYA PERLENGKAPAN</td>
-      <td>{{ format_uang($split['Neraca Saldo Disesuikan']['ajp_9']['debet']) }}</td>
-      <td></td>
-    </tr>
-
-    <tr>
-      <td>TOTAL BIAYA</td>
-      <td></td>
-      <td>{{ format_uang($total_beban) }}</td>
-    </tr>
-    <tr>
-      @php
-        $laba_bersih = $laba_kotor - $total_beban;
-      @endphp
-      <td>LABA BERSIH</td>
-      <td></td>
-      <td>{{ format_uang($laba_bersih) }}</td>
-    </tr>
-  </table>
-  <div class="page-break"></div>
-  Laporan Bulan {{ $bulan }}
-
-  <br>
-  <br>
-  <table table style="width: 100%">
-    <tr>
-      <th colspan="2">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
-    </tr>
-    <tr>
-      <th colspan="2">PERUBAHAN MODAL</th>
-    </tr>
-    <tr>
-      <th colspan="2">PER {{ format_tanggal($hari) }}</th>
-    </tr>
-    <tr>
-      <td>MODAL AWAL</td>
-      <td>{{ format_uang($split['Neraca Saldo Disesuikan']['saldo_6']['kredit']) }}</td>
-    </tr>
-    <tr>
-      <td>LABA BERSIH</td>
-      <td>{{ format_uang($laba_bersih) }}</td>
-    </tr>
-    <tr>
-      @php
-        $modal_akhir = $split['Neraca Saldo Disesuikan']['saldo_6']['kredit'] + $laba_bersih;
-      @endphp
-      <td>MODAL AKHIR</td>
-      <td>{{ format_uang($modal_akhir) }}</td>
-    </tr>
-  </table>
-  <div class="page-break"></div>
-  Laporan Bulan {{ $bulan }}
+    @endphp    
+  @endforeach
+  @php
+    $laba_bersih = $laba_kotor - $total_beban;
+  @endphp
+  @php
+    $modal_akhir = $split['Neraca Saldo Disesuikan']['saldo_6']['kredit'] + $laba_bersih;
+  @endphp
+  Posisi Keuangan Bulan {{ $bulan }}
 
   <br>
   <br>
@@ -145,7 +59,7 @@
       <th colspan="4">PT PUNOKAWAN MANUNGGAL SEJAHTERA</th>
     </tr>
     <tr>
-      <th colspan="4">POSISI KEUANGAN</th>
+      <th colspan="4">Neraca</th>
     </tr>
     <tr>
       <th colspan="4">PER {{ format_tanggal($hari) }}</th>

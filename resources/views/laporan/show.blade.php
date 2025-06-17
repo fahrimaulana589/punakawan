@@ -27,7 +27,10 @@
             ['name' => 'AJP '.$bulan, 'permission' => 'ajp', 'link' => route('laporan.ajp', $laporan->id)],
             ['name' => 'Neraca Lajur '.$bulan, 'permission' => 'neraca_lajur', 'link' => route('laporan.neracalajur', $laporan->id)],
             ['name' => 'HPP '.$bulan, 'permission' => 'hpp', 'link' => route('laporan.hpp', $laporan->id)],
-            ['name' => 'Laporan '.$bulan, 'permission' => 'laporan_bulan', 'link' => route('laporan.bulan', $laporan->id)],];
+            ['name' => 'Laba Rugi '.$bulan, 'permission' => 'laba_rugi', 'link' => route('laporan.labarugi', $laporan->id)],
+            ['name' => 'Perubahan Modal '.$bulan, 'permission' => 'perubahan_modal', 'link' => route('laporan.perubahanmodal', $laporan->id)],
+            ['name' => 'Posisi Keuangan '.$bulan, 'permission' => 'posisi_keuangan', 'link' => route('laporan.posisikeuangan', $laporan->id)],
+          ];
       @endphp
 
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

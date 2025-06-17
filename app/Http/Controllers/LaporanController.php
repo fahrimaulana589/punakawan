@@ -424,7 +424,7 @@ class LaporanController extends Controller
 
     }
 
-    public function bulan(Laporan $id){
+    public function labaRugi(Laporan $id){
         $bulan = nama_bulan($id->bulan);
 
         $hari = tanggal_akhir_laporan($id->tahun,$id->bulan);
@@ -451,8 +451,70 @@ class LaporanController extends Controller
         // Gabungkan semua elemen jadi satu array
         $bebans = array_merge(...array_values($filtered));
 
-        $pdf = Pdf::loadView('laporan.bulan',compact('hari','bebans','split','bulan'))->setPaper('A4', 'portrait');
-        return $pdf->stream('Saldo Bulan '.$bulan.'.pdf');
+        $pdf = Pdf::loadView('laporan.labarugi',compact('hari','bebans','split','bulan'))->setPaper('A4', 'portrait');
+        return $pdf->stream('Laba Rugi Bulan '.$bulan.'.pdf');
+    }
+
+    public function perubahanModal(Laporan $id){
+        $bulan = nama_bulan($id->bulan);
+
+        $hari = tanggal_akhir_laporan($id->tahun,$id->bulan);
+        
+        $data_akuns = data_akun($id);
+        $data = data_neracasaldo($data_akuns,$id);
+        
+        $split = [];
+
+        foreach ($data as $key => $item) {
+            $split['Neraca Saldo'][$key] = $item['saldo'];
+            $split['Penyesuaian'][$key] = $item['penyesuian'];
+            $split['Neraca Saldo Disesuikan'][$key] = $item['saldo_penyesuaian'];
+            $split['Laba Rugi'][$key] = $item['laba rugi'];
+            $split['Neraca'][$key] = $item['neraca'];
+        }
+
+        $excludedKeys = [1, 2, 3, 4, 5, 6, 7, 13, 14,8,15];
+
+        $filtered = array_filter($data_akuns, function($key) use ($excludedKeys) {
+            return !in_array($key, $excludedKeys);
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Gabungkan semua elemen jadi satu array
+        $bebans = array_merge(...array_values($filtered));
+
+        $pdf = Pdf::loadView('laporan.perubahanmodal',compact('hari','bebans','split','bulan'))->setPaper('A4', 'portrait');
+        return $pdf->stream('Perubahan Modal Bulan '.$bulan.'.pdf');
+    }
+
+    public function posisiKeuangan(Laporan $id){
+        $bulan = nama_bulan($id->bulan);
+
+        $hari = tanggal_akhir_laporan($id->tahun,$id->bulan);
+        
+        $data_akuns = data_akun($id);
+        $data = data_neracasaldo($data_akuns,$id);
+        
+        $split = [];
+
+        foreach ($data as $key => $item) {
+            $split['Neraca Saldo'][$key] = $item['saldo'];
+            $split['Penyesuaian'][$key] = $item['penyesuian'];
+            $split['Neraca Saldo Disesuikan'][$key] = $item['saldo_penyesuaian'];
+            $split['Laba Rugi'][$key] = $item['laba rugi'];
+            $split['Neraca'][$key] = $item['neraca'];
+        }
+
+        $excludedKeys = [1, 2, 3, 4, 5, 6, 7, 13, 14,8,15];
+
+        $filtered = array_filter($data_akuns, function($key) use ($excludedKeys) {
+            return !in_array($key, $excludedKeys);
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Gabungkan semua elemen jadi satu array
+        $bebans = array_merge(...array_values($filtered));
+
+        $pdf = Pdf::loadView('laporan.posisikeuangan',compact('hari','bebans','split','bulan'))->setPaper('A4', 'portrait');
+        return $pdf->stream('Posisi Keuangan Bulan '.$bulan.'.pdf');
     }
 
     /**

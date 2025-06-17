@@ -241,7 +241,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/neracasaldo/{id}', [LaporanController::class, 'neracaSaldo'])->name('laporan.neracasaldo')->middleware('can:neraca_saldo');
     Route::get('/laporan/ajp/{id}', [LaporanController::class, 'ajp'])->name('laporan.ajp')->middleware('can:ajp');
     Route::get('/laporan/neracalajur/{id}', [LaporanController::class, 'neracaLajur'])->name('laporan.neracalajur')->middleware('can:neraca_lajur');
-    Route::get('/laporan/bulan/{id}', [LaporanController::class, 'bulan'])->name('laporan.bulan')->middleware('can:laporan_bulan');
+    Route::get('/laporan/labarugi/{id}', [LaporanController::class, 'labaRugi'])->name('laporan.labarugi')->middleware('can:laba_rugi');
+    Route::get('/laporan/posisikeuangan/{id}', [LaporanController::class, 'posisiKeuangan'])->name('laporan.posisikeuangan')->middleware('can:posisi_keuangan');
+    Route::get('/laporan/perubahanmodal/{id}', [LaporanController::class, 'perubahanModal'])->name('laporan.perubahanmodal')->middleware('can:perubahan_modal');
     Route::get('/laporan/hpp/', [LaporanController::class, 'hppList'])->name('laporan.hpp.list')->middleware('can:hpp');
     Route::get('/laporan/hpp/{id}', [LaporanController::class, 'hpp'])->name('laporan.hpp')->middleware('can:hpp');
     Route::get('/laporan/rekap_penjualan', [LaporanController::class, 'rekap'])->name('laporan.rekap')->middleware(['can:rekap_penjualan']);

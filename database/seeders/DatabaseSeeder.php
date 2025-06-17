@@ -102,7 +102,9 @@ class DatabaseSeeder extends Seeder
         $ajp = Permission::create(['name' => 'ajp']);
         $neraca_lajur = Permission::create(['name' => 'neraca_lajur']);
         $hpp = Permission::create(['name' => 'hpp']);
-        $laporan_bulan = Permission::create(['name' => 'laporan_bulan']);
+        $laba_rugi = Permission::create(['name' => 'laba_rugi']);
+        $perubahan_modal = Permission::create(['name' => 'perubahan_modal']);
+        $posisi_keuangan = Permission::create(['name' => 'posisi_keuangan']);
 
         $peralatan_create = Permission::create(['name' => 'peralatan_create']);
         $peralatan_read = Permission::create(['name' => 'peralatan_read']);
@@ -156,7 +158,9 @@ class DatabaseSeeder extends Seeder
             'neraca_saldo',
             'ajp',
             'neraca_lajur',
-            'laporan_bulan',
+            'laba_rugi',
+            'posisi_keuangan',
+            'perubahan_modal'
         ]);
         
         $path = storage_path('/data/data.xlsx');
