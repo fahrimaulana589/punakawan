@@ -142,8 +142,12 @@
         $total = $slipgaji['gaji_pokok'] * $slipgaji['hari_kerja'];
       @endphp  
       <tr>
+        @if ($slipgaji['gaji_pokok'] == 0)
+        <td>{{ $index }}</td><td>Laporan Gaji</td>  
+        @else
         <td>{{ $index }}</td><td>Laporan Gaji Perhari {{ format_uang($slipgaji['gaji_pokok']) }} X {{ $slipgaji['hari_kerja'] }} Hari</td>
-        <td>{{ format_uang($slipgaji['gaji_pokok'] * $slipgaji['hari_kerja']) }}</td>
+        @endif
+        <td>{{ $slipgaji['gaji_pokok'] == 0 ? $slipgaji['total'] : format_uang($slipgaji['gaji_pokok'] * $slipgaji['hari_kerja']) }}</td>
       </tr>
       @foreach ($slipgaji['lainya'] as $lainya)
       @php
@@ -159,10 +163,10 @@
   </table>
 
   <div style="display: flex; align-items: center; justify-content: space-between;" class="mt-20">
-    <em>{{ terbilang($total) }}</em>
+    <em>{{ terbilang($slipgaji['gaji_pokok'] == 0 ? $slipgaji['total_numeric'] : $total) }}</em>
     <div class="total-row" style="margin-top: 0;">
       <span class="total-label">TOTAL DITERIMA:</span>
-      <span>{{ format_uang($total) }}</span>
+      <span>{{ $slipgaji['gaji_pokok'] == 0 ? $slipgaji['total'] : format_uang($total) }}</span>
     </div>
   </div>
 

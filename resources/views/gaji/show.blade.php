@@ -144,14 +144,14 @@
                     class="flex flex-wrap justify-between gap-x-4"
                   >
                     <div x-ref="text" class="truncate text-sm">
-                      Laporan Gaji
+                      Gaji
                     </div>
                     <div 
                       x-ref="price" 
                       :class="isBelow ? 'w-full flex justify-end' : ''" 
                       class="text-sm"
                     >
-                      {{ $karyawan->gajiRupiah }}
+                      {{ $karyawan->gaji_pokok == 0 ? format_uang($karyawan->total) : $karyawan->gajiRupiah}}
                     </div>
                   </div>
 

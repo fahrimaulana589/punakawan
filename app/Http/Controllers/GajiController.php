@@ -446,6 +446,7 @@ class GajiController extends Controller
                 'alamat' => $gajiKaryawan->karyawan->jabatan,
                 'no_hp' => $gajiKaryawan->karyawan->no_hp,
                 'total' => $gajiKaryawan->totalRupiah,
+                'total_numeric' => $gajiKaryawan->total,
                 'tanggal_awal' => $tanggal_awal,
                 'tanggal_akhir' => $tanggal_akhir,
                 'gaji_pokok' => $gajiKaryawan->gaji_pokok,
