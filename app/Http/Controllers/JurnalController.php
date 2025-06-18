@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Akun;
 use App\Models\Jurnal;
 use App\Models\Konsumsi;
+use App\Models\Belanja;
+use App\Models\Laporan;
+use App\Models\Persedian;
+use App\Models\PersediaanProdukJadi;
+use App\Models\Peralatan;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class JurnalController extends Controller
 {
@@ -22,7 +28,7 @@ class JurnalController extends Controller
         $query = Jurnal::query();
         $query->whereIn('tipe', [1, 3]);
 
-        $jurnals = filter($query);
+        $jurnals = filter3($query);
         return view('jurnal.index', compact('jurnals'));
     }
 
@@ -71,9 +77,191 @@ class JurnalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function print()
     {
-        //
+        // Ambil year dan month dari request, atau default ke hari ini
+        $tahun = request()->get('tahun', now()->year);
+        $bulan = request()->get('bulan', now()->month);
+
+        $data = [];
+
+        $startDate = tanggal_awal_laporan($tahun,$bulan);
+        $endDate = tanggal_akhir_laporan($tahun,$bulan);
+        
+        $jurnals = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->whereIn('tipe',[1,3])
+            ->get();
+
+        $belanjas = Belanja::whereBetween('tanggal', [$startDate, $endDate])
+            ->get();
+
+        $gaji = Jurnal::whereBetween('tanggal', [$startDate, $endDate])
+            ->where('tipe','=',2)
+            ->first();
+
+        $previousMonth = $bulan - 1;
+        $previousYear = $tahun;
+
+        if ($previousMonth < 1) {
+            $previousMonth = 12;
+            $previousYear -= 1;
+        }
+
+        $persedians = Persedian::where('tahun','=',$previousYear)
+            ->where('bulan','=',$previousMonth)
+            ->get();
+
+        $persedianProduks = PersediaanProdukJadi::where('tahun','=',$previousYear)
+            ->where('bulan','=',$previousMonth)
+            ->get();
+
+        $groupedPersedians = $persedians->groupBy(function ($persedian) {
+            return $persedian->bahanProduksi->debet_id;
+        });
+
+        $peralatans = Peralatan::where(function ($query) use ($startDate, $endDate) {
+            $query
+                // Kasus 1: tanggal_nonaktif TIDAK NULL
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereNotNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate)
+                    ->whereDate('tanggal_nonaktif', '>=', $startDate);
+                })
+
+                // Kasus 2: tanggal_nonaktif NULL dan tanggal_aktif <= endDate
+                ->orWhere(function ($q) use ($endDate) {
+                    $q->whereNull('tanggal_nonaktif')
+                    ->whereDate('tanggal_aktif', '<=', $endDate);
+                });
+        })->get();
+
+        foreach($jurnals as $jurnal){
+            $data[] = [
+                'tanggal' => $jurnal->tanggal,
+                'nama' => $jurnal->nama,
+                'total' => $jurnal->total,
+                'kredit' => $jurnal->kredit->nama
+            ];
+        }
+
+        foreach( $groupedPersedians as $key => $value ){
+            $nama_akun = Akun::find($key)->nama;
+            $totalpersedian = $value->sum(function ($item) {
+                return $item->total;
+            });
+
+            $data[] = [
+                'tanggal' => $startDate,
+                'nama' => $nama_akun,
+                'total' => $totalpersedian,
+                'kredit' => 'MODAL'
+            ];
+        }
+
+        $akunProduk = Akun::find(15)->nama;
+        $totalsisaproduk = $persedianProduks->sum(function ($item) {
+            return $item->stokSisaProduk * $item->produk->harga;
+        });
+
+        if($persedianProduks->count() != 0){
+            $data[] = [
+                'tanggal' => $startDate,
+                'nama' => $akunProduk,
+                'total' => $totalsisaproduk,
+                'kredit' => 'MODAL'
+            ];
+        }
+
+        $modal = Jurnal::where('tanggal', $startDate)
+                ->where('kredit_id', 14)
+                ->where('debet_id', 6)
+                ->orderBy('id')
+                ->first();
+        if($modal){
+            $data[] = [
+                'tanggal' => $startDate,
+                'nama'=> 'AKUMULASI PENYUSUTAN PERALATAN',
+                'kredit_total'=> $modal->total,
+                'total'=> 0,
+                'kredit' => 'AKUMULASI'
+            ];
+        }
+
+        $totalperalatan = $peralatans->sum(function ($item) {
+        return $item->harga;
+        });
+        $data[] = [
+            'tanggal' => $startDate,
+            'nama'=> 'PERALATAN',
+            'total'=> $totalperalatan,
+            'kredit' => 'MODAL' 
+        ];
+
+        foreach($belanjas as $belanja){
+            $data[] = [
+                'tanggal' => $belanja->tanggal,
+                'nama'=> $belanja->bahanProduksi->debet->nama." ( ".$belanja->bahanProduksi->nama." ) ",
+                'total'=> $belanja->total,
+                'kredit' => $belanja->bahanProduksi->kredit->nama 
+            ];
+        }
+
+        if($gaji){
+            $data[] = [
+                'tanggal' => $gaji->tanggal,
+                'nama'=> $gaji->nama,
+                'total'=> $gaji->total,
+                'kredit' => $gaji->kredit->nama 
+            ];
+        }
+
+        usort($data, function ($a, $b) {
+            return strtotime($a['tanggal']) - strtotime($b['tanggal']);
+        });
+
+        usort($data, function ($a, $b) {
+            // Prioritaskan 'MODAL' paling atas, lalu 'AKUMULASI', lalu lainnya
+            $priority = ['MODAL' => 2, 'AKUMULASI' => 1];
+
+            $aPriority = $priority[$a['kredit']] ?? 3;
+            $bPriority = $priority[$b['kredit']] ?? 3;
+
+            if ($aPriority !== $bPriority) {
+            return $aPriority - $bPriority;
+            }
+            return strtotime($a['tanggal']) - strtotime($b['tanggal']);
+        });
+
+        $modalTotal = 0;
+        $lastModalIndex = null;
+
+        foreach($data as $index => $item){
+            $isModal = $item['kredit'] === 'MODAL';
+            $isAkumulasi = $item['kredit'] === 'AKUMULASI';
+            if($isModal){
+                $modalTotal += $item['total'];
+                $lastModalIndex = $index;
+                $data[$index]['kredit_total'] = 0;
+                $data[$index]['kredit'] = '';
+            }else if ($isAkumulasi){
+                $modalTotal -= $item['kredit_total'];
+                $lastModalIndex = $index;
+                $data[$index]['kredit'] = "AKUMULASI";
+            }
+            else{
+                $data[$index]['kredit_total'] = $item['total'];
+            }
+        }
+
+        // dd($data);
+
+        $data[$lastModalIndex]['kredit_total'] = $modalTotal;
+        $data[$lastModalIndex]['kredit'] = 'MODAL';
+
+        $bulan = nama_bulan($bulan);
+
+        $pdf = Pdf::loadView('laporan.jurnal',compact('data','bulan'))->setPaper('A4', 'portrait');
+        return $pdf->stream('Jurnal Bulan '.$bulan.'.pdf');
     }
 
     /**

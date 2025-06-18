@@ -147,6 +147,33 @@ if (!function_exists('filter2')) {
 
 }
 
+if (!function_exists('filter3')) {
+    function filter3($query)
+    {
+        $perPage = request()->get('per_page', 10);
+
+        // Ambil year dan month dari request, atau default ke hari ini
+        $tahun = request()->get('year', now()->year);
+        $bulan = request()->get('month', now()->month);
+
+        // Buat range tanggal awal dan akhir
+        $tanggalAwal = Carbon::create($tahun, $bulan, 1)->startOfMonth();
+        $tanggalAkhir = Carbon::create($tahun, $bulan, 1)->endOfMonth();
+
+        // Jika tahun & bulan sekarang, ambil hanya sampai hari ini
+        if ($tahun == now()->year && $bulan == now()->month) {
+            $tanggalAkhir = now()->endOfDay();
+        }
+
+        // Query berdasarkan rentang tanggal
+        $query->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir])
+            ->orderByDesc('tanggal');
+
+        return $query->paginate($perPage)->withQueryString(); // <- ini penting
+    }
+
+}
+
 if (!function_exists('data_akun')) {
     function data_akun(Laporan $id):array{
         $data = [];

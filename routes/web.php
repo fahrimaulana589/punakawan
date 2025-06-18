@@ -179,6 +179,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/jurnal', [JurnalController::class, 'index'])->name('jurnal')->middleware('can:jurnal_read');
     Route::get('/jurnal/create', [JurnalController::class, 'create'])->name('jurnal.create')->middleware('can:jurnal_create');
+    Route::get('/jurnal/print', [JurnalController::class, 'print'])->name('jurnal.print')->middleware('can:jurnal_read');
     Route::post('/jurnal/store', [JurnalController::class, 'store'])->name('jurnal.store')->middleware('can:jurnal_create');
     Route::get('/jurnal/edit/{id}', [JurnalController::class, 'edit'])->name('jurnal.edit')->middleware('can:jurnal_edit');
     Route::put('/jurnal/update/{id}', [JurnalController::class, 'update'])->name('jurnal.update')->middleware('can:jurnal_edit');

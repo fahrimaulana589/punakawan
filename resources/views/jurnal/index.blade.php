@@ -87,10 +87,20 @@
 
       @endsession
       
-        
+      @php
+        $currentYear = now()->year;
+        $selectedYear = request('year', $currentYear);
+
+        $currentMonth = now()->month;
+        $selectedMonth = request('month', $currentMonth);
+ 
+      @endphp
       @canany(['jurnal_create'])
       <div class="flex items-center justify-end mb-4 gap-2">
         @can('jurnal_create')
+        <a href="{{ route('jurnal.print',['tahun' => $selectedYear,'bulan' => $selectedMonth]) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Print
+        </a>
         <a href="{{ route('jurnal.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add Jurnal
         </a>
@@ -99,7 +109,7 @@
       @endcan
 
       <!-- Filter Start -->
-      @include('partials.filter',['paginate' => true])
+      @include('partials.filter-2',['paginate' => true])
       
       <!-- Filter End -->
 
