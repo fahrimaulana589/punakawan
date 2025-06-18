@@ -216,10 +216,77 @@ class LaporanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function hppList(Laporan $id)
+    public function laporanList($laporan)
     {
+        $laporanMap = [
+            'penjualan' => [
+                'route' => 'laporan.penjualan',
+                'nama' => 'Penjualan',
+                'permission' => 'laporan_penjualan',
+            ],
+            'jurnal' => [
+                'route' => 'laporan.jurnal',
+                'nama' => 'Jurnal',
+                'permission' => 'laporan_jurnal',
+            ],
+            'bukubesar' => [
+                'route' => 'laporan.bukubesar',
+                'nama' => 'Buku Besar',
+                'permission' => 'buku_besar',
+            ],
+            'neracasaldo' => [
+                'route' => 'laporan.neracasaldo',
+                'nama' => 'Neraca Saldo',
+                'permission' => 'neraca_saldo',
+            ],
+            'ajp' => [
+                'route' => 'laporan.ajp',
+                'nama' => 'AJP',
+                'permission' => 'ajp',
+            ],
+            'neracalajur' => [
+                'route' => 'laporan.neracalajur',
+                'nama' => 'Neraca Lajur',
+                'permission' => 'neraca_lajur',
+            ],
+            'hpp' => [
+                'route' => 'laporan.hpp',
+                'nama' => 'HPP',
+                'permission' => 'hpp',
+            ],
+            'labarugi' => [
+                'route' => 'laporan.labarugi',
+                'nama' => 'Laba Rugi',
+                'permission' => 'laba_rugi',
+            ],
+            'perubahanmodal' => [
+                'route' => 'laporan.perubahanmodal',
+                'nama' => 'Perubahan Modal',
+                'permission' => 'perubahan_modal',
+            ],
+            'posisikeuangan' => [
+                'route' => 'laporan.posisikeuangan',
+                'nama' => 'Posisi Keuangan',
+                'permission' => 'posisi_keuangan',
+            ],
+        ];
+
+        // Validasi input
+        if (!isset($laporanMap[$laporan])) {
+            abort(404, 'Laporan tidak ditemukan.');
+        }
+
+        // Ambil data yang cocok
+        $routeName   = $laporanMap[$laporan]['route'];
+        $namaLaporan = $laporanMap[$laporan]['nama'];
+        $permission = $laporanMap[$laporan]['permission'];
+
+        if (!auth()->user()->can($permission)) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses laporan ini.');
+        }
+
         $laporans = Laporan::paginate(10);
-        return view('laporan.hpplist', compact('laporans'));    
+        return view('laporan.laporanlist', compact('laporans','routeName','namaLaporan'));    
     }
 
     /**

@@ -235,7 +235,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/edit/{id}', [LaporanController::class, 'edit'])->name('laporan.edit')->middleware('can:laporan_edit');
     Route::put('/laporan/update/{id}', [LaporanController::class, 'update'])->name('laporan.update')->middleware('can:laporan_edit');
     Route::delete('/laporan/delete/{id}', [LaporanController::class, 'destroy'])->name('laporan.delete')->middleware('can:laporan_delete');
-    Route::get('/laporan/show/{id}', [LaporanController::class, 'show'])->name('laporan.show')->middleware('can:laporan_read');
+    // Route::get('/laporan/show/{id}', [LaporanController::class, 'show'])->name('laporan.show')->middleware('can:laporan_read');
     Route::get('/laporan/penjualan/{id}', [LaporanController::class, 'penjualan'])->name('laporan.penjualan')->middleware('can:laporan_penjualan');
     Route::get('/laporan/jurnal/{id}', [LaporanController::class, 'jurnal'])->name('laporan.jurnal')->middleware('can:laporan_jurnal');
     Route::get('/laporan/bukubesar/{id}', [LaporanController::class, 'bukuBesar'])->name('laporan.bukubesar')->middleware('can:buku_besar');
@@ -245,8 +245,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/labarugi/{id}', [LaporanController::class, 'labaRugi'])->name('laporan.labarugi')->middleware('can:laba_rugi');
     Route::get('/laporan/posisikeuangan/{id}', [LaporanController::class, 'posisiKeuangan'])->name('laporan.posisikeuangan')->middleware('can:posisi_keuangan');
     Route::get('/laporan/perubahanmodal/{id}', [LaporanController::class, 'perubahanModal'])->name('laporan.perubahanmodal')->middleware('can:perubahan_modal');
-    Route::get('/laporan/hpp/', [LaporanController::class, 'hppList'])->name('laporan.hpp.list')->middleware('can:hpp');
     Route::get('/laporan/hpp/{id}', [LaporanController::class, 'hpp'])->name('laporan.hpp')->middleware('can:hpp');
+    Route::get('/laporanlist/{laporan}/', [LaporanController::class, 'laporanList'])->name('laporan.list');
     Route::get('/laporan/rekap_penjualan', [LaporanController::class, 'rekap'])->name('laporan.rekap')->middleware(['can:rekap_penjualan']);
     Route::get('/laporan/rekap_penjualan/print', [LaporanController::class, 'rekap_print'])->name('laporan.rekap_print')->middleware(['can:rekap_penjualan']);
 
