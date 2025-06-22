@@ -173,12 +173,12 @@
                 class="relative z-20 bg-transparent"
               >
                 <select
-                  @error('pegawai_id')
+                  @error('karyawan_id')
                     class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                   @else
                     class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                   @enderror:class="isOptionSelected && 'text-gray-800 dark:text-white/90'"
-                  name="pegawai_id"
+                  name="karyawan_id"
                   @change="isOptionSelected = true"
                 >
                   <option
@@ -190,7 +190,7 @@
                   @foreach ($karyawans as $karyawan)
                     <option
                     value="{{ $karyawan->id }}"
-                    @if (old('pegawai_id',$absensi->pegawai->id) == $karyawan->id)
+                    @if (old('karyawan_id',$absensi->karyawan->id) == $karyawan->id)
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
@@ -220,7 +220,7 @@
                   </svg>
                 </span>
               </div>
-              @error('pegawai_id')
+              @error('karyawan_id')
                 <p class="text-theme-xs text-error-500">
                   {{ $message }}
                 </p>
@@ -269,7 +269,7 @@
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
                   >
-                    Alpha
+                    Tidak Hadir
                   </option>
                   {{-- <option
                     value="izin"

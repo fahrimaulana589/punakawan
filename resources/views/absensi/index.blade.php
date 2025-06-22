@@ -173,14 +173,20 @@
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $absensi->pegawai->nama }}
+                          {{ $absensi->karyawan->nama }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $absensi->status }}
+                          @if($absensi->status === 'alpha')
+                            Tidak Hadir
+                          @elseif($absensi->status === 'hadir')
+                            Hadir
+                          @else
+                            {{ ucfirst($absensi->status) }}
+                          @endif
                         </p>
                       </div>
                     </td>
