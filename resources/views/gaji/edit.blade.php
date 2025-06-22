@@ -205,7 +205,7 @@
                     <label
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
-                      Pegawai
+                      Karyawan
                     </label>
                     <select
                       x-model="item.pegawai_id"
@@ -216,7 +216,7 @@
                       "
                       class="dark:bg-dark-900 shadow-theme-xs h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                     >
-                      <option value="">Pilih Pegawai</option>
+                      <option value="">Pilih Karyawan</option>
                         <template x-for="pegawai in pegawais.filter(p => !items.some((it, idx) => it.pegawai_id == p.id && idx !== index))" :key="pegawai.id">
                         <option 
                           :value="pegawai.id" 
@@ -278,7 +278,7 @@
                 @click="if(items.length < pegawais.length) items.push({ pegawai_id: '', nominal: '' })"
                 class="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-5 py-3.5 text-sm font-medium text-gray-800 shadow-theme-xs transition hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
               >
-                Tambah Pegawai
+                Tambah Karyawan
               </button>
               <button
                 type="submit"

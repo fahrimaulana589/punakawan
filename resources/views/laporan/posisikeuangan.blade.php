@@ -78,13 +78,13 @@
       <td>KAS</td>
       <td>{{ format_uang($split['Neraca Saldo Disesuikan']['saldo_1']['debet']) }}</td>
       <td><strong>MODAL</strong></td>
-      <td>{{ format_uang($split['Neraca Saldo Disesuikan']['saldo_6']['kredit']) }}</td>
+      <td>{{ format_uang( $modal_akhir)}}</td>
     </tr>
     <tr>
       <td>PERLENGKAPAN</td>
       <td>{{ format_uang($split['Neraca Saldo Disesuikan']['saldo_4']['debet']) }}</td>
-      <td>IKHTISAR LABA RUGI</td>
-      <td>{{ format_uang($laba_bersih) }}</td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td>PERSEDIAAN BAHAN BAKU</td>

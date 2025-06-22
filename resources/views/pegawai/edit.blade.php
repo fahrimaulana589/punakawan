@@ -120,7 +120,7 @@
           <h3
             class="text-base font-medium text-gray-800 dark:text-white/90"
           >
-            Data Pegawai
+            Data Karyawan
           </h3>
         </div>
         <div class="grid grid-cols-12 border border-gray-100 dark:border-gray-800">
