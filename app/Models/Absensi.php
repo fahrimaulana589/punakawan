@@ -12,14 +12,14 @@ class Absensi extends Model
 
     protected $fillable = [
         'tanggal',
-        'pegawai_id',
+        'karyawan_id',
         'status',
         'alasan'
     ];
 
-    public function pegawai(){
+    public function karyawan(){
 
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(Karyawan::class);
     }
 
     public function tanggalFormat(): Attribute

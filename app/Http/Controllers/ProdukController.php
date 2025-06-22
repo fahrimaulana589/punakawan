@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pegawai;
+use App\Models\karyawan;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;

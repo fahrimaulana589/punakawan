@@ -11,7 +11,7 @@
       <div x-data="{ 
         pageName: `Add Karyawan`,
         urls:[
-          {name: 'Karyawan', url: '{{ route('pegawai') }}'},
+          {name: 'Karyawan', url: '{{ route('karyawan') }}'},
         ]
       }">
         @include('partials.breadcrumb')
@@ -31,7 +31,7 @@
         <div class="grid grid-cols-12 border border-gray-100 dark:border-gray-800">
           <form
             class="space-y-6 col-span-12 lg:col-span-7 md:col-span-8  p-5 sm:p-6"
-            action="{{ route('pegawai.store') }}"
+            action="{{ route('karyawan.store') }}"
             method="POST"
           >
             @csrf

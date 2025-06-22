@@ -5,7 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Imports\DataImport;
 use App\Models\Akun;
-use App\Models\Pegawai;
+use App\Models\karyawan;
 use App\Models\Produk;
 use Illuminate\Database\Seeder;
 use Maatwebsite\Excel\Facades\Excel;

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('penggajians', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('restrict');
+            $table->foreignId('karyawan_id')->constrained('karyawans')->onDelete('restrict');
            
             $table->string('type');
             $table->string('nama');

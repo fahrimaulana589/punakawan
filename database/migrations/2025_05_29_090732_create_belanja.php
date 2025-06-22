@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->date('tanggal');
             $table->integer('total');
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('restrict');
+            $table->foreignId('karyawan_id')->constrained('karyawans')->onDelete('restrict');
           
             $table->foreignId('konsumsi_id')->constrained('konsumsis')->onDelete('restrict');
           

@@ -30,7 +30,7 @@ class BiayaImport implements ToModel,WithStartRow
             'debet_id' => $row[5], // Asumsi kolom keempat adalah debet_id
             'kredit_id' => $row[6], // Asumsi kolom kelima adalah kredit_id
             'tipe' => 3,
-            'pegawai_id' => $row[4]
+            'karyawan_id' => $row[4]
         ]);
     }
 

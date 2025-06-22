@@ -11,7 +11,7 @@
       <div x-data="{ 
         pageName: `Edit Karyawan`,
         urls:[
-          {name: 'Karyawan', url: '{{ route('pegawai') }}'},
+          {name: 'Karyawan', url: '{{ route('karyawan') }}'},
         ]
       }">
         @include('partials.breadcrumb')
@@ -126,7 +126,7 @@
         <div class="grid grid-cols-12 border border-gray-100 dark:border-gray-800">
           <form
             class="space-y-6 col-span-12 lg:col-span-7 md:col-span-8  p-5 sm:p-6"
-            action="{{ route('pegawai.update',$pegawai->id) }}"
+            action="{{ route('karyawan.update',$karyawan->id) }}"
             method="POST"
           >
             @csrf
@@ -142,7 +142,7 @@
               <input
                 type="text"
                 name="kode"
-                value="{{ old('kode',$pegawai->kode) }}"
+                value="{{ old('kode',$karyawan->kode) }}"
                 readonly
                 @error('kode')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
@@ -168,7 +168,7 @@
               <input
                 type="text"
                 name="nama"
-                value="{{ old('nama',$pegawai->nama) }}"
+                value="{{ old('nama',$karyawan->nama) }}"
                 @error('nama')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else
@@ -192,7 +192,7 @@
               <input
                 type="text"
                 name="jabatan"
-                value="{{ old('jabatan',$pegawai->jabatan) }}"
+                value="{{ old('jabatan',$karyawan->jabatan) }}"
                 @error('jabatan')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else
@@ -223,7 +223,7 @@
                 @else
                   class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @enderror
-              >{{ old('alamat',$pegawai->alamat) }}</textarea>
+              >{{ old('alamat',$karyawan->alamat) }}</textarea>
               @error('alamat')
                 <p class="text-theme-xs text-error-500">
                   {{ $message }}
@@ -241,7 +241,7 @@
               <input
                 type="text"
                 name="no_hp"
-                value="{{ old('no_hp',$pegawai->no_hp) }}"
+                value="{{ old('no_hp',$karyawan->no_hp) }}"
                 @error('no_hp')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else
@@ -283,7 +283,7 @@
                   </option>
                   <option
                     value="L"
-                    @if (old('jenis_kelamin',$pegawai->jenis_kelamin) == 'L')
+                    @if (old('jenis_kelamin',$karyawan->jenis_kelamin) == 'L')
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
@@ -292,7 +292,7 @@
                   </option>
                   <option
                     value="P"
-                    @if (old('jenis_kelamin',$pegawai->jenis_kelamin) == 'P')
+                    @if (old('jenis_kelamin',$karyawan->jenis_kelamin) == 'P')
                       selected
                     @endif
                     class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
@@ -338,7 +338,7 @@
               <input
                 type="number"
                 name="gaji"
-                value="{{ old('gaji',$pegawai->gaji) }}"
+                value="{{ old('gaji',$karyawan->gaji) }}"
                 @error('gaji')
                   class="dark:bg-dark-900 border-error-300 shadow-theme-xs focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800 w-full rounded-lg border bg-transparent px-4 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 @else

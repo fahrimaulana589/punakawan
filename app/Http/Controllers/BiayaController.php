@@ -56,7 +56,7 @@ class BiayaController extends Controller
         $data =[
             'debet_id' => $request->debet_id, // Assuming 1 is the ID for the "Jurnal" account
             'kredit_id' => 1, // Assuming 2 is the ID for the "Kas" account
-            'pegawai_id' => auth()->user()->pegawai_id,
+            'karyawan_id' => auth()->user()->karyawan_id,
             'tanggal' => $request->tanggal,
             'nama' => $akun->nama,
             'total' => $request->total,

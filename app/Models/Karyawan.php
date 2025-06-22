@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class Pegawai extends Model
+class Karyawan extends Model
 {
     use HasFactory;
 
@@ -23,10 +23,6 @@ class Pegawai extends Model
     public function user()
     {
         return $this->hasOne(User::class);
-    }
-
-    public function pegawai(){
-        return $this->hasOne(Pegawai::class);
     }
 
     public function penggajians(){

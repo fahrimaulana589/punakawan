@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -21,8 +21,8 @@ class UserController extends Controller
 
     public function create()
     {
-        $pegawais = Pegawai::doesntHave('user')->get();
-        return view('user.create', compact('pegawais'));
+        $karyawans = Karyawan::doesntHave('user')->get();
+        return view('user.create', compact('karyawans'));
     }
     public function store(Request $request)
     {
@@ -31,27 +31,27 @@ class UserController extends Controller
             'email' => 'required|string|max:255|unique:users,email',
             'password' => 'required|string|max:255',
             'role' => ['required', 'string', Rule::in(['Kasir', 'Direktur SDM','Direktur Produksi','Direktur Keuangan'])],
-            'pegawai_id' => 'required|string|max:255|unique:users,pegawai_id',
+            'karyawan_id' => 'required|string|max:255|unique:users,karyawan_id',
         ]);
 
         $user = User::create($request->all());
         $user->assignRole($request->role);
 
-        return redirect()->route('user')->with('success', 'Pegawai created successfully.');
+        return redirect()->route('user')->with('success', 'Karyawan created successfully.');
     }
     public function edit($id)
     {
         $user = User::findOrFail($id);
 
-        $pegawai = $user->pegawai;
+        $karyawan = $user->karyawan;
 
-        $pegawais = Pegawai::doesntHave('user')->get();
+        $karyawans = Karyawan::doesntHave('user')->get();
         
-        if ($pegawai) {
-            $pegawais->push($pegawai);
+        if ($karyawan) {
+            $karyawans->push($karyawan);
         }
 
-        return view('user.edit', compact('user', 'pegawais'));
+        return view('user.edit', compact('user', 'karyawans'));
     }
     public function update(Request $request, $id)
     {
@@ -60,7 +60,7 @@ class UserController extends Controller
             'email' => 'required|string|max:255|unique:users,email,'.$id,
             'password' => 'string|max:255|nullable',
             'role' => ['required', 'string', Rule::in(['Kasir', 'Bagian SDM','Bagian Produksi','Bagian Keuangan'])],
-            'pegawai_id' => 'required|string|max:255|unique:users,pegawai_id,'.$id,
+            'karyawan_id' => 'required|string|max:255|unique:users,karyawan_id,'.$id,
         ]);
 
         $user = User::findOrFail($id);

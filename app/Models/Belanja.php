@@ -14,12 +14,12 @@ class Belanja extends Model
         'tanggal',
         'total',
         'konsumsi_id',
-        'pegawai_id'
+        'karyawan_id'
     ];
 
-    public function pegawai()
+    public function karyawan()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+        return $this->belongsTo(Karyawan::class, 'karyawan_id');
     }   
 
     public function totalRupiah(): Attribute

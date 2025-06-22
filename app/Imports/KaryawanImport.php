@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
@@ -15,10 +15,10 @@ class KaryawanImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
-        $lastId = Pegawai::max('id') ?? 0;
+        $lastId = Karyawan::max('id') ?? 0;
         $kode = 'KRY' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
         
-        return new Pegawai( [
+        return new Karyawan( [
             'nama' => $row[1], // Asumsi kolom pertama adalah nama
             'jabatan' => $row[2], // Asumsi kolom kedua adalah jabatan
             'alamat' => $row[3], // Asumsi kolom ketiga adalah alamat

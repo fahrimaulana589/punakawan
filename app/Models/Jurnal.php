@@ -17,7 +17,7 @@ class Jurnal extends Model
         'total',
         'tanggal',
         'tipe',
-        'pegawai_id'
+        'karyawan_id'
     ];
     public function debet()
     {
@@ -27,9 +27,9 @@ class Jurnal extends Model
     {
         return $this->belongsTo(Akun::class, 'kredit_id');
     }
-    public function pegawai()
+    public function karyawan()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+        return $this->belongsTo(Karyawan::class, 'karyawan_id');
     }
 
     public function totalRupiah(): Attribute

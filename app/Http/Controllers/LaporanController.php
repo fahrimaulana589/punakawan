@@ -159,7 +159,7 @@ class LaporanController extends Controller
                     'tipe' => 1,
                 ],
                 [
-                    'pegawai_id' => auth()->user()->pegawai_id,
+                    'karyawan_id' => auth()->user()->karyawan_id,
                     'total' => $ajp["noref"][8]["kredit"],
                 ]
             );
@@ -179,7 +179,7 @@ class LaporanController extends Controller
                     'tipe' => 1,
                 ],
                 [
-                    'pegawai_id' => auth()->user()->pegawai_id,
+                    'karyawan_id' => auth()->user()->karyawan_id,
                     'total' => $ajp["ref"][14]["kredit"] + $modal->total,
                 ]
             );
@@ -194,7 +194,7 @@ class LaporanController extends Controller
                 'tipe' => 1,
             ],
             [
-                'pegawai_id' => auth()->user()->pegawai_id,
+                'karyawan_id' => auth()->user()->karyawan_id,
                 'total' => $data[1]['debet'],
             ]
         );
@@ -703,7 +703,7 @@ class LaporanController extends Controller
                 'tipe' => 1,
             ],
             [
-                'pegawai_id' => auth()->user()->pegawai_id,
+                'karyawan_id' => auth()->user()->karyawan_id,
                 'total' => $totalAjp,
             ]
         );
@@ -718,7 +718,7 @@ class LaporanController extends Controller
                 'tipe' => 1,
             ],
             [
-                'pegawai_id' => auth()->user()->pegawai_id,
+                'karyawan_id' => auth()->user()->karyawan_id,
                 'total' => $data[1]['debet'] ?? 0,
             ]
         );

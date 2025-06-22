@@ -7,7 +7,7 @@ use App\Models\Gaji;
 use App\Models\GajiKaryawan;
 use App\Models\GajiLainya;
 use App\Models\Jurnal;
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
@@ -94,7 +94,7 @@ class GajiController extends Controller
         $tanggal_awal = $tanggal_awal->toDateString();
         $tanggal_akhir = $tanggal_akhir->toDateString();
  
-        $karyawans = Pegawai::all();
+        $karyawans = Karyawan::all();
         
         // Ambil absensi berdasarkan rentang tanggal
         $absensis = Absensi::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
@@ -107,26 +107,29 @@ class GajiController extends Controller
             $periode->addDay();
         }
 
-        // Hasil alpa per pegawai
+        // Hasil alpa per karyawan
         $rekapAlpa = [];
         $rekapHadir = [];
         $total_gaji = 0;
         
-        foreach ($karyawans as $pegawai) {
+        foreach ($karyawans as $karyawan) {
             $alpaCount = 0;
             $hadirCount = 0;
-            $gaji = $pegawai->gaji;
+            $gaji = $karyawan->gaji;
 
             foreach ($tanggal_range as $tanggal) {
-                // Cek apakah pegawai punya absensi di tanggal itu
-                $absen = $absensis->firstWhere(fn ($a) => $a->pegawai_id === $pegawai->id && $a->tanggal === $tanggal);
+                // Cek apakah karyawan punya absensi di tanggal itu
+                $absen = $absensis->firstWhere(fn ($a) => $a->karyawan_id === $karyawan->id && $a->tanggal === $tanggal);
                 if (!$absen || ($absen->status != 'hadir' && $absen->status != 'terlambat')) {
                     $alpaCount++;
                 }else{
                     $hadirCount++;
                 }
             }
-            foreach($pegawai->penggajians as $penggajian){
+
+            $gaji = $gaji * $hadirCount;
+
+            foreach($karyawan->penggajians as $penggajian){
                 if($penggajian->type == 'potongan_bulanan'){
                     $gaji = $gaji - $penggajian->total;
                 }else if($penggajian->type == 'potongan_absensi'){
@@ -137,13 +140,14 @@ class GajiController extends Controller
                     $gaji = $gaji + ($penggajian->total * $hadirCount);
                 }               
             }
-            $total_gaji += $gaji * $hadirCount;
+            $total_gaji += $gaji;
             
-            $rekapAlpa[$pegawai->id] = $alpaCount;
+            $rekapAlpa[$karyawan->id] = $alpaCount;
 
-            $rekapHadir[$pegawai->id] = $hadirCount;
+            $rekapHadir[$karyawan->id] = $hadirCount;
+            
         }
-
+        
         return view('gaji.generate', compact('tanggal','tanggal_awal','tanggal_akhir','total_gaji','karyawans','rekapAlpa','rekapHadir'));
     }
 
@@ -184,7 +188,7 @@ class GajiController extends Controller
             'tanggal' => $request->tanggal,
             'total' => $request->total,
             'nama' => "Laporan Gaji ".$nama,
-            'pegawai_id' => auth()->user()->pegawai_id,
+            'karyawan_id' => auth()->user()->karyawan_id,
             'tipe' => 2,
             'debet_id' => 8, // Ganti dengan ID akun debet yang sesuai
             'kredit_id' => 1, // Ganti dengan ID akun kredit yang sesuai
@@ -230,7 +234,7 @@ class GajiController extends Controller
             'tanggal' => $request->tanggal,
             'total' => $request->total,
             'nama' => "Laporan Gaji ".$nama,
-            'pegawai_id' => auth()->user()->pegawai_id,
+            'karyawan_id' => auth()->user()->karyawan_id,
             'tipe' => 2,
             'debet_id' => 8, // Ganti dengan ID akun debet yang sesuai
             'kredit_id' => 1, // Ganti dengan ID akun kredit yang sesuai
@@ -261,7 +265,7 @@ class GajiController extends Controller
         $tanggal_awal = $tanggal_awal->toDateString();
         $tanggal_akhir = $tanggal_akhir->toDateString();
  
-        $karyawans = Pegawai::all();
+        $karyawans = Karyawan::all();
         
         // Ambil absensi berdasarkan rentang tanggal
         $absensis = Absensi::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
@@ -276,14 +280,14 @@ class GajiController extends Controller
 
         $total_gaji = 0;
         
-        foreach ($karyawans as $pegawai) {
+        foreach ($karyawans as $karyawan) {
             $alpaCount = 0;
             $hadirCount = 0;
-            $gaji = $pegawai->gaji;
+            $gaji = $karyawan->gaji;
 
             foreach ($tanggal_range as $tanggal) {
-                // Cek apakah pegawai punya absensi di tanggal itu
-                $absen = $absensis->firstWhere(fn ($a) => $a->pegawai_id === $pegawai->id && $a->tanggal === $tanggal);
+                // Cek apakah karyawan punya absensi di tanggal itu
+                $absen = $absensis->firstWhere(fn ($a) => $a->karyawan_id === $karyawan->id && $a->tanggal === $tanggal);
                 if (!$absen || ($absen->status != 'hadir' && $absen->status != 'terlambat')) {
                     $alpaCount++;
                 }else{
@@ -291,9 +295,9 @@ class GajiController extends Controller
                 }
             }
 
-            $gaji = $pegawai->gaji * $hadirCount;
+            $gaji = $karyawan->gaji * $hadirCount;
             
-            foreach($pegawai->penggajians as $penggajian){
+            foreach($karyawan->penggajians as $penggajian){
                 if($penggajian->type == 'potongan_bulanan'){
                     $gaji = $gaji - $penggajian->total;
                 }else if($penggajian->type == 'potongan_absensi'){
@@ -308,13 +312,13 @@ class GajiController extends Controller
             $total_gaji += $gaji;
             $gaji_karyawan = GajiKaryawan::create([
                 'tanggal' => $tanggal,
-                'pegawai_id' => $pegawai->id,
+                'karyawan_id' => $karyawan->id,
                 'gaji_id' => $gaji_bulanan->id,
                 'total' => $gaji,
-                'gaji_pokok'=> $pegawai->gaji
+                'gaji_pokok'=> $karyawan->gaji
             ]);
 
-            foreach($pegawai->penggajians as $penggajian){
+            foreach($karyawan->penggajians as $penggajian){
                 if($penggajian->type == 'potongan_bulanan'){
                     $lainya = $penggajian->total;
                 }else if($penggajian->type == 'potongan_absensi'){
@@ -366,7 +370,7 @@ class GajiController extends Controller
         $tanggal_akhir = $tanggal_akhir->toDateString();
 
         $rekapHadir = [];
-        $karyawans = Pegawai::all();
+        $karyawans = Karyawan::all();
         $absensis = Absensi::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
         $tanggal_range = [];
         $periode = Carbon::parse($tanggal_awal)->copy();
@@ -374,15 +378,15 @@ class GajiController extends Controller
             $tanggal_range[] = $periode->toDateString();
             $periode->addDay();
         }
-        foreach ($karyawans as $pegawai) {
+        foreach ($karyawans as $karyawan) {
             $hadirCount = 0;
             foreach ($tanggal_range as $tanggal) {
-                $absen = $absensis->firstWhere(fn ($a) => $a->pegawai_id === $pegawai->id && $a->tanggal === $tanggal);
+                $absen = $absensis->firstWhere(fn ($a) => $a->karyawan_id === $karyawan->id && $a->tanggal === $tanggal);
                 if ($absen && ($absen->status == 'hadir' || $absen->status == 'terlambat')) {
                     $hadirCount++;
                 }
             }
-            $rekapHadir[$pegawai->id] = $hadirCount;
+            $rekapHadir[$karyawan->id] = $hadirCount;
         }
 
         return view('gaji.show',compact('gaji','tanggal_awal','tanggal_akhir','rekapHadir'));
@@ -417,7 +421,7 @@ class GajiController extends Controller
         $tanggal_akhir = $tanggal_akhir->toDateString();
 
         $rekapHadir = [];
-        $karyawans = Pegawai::all();
+        $karyawans = Karyawan::all();
         $absensis = Absensi::whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])->get();
         $tanggal_range = [];
         $periode = Carbon::parse($tanggal_awal)->copy();
@@ -425,15 +429,15 @@ class GajiController extends Controller
             $tanggal_range[] = $periode->toDateString();
             $periode->addDay();
         }
-        foreach ($karyawans as $pegawai) {
+        foreach ($karyawans as $karyawan) {
             $hadirCount = 0;
             foreach ($tanggal_range as $tanggal) {
-                $absen = $absensis->firstWhere(fn ($a) => $a->pegawai_id === $pegawai->id && $a->tanggal === $tanggal);
+                $absen = $absensis->firstWhere(fn ($a) => $a->karyawan_id === $karyawan->id && $a->tanggal === $tanggal);
                 if ($absen && ($absen->status == 'hadir' || $absen->status == 'terlambat')) {
                     $hadirCount++;
                 }
             }
-            $rekapHadir[$pegawai->id] = $hadirCount;
+            $rekapHadir[$karyawan->id] = $hadirCount;
         }
 
         $slip = [];
@@ -450,7 +454,7 @@ class GajiController extends Controller
                 'tanggal_awal' => $tanggal_awal,
                 'tanggal_akhir' => $tanggal_akhir,
                 'gaji_pokok' => $gajiKaryawan->gaji_pokok,
-                'hari_kerja' => $rekapHadir[$gajiKaryawan->pegawai_id] ?? 0,
+                'hari_kerja' => $rekapHadir[$gajiKaryawan->karyawan_id] ?? 0,
                 'lainya' => []
             ];
             foreach($gajiKaryawan->gajiLainyas as $lainya){
@@ -500,27 +504,27 @@ class GajiController extends Controller
      */
     public function edit(Jurnal $gaji)
     {
-        $pegawais = Pegawai::select('id', 'nama')->get()->toArray();
-        $pegawais = json_encode($pegawais);
+        $karyawans = Karyawan::select('id', 'nama')->get()->toArray();
+        $karyawans = json_encode($karyawans);
 
         // Menangkap data old dari session dan mengatur default jika tidak ada
-        $oldPegawaiId = old('pegawai_id', []);    // Default pegawai_id kosong
+        $oldKaryawanId = old('karyawan_id', []);    // Default karyawan_id kosong
         $oldNominal = old('nominal', []);         // Default nominal kosong
 
-        // Gabungkan pegawai_id dan nominal menjadi array asosiatif
+        // Gabungkan karyawan_id dan nominal menjadi array asosiatif
         $old = [];
-        foreach ($oldPegawaiId as $idx => $pegawaiId) {
+        foreach ($oldKaryawanId as $idx => $karyawanId) {
             $old[] = [
-            'pegawai_id' => $pegawaiId,
+            'karyawan_id' => $karyawanId,
             'nominal' => $oldNominal[$idx] ?? null,
             ];
         }
 
         // Jika tidak ada old input, isi dari data gaji karyawan terkait (jika ada relasi)
-        if (empty($oldPegawaiId) && empty($oldNominal) && isset($gaji->karyawans)) {
+        if (empty($oldKaryawanId) && empty($oldNominal) && isset($gaji->karyawans)) {
             foreach ($gaji->karyawans as $gajiKaryawan) {
                 $old[] = [
-                    'pegawai_id' => $gajiKaryawan->pegawai_id,
+                    'karyawan_id' => $gajiKaryawan->karyawan_id,
                     'nominal' => $gajiKaryawan->total,
                 ];
             }
@@ -533,7 +537,7 @@ class GajiController extends Controller
 
         $messages = json_encode($messages);
 
-        return view('gaji.edit',compact('old','gaji', 'pegawais','messages'));
+        return view('gaji.edit',compact('old','gaji', 'karyawans','messages'));
     }
 
     /**
@@ -543,8 +547,8 @@ class GajiController extends Controller
     {
 
         $request->validate([
-            'pegawai_id'   => ['nullable', 'array'],
-            'pegawai_id.*' => 'required|integer|exists:pegawais,id',
+            'karyawan_id'   => ['nullable', 'array'],
+            'karyawan_id.*' => 'required|integer|exists:karyawans,id',
             'nominal'      => ['nullable', 'array'],
             'nominal.*'    => 'required|numeric|min:1|max:100000000',
         ]);
@@ -588,13 +592,13 @@ class GajiController extends Controller
 
         $totalGajiBaru = 0;
 
-        if ($request->has('pegawai_id') && $request->has('nominal')) {
-            foreach ($request->pegawai_id as $idx => $pegawaiId) {
+        if ($request->has('karyawan_id') && $request->has('nominal')) {
+            foreach ($request->karyawan_id as $idx => $karyawanId) {
             $nominal = $request->nominal[$idx];
             GajiKaryawan::create([
                 'tanggal' => $request->tanggal,
                 'gaji_id' => $gaji->id,
-                'pegawai_id' => $pegawaiId,
+                'karyawan_id' => $karyawanId,
                 'total' => $nominal,
             ]);
             $totalGajiBaru += $nominal;

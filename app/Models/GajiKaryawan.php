@@ -12,7 +12,7 @@ class GajiKaryawan extends Model
 
     protected $fillable = [
         'tanggal',
-        'pegawai_id',
+        'karyawan_id',
         'gaji_id',
         'total',
         'gaji_pokok'
@@ -23,7 +23,7 @@ class GajiKaryawan extends Model
     }
 
     public function karyawan(){
-        return $this->belongsTo(Pegawai::class,'pegawai_id');
+        return $this->belongsTo(Karyawan::class,'karyawan_id');
     }
 
     public function totalRupiah(): Attribute

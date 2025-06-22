@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -29,7 +29,7 @@ class AbsensiController extends Controller
      */
     public function create()
     {
-        $karyawans = Pegawai::all();
+        $karyawans = Karyawan::all();
         return view('absensi.create',compact('karyawans'));
     }
 
@@ -44,12 +44,12 @@ class AbsensiController extends Controller
                 'required',
                 'date',
                 'before_or_equal:today',
-                // Cek kombinasi unik tanggal dan pegawai_id
+                // Cek kombinasi unik tanggal dan karyawan_id
                 Rule::unique('absensis')->where(function ($query) use ($request) {
-                    return $query->where('pegawai_id', $request->pegawai_id);
+                    return $query->where('karyawan_id', $request->karyawan_id);
                 }),
             ],
-            'pegawai_id' => 'required|numeric|exists:pegawais,id',
+            'karyawan_id' => 'required|numeric|exists:karyawans,id',
             'status' => 'required|string|in:hadir,alpha,izin,terlambat,sakit',
             'alasan' => 'nullable|string',
         ]);
@@ -74,7 +74,7 @@ class AbsensiController extends Controller
     public function edit($id)
     {
         $absensi = Absensi::findOrFail($id);
-        $karyawans = Pegawai::all();
+        $karyawans = Karyawan::all();
 
         return view('absensi.edit', compact('absensi','karyawans'));
     }
@@ -89,13 +89,13 @@ class AbsensiController extends Controller
                 'required',
                 'date',
                 'before_or_equal:today',
-                // Cek kombinasi unik tanggal dan pegawai_id
+                // Cek kombinasi unik tanggal dan karyawan_id
                 Rule::unique('absensis')->where(function ($query) use ($request) {
-                    return $query->where('pegawai_id', $request->pegawai_id);
+                    return $query->where('karyawan_id', $request->karyawan_id);
                 })
                 ->ignore($id->id),
             ],
-            'pegawai_id' => 'required|numeric|exists:pegawais,id',
+            'karyawan_id' => 'required|numeric|exists:karyawans,id',
             'status' => 'required|string|in:hadir,alpha,izin,terlambat,sakit',
             'alasan' => 'nullable|string',
         ]);

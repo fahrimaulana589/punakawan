@@ -4,7 +4,7 @@ namespace App\Imports;
 
 use App\Models\GajiKaryawan;
 use App\Models\Jurnal;
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
@@ -20,14 +20,14 @@ class GajiKaryawanImport implements ToModel, WithStartRow
         $gaji = Jurnal::where('id', $row[0])
             ->where('tipe', 2)
             ->first();
-        $pegawai = Pegawai::find($row[1]);
+        $karyawan = Karyawan::find($row[1]);
 
         return new GajiKaryawan([
             'tanggal' => $gaji->tanggal,
-            'pegawai_id' => $row[1],
+            'karyawan_id' => $row[1],
             'gaji_id' => $gaji->id,
             'total' => $row[2],
-            'gaji_pokok' => $pegawai->gaji,
+            'gaji_pokok' => $karyawan->gaji,
         ]);
     }
 

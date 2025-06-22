@@ -20,7 +20,7 @@ class UserImport implements ToModel,WithStartRow
             'name' => $row[1], // Asumsi kolom pertama adalah nama
             'email' => $row[2], // Asumsi kolom kedua adalah email
             'password' => Hash::make($row[3]), // Asumsi kolom ketiga adalah password, dienkripsi
-            'pegawai_id' => $row[4], // Asumsi kolom keempat adalah pegawai_id
+            'karyawan_id' => $row[4], // Asumsi kolom keempat adalah karyawan_id
         ]);
 
         $user->assignRole($row[5]); // Asumsi kolom kelima adalah role

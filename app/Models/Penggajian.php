@@ -14,11 +14,11 @@ class Penggajian extends Model
         "type",
         "nama",
         "total",
-        'pegawai_id'
+        'karyawan_id'
     ];
 
-    public function pegawai(){
-        return $this->belongsTo(Pegawai::class);
+    public function karyawan(){
+        return $this->belongsTo(Karyawan::class);
     }
 
     public function totalRupiah(): Attribute

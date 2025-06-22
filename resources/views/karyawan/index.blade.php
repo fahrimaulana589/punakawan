@@ -90,7 +90,7 @@
       
       @can('karyawan_create')
       <div class="flex items-center justify-end mb-4">
-        <a href="{{ route('pegawai.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <a href="{{ route('karyawan.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Add Karyawan
         </a>
       </div>
@@ -181,54 +181,54 @@
               <!-- table header end -->
               <!-- table body start -->
               <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                @foreach ($pegawais as $pegawai)
+                @foreach ($karyawans as $karyawan)
                   <tr>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $pegawai->kode }}
+                          {{ $karyawan->kode }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $pegawai->nama }}
+                          {{ $karyawan->nama }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $pegawai->alamat }}
+                          {{ $karyawan->alamat }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $pegawai->jabatan }}
+                          {{ $karyawan->jabatan }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $pegawai->jenis_kelamin }}
+                          {{ $karyawan->jenis_kelamin }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $pegawai->no_hp }}
+                          {{ $karyawan->no_hp }}
                         </p>
                       </div>
                     </td>
                     <td class="px-5 py-4 sm:px-6">
                       <div class="flex items-center">
                         <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                          {{ $pegawai->gajiRupiah }}
+                          {{ $karyawan->gajiRupiah }}
                         </p>
                       </div>
                     </td>
@@ -236,7 +236,7 @@
                       <div class="flex items-center justify-end mb-4">
                         @can('karyawan_edit')
                         <a
-                        href="{{ route('pegawai.edit',$pegawai->id) }}"
+                        href="{{ route('karyawan.edit',$karyawan->id) }}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Edit
@@ -244,10 +244,10 @@
                         @endcan
                        
                         @can('karyawan_delete')
-                        <form action="{{ route('pegawai.delete', $pegawai->id) }}" method="POST" class="inline">
+                        <form action="{{ route('karyawan.delete', $karyawan->id) }}" method="POST" class="inline">
                           @csrf
                           @method('DELETE')
-                          <a href="{{ route('pegawai.delete', $pegawai->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                          <a href="{{ route('karyawan.delete', $karyawan->id) }}" data-confirm-delete="true" type="submit" class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             Delete
                           </a>
                         </form>
@@ -266,7 +266,7 @@
     </div>
 
     <div class="mt-4">
-      {{ $pegawais->links() }}
+      {{ $karyawans->links() }}
     </div>
   </div>
 </x-app-layout>

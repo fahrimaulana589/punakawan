@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use App\Models\Akun;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;

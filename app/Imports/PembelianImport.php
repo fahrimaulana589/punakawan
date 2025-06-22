@@ -25,7 +25,7 @@ class PembelianImport implements ToModel,WithStartRow
         return new Belanja([
             'tanggal' => $tanggal, // Asumsi kolom pertama adalah tanggal
             'total' => $row[3], // Asumsi kolom kedua adalah total
-            'pegawai_id' => $row[4], // Asumsi kolom ketiga adalah pegawai_id
+            'karyawan_id' => $row[4], // Asumsi kolom ketiga adalah karyawan_id
             'konsumsi_id' => $row[5], // Asumsi kolom keempat adalah debet_id
         ]);
     }

@@ -17,7 +17,7 @@ class PenggajianKaryawanImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         return new Penggajian([
-            'pegawai_id' => $row[0],
+            'karyawan_id' => $row[0],
             'nama' => $row[1],
             'type' => $row[2],
             'total' => $row[3],

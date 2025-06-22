@@ -159,7 +159,7 @@
             <img src="{{ asset('images/user/owner.jpg') }}" alt="User" />
           </span>
 
-          <span class="text-theme-sm mr-1 block font-medium"> {{ Auth::user()->pegawai->nama }} </span>
+          <span class="text-theme-sm mr-1 block font-medium"> {{ Auth::user()->karyawan->nama }} </span>
 
           <svg
             :class="dropdownOpen && 'rotate-180'"
@@ -189,7 +189,7 @@
             <span
               class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400"
             >
-            {{ Auth::user()->pegawai->nama }}
+            {{ Auth::user()->karyawan->nama }}
             </span>
             <span
               class="text-theme-xs mt-0.5 block text-gray-500 dark:text-gray-400"

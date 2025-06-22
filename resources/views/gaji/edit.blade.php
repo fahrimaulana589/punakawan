@@ -98,7 +98,7 @@
         x-data="{
           tanggal : '{{ old('tanggal',$gaji->tanggal) }}',
           items : {{ $old }},
-          pegawais : {{ $pegawais }},
+          karyawans : {{ $karyawans }},
           messages : {{ $messages }}
         }"
       >
@@ -208,25 +208,25 @@
                       Karyawan
                     </label>
                     <select
-                      x-model="item.pegawai_id"
-                      name="pegawai_id[]"
-                      :class="messages[`pegawai_id.${index}`] 
+                      x-model="item.karyawan_id"
+                      name="karyawan_id[]"
+                      :class="messages[`karyawan_id.${index}`] 
                         ? 'border-error-300 focus:border-error-300 focus:ring-error-500/10 dark:border-error-700 dark:focus:border-error-800'
                         : 'border-gray-300 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:focus:border-brand-800'
                       "
                       class="dark:bg-dark-900 shadow-theme-xs h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                     >
                       <option value="">Pilih Karyawan</option>
-                        <template x-for="pegawai in pegawais.filter(p => !items.some((it, idx) => it.pegawai_id == p.id && idx !== index))" :key="pegawai.id">
+                        <template x-for="karyawan in karyawans.filter(p => !items.some((it, idx) => it.karyawan_id == p.id && idx !== index))" :key="karyawan.id">
                         <option 
-                          :value="pegawai.id" 
-                          x-text="pegawai.nama"
-                          :selected="item.pegawai_id == pegawai.id"
+                          :value="karyawan.id" 
+                          x-text="karyawan.nama"
+                          :selected="item.karyawan_id == karyawan.id"
                         ></option>
                         </template>
                     </select>
-                    <template x-if="messages[`pegawai_id.${index}`]">
-                      <p class="text-theme-xs text-error-500" x-text="messages[`pegawai_id.${index}`][0]"></p>
+                    <template x-if="messages[`karyawan_id.${index}`]">
+                      <p class="text-theme-xs text-error-500" x-text="messages[`karyawan_id.${index}`][0]"></p>
                     </template>
                   </div>
                   <div class="w-full">
@@ -275,7 +275,7 @@
             <div class="flex items-center justify-end gap-2">
               <button
                 type="button"
-                @click="if(items.length < pegawais.length) items.push({ pegawai_id: '', nominal: '' })"
+                @click="if(items.length < karyawans.length) items.push({ karyawan_id: '', nominal: '' })"
                 class="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-5 py-3.5 text-sm font-medium text-gray-800 shadow-theme-xs transition hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
               >
                 Tambah Karyawan

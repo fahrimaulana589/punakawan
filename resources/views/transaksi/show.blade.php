@@ -23,7 +23,7 @@
           <div class="bg-white dark:bg-white/[0.03] shadow-lg rounded-2xl p-6 font-mono">
             <div class="text-center border-b border-gray-200 dark:border-gray-700 pb-4">
               <p class="text-sm text-gray-500 dark:text-gray-400">Tanggal: {{ $transaksi->tanggal }}</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Kasir: {{ $transaksi->pegawai->nama }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Kasir: {{ $transaksi->karyawan->nama }}</p>
             </div>
           
             <div class="mt-4">

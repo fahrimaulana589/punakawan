@@ -118,13 +118,13 @@
             <!-- Menu Item Karyawan -->
             <li>
               <a
-                href="{{ route('pegawai') }}"
+                href="{{ route('karyawan') }}"
                 class="menu-item group"
-                :class="selected === 'pegawai' | selected === 'pegawai.create' | selected === 'pegawai.edit' ? 'menu-item-active' : 'menu-item-inactive'"
+                :class="selected === 'karyawan' | selected === 'karyawan.create' | selected === 'karyawan.edit' ? 'menu-item-active' : 'menu-item-inactive'"
               >
               
                 <svg
-                  :class="selected === 'pegawai' | selected === 'pegawai.create' | selected === 'pegawai.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
+                  :class="selected === 'karyawan' | selected === 'karyawan.create' | selected === 'karyawan.edit' ? 'menu-item-icon-active' : 'menu-item-icon-inactive'" width="24"
                   height="24"
                   viewBox="0 0 24 24"
                   fill="none"

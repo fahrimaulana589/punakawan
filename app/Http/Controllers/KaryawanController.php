@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class PegawaiController extends Controller
+class KaryawanController extends Controller
 {
     public function index()
     {
@@ -14,22 +14,22 @@ class PegawaiController extends Controller
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
 
-        $pegawais = Pegawai::paginate(10);
-        return view('pegawai.index', compact('pegawais'));
+        $karyawans = Karyawan::paginate(10);
+        return view('karyawan.index', compact('karyawans'));
     }
 
     public function create()
     {
-        $lastId = Pegawai::max('id') ?? 0;
+        $lastId = Karyawan::max('id') ?? 0;
         $kode = 'KRY' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
         
-        return view('pegawai.create',compact('kode'));
+        return view('karyawan.create',compact('kode'));
     }
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255|unique:pegawais,nama',
-            'kode' => 'required|string|max:255|unique:pegawais,kode',
+            'nama' => 'required|string|max:255|unique:karyawans,nama',
+            'kode' => 'required|string|max:255|unique:karyawans,kode',
             'jabatan' => 'required|string|max:255',
             'no_hp' => 'required|string|numeric',
             'alamat' => 'required|string|max:255',
@@ -41,13 +41,13 @@ class PegawaiController extends Controller
         ]);
         
 
-        $pegawai = Pegawai::create($request->all());
+        $karyawan = Karyawan::create($request->all());
 
-        return redirect()->route('pegawai.edit',$pegawai->id)->with('success', 'Karyawan created successfully.');
+        return redirect()->route('karyawan.edit',$karyawan->id)->with('success', 'Karyawan created successfully.');
     }
     public function edit($id)
     {
-        $pegawai = Pegawai::findOrFail($id);
+        $karyawan = Karyawan::findOrFail($id);
         
         // Menangkap data old dari session dan mengatur default jika tidak ada
         $oldPotonganNama = old('potongan_nama', []);  // Default produk_id null
@@ -75,7 +75,7 @@ class PegawaiController extends Controller
             && empty(old('tunjangan_jenis'))
             ) {
             $old = [];
-            foreach ($pegawai->penggajians as $penggajian) {
+            foreach ($karyawan->penggajians as $penggajian) {
                 $old[] = [
                     'nama' => $penggajian->nama,
                     'total' => $penggajian->total,
@@ -91,7 +91,7 @@ class PegawaiController extends Controller
 
         $messages = json_encode($messages); // hasil asli: {"produk_ids":["The produk ids field is required."]}
 
-        return view('pegawai.edit', compact('pegawai','messages','old'));
+        return view('karyawan.edit', compact('karyawan','messages','old'));
     }
     public function update(Request $request, $id)
     {
@@ -111,7 +111,7 @@ class PegawaiController extends Controller
         ]);
 
         $request->validate([
-            'nama' => 'required|string|max:255|unique:pegawais,nama,'.$id,
+            'nama' => 'required|string|max:255|unique:karyawans,nama,'.$id,
             'jabatan' => 'required|string|max:255',
             'no_hp' => 'required|string|numeric',
             'alamat' => 'required|string|max:255',
@@ -122,10 +122,10 @@ class PegawaiController extends Controller
             ],
         ]);
 
-        $pegawai = Pegawai::findOrFail($id);
-        $pegawai->update($request->all());
+        $karyawan = Karyawan::findOrFail($id);
+        $karyawan->update($request->all());
 
-        $pegawai->penggajians()->delete();
+        $karyawan->penggajians()->delete();
 
         $tunjangan = array_map(function ($nama, $jumlah,$jenis) {
             return [
@@ -146,15 +146,15 @@ class PegawaiController extends Controller
         $dataPenggajian = array_merge($potongan, $tunjangan);
         
         // Simpan ulang penggajian
-        $pegawai->penggajians()->createMany($dataPenggajian);        
+        $karyawan->penggajians()->createMany($dataPenggajian);        
 
         return back()->with('success', 'Karyawan updated successfully.');
     }
     public function destroy($id)
     {
-        $pegawai = Pegawai::findOrFail($id);
+        $karyawan = Karyawan::findOrFail($id);
         try {
-            $pegawai->delete();
+            $karyawan->delete();
         } catch (\Exception $e) {
             return back()->with('error', 'Data cannot be deleted because it is associated with other records.');
         }

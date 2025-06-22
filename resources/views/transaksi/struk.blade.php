@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="text-sm">
-      {{ $transaksi->pegawai->nama }}
+      {{ $transaksi->karyawan->nama }}
     </div>
   </div>
   

@@ -17,7 +17,7 @@ class AbsensiImport implements ToModel, WithStartRow
     {
         return new Absensi([
             'tanggal' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0]),
-            'pegawai_id' => $row[1],
+            'karyawan_id' => $row[1],
             'status' => $row[2],
             'alasan' => $row[3] ?? null,
         ]);

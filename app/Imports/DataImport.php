@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterImport;
 use Carbon\Carbon;
 use App\Models\Absensi;
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use App\Models\GajiKaryawan;
 use App\Models\GajiLainya;
 
@@ -87,7 +87,7 @@ class DataImport implements WithMultipleSheets, WithEvents
                     // Simpan informasi ke dalam model Gaji
                     if($adaAbsensi){
                         
-                        $karyawans = Pegawai::all();
+                        $karyawans = Karyawan::all();
                         // Buat array tanggal dalam rentang
                         $tanggal_range = [];
                         $periode = Carbon::parse($tanggal_awal)->copy();
@@ -98,14 +98,14 @@ class DataImport implements WithMultipleSheets, WithEvents
 
                         $total_gaji = 0;
 
-                        foreach ($karyawans as $pegawai) {
+                        foreach ($karyawans as $karyawan) {
                             $alpaCount = 0;
                             $hadirCount = 0;
-                            $gaji_karyawan = $pegawai->gaji;
+                            $gaji_karyawan = $karyawan->gaji;
 
                             foreach ($tanggal_range as $tanggal) {
-                                // Cek apakah pegawai punya absensi di tanggal itu
-                                $absen = $absensis->firstWhere(fn ($a) => $a->pegawai_id === $pegawai->id && $a->tanggal === $tanggal);
+                                // Cek apakah karyawan punya absensi di tanggal itu
+                                $absen = $absensis->firstWhere(fn ($a) => $a->karyawan_id === $karyawan->id && $a->tanggal === $tanggal);
                                 if (!$absen || ($absen->status != 'hadir' && $absen->status != 'terlambat')) {
                                     $alpaCount++;
                                 }else{
@@ -113,9 +113,9 @@ class DataImport implements WithMultipleSheets, WithEvents
                                 }
                             }
 
-                            $gaji_karyawan = $pegawai->gaji * $hadirCount;
+                            $gaji_karyawan = $karyawan->gaji * $hadirCount;
 
-                            foreach($pegawai->penggajians as $penggajian){
+                            foreach($karyawan->penggajians as $penggajian){
                                 if($penggajian->type == 'potongan_bulanan'){
                                     $gaji_karyawan = $gaji_karyawan - $penggajian->total;
                                 }else if($penggajian->type == 'potongan_absensi'){
@@ -131,13 +131,13 @@ class DataImport implements WithMultipleSheets, WithEvents
 
                             $gaji_karyawan = GajiKaryawan::create([
                                 'tanggal' => $tanggal,
-                                'pegawai_id' => $pegawai->id,
+                                'karyawan_id' => $karyawan->id,
                                 'gaji_id' => $gaji->id,
                                 'total' => $gaji_karyawan,
-                                'gaji_pokok'=> $pegawai->gaji
+                                'gaji_pokok'=> $karyawan->gaji
                             ]);
 
-                            foreach($pegawai->penggajians as $penggajian){
+                            foreach($karyawan->penggajians as $penggajian){
                                 if($penggajian->type == 'potongan_bulanan'){
                                     $lainya = $penggajian->total;
                                 }else if($penggajian->type == 'potongan_absensi'){

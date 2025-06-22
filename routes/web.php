@@ -6,7 +6,7 @@ use App\Http\Controllers\BelanjaController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\KonsumsiController;
 use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PeralatanController;
 use App\Http\Controllers\PersediaanProdukJadiController;
 use App\Http\Controllers\PersedianController;
@@ -88,13 +88,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    // Karyawan (Pegawai)
-    Route::get('/karyawan', [PegawaiController::class, 'index'])->name('pegawai')->middleware('can:karyawan_read');
-    Route::get('/karyawan/create', [PegawaiController::class, 'create'])->name('pegawai.create')->middleware('can:karyawan_create');
-    Route::post('/karyawan/store', [PegawaiController::class, 'store'])->name('pegawai.store')->middleware('can:karyawan_create');
-    Route::get('/karyawan/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit')->middleware('can:karyawan_edit');
-    Route::put('/karyawan/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update')->middleware('can:karyawan_edit');
-    Route::delete('/karyawan/delete/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.delete')->middleware('can:karyawan_delete');
+    // Karyawan (karyawan)
+    Route::get('/karyawan', [KaryawanController::class, 'index'])->name('karyawan')->middleware('can:karyawan_read');
+    Route::get('/karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create')->middleware('can:karyawan_create');
+    Route::post('/karyawan/store', [KaryawanController::class, 'store'])->name('karyawan.store')->middleware('can:karyawan_create');
+    Route::get('/karyawan/edit/{id}', [KaryawanController::class, 'edit'])->name('karyawan.edit')->middleware('can:karyawan_edit');
+    Route::put('/karyawan/update/{id}', [KaryawanController::class, 'update'])->name('karyawan.update')->middleware('can:karyawan_edit');
+    Route::delete('/karyawan/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.delete')->middleware('can:karyawan_delete');
 
 });
 

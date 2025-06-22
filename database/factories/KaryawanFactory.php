@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pegawai>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\karyawan>
  */
-class PegawaiFactory extends Factory
+class KaryawanFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +18,7 @@ class PegawaiFactory extends Factory
     {
         return [
             "nama" => $this->faker->name(),
-            "jabatan" => "pegawai",
+            "jabatan" => "karyawan",
             "alamat" => $this->faker->address(),
             "no_hp" => $this->faker->phoneNumber(),
             "jenis_kelamin" => $this->faker->randomElement(['L', 'P']),

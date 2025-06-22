@@ -13,7 +13,7 @@ class Transaksi extends Model
     protected $fillable = [
         'debet_id',
         'kredit_id',
-        'pegawai_id',
+        'karyawan_id',
         'tanggal',
         'total',
         'status',
@@ -33,9 +33,9 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Akun::class, 'kredit_id');
     }
-    public function pegawai()
+    public function karyawan()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(Karyawan::class);
     }
     
     public function totalRupiah(): Attribute

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Pegawai;
+use App\Models\Karyawan;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->foreignIdFor(Pegawai::class)->nullable()->onDelete('restrict')->after('id')->constrained('pegawais', 'id');
+            $table->foreignIdFor(Karyawan::class)->nullable()->onDelete('restrict')->after('id')->constrained('karyawans', 'id');
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeignIdFor(Pegawai::class);
+            $table->dropForeignIdFor(Karyawan::class);
         });
     }
 };

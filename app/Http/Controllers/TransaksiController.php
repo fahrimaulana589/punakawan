@@ -110,7 +110,7 @@ class TransaksiController extends Controller
             'jumlahs.*'    => ['required', 'integer', 'min:1'],
         ]);
 
-        $pegawai = auth()->user()->pegawai;
+        $karyawan = auth()->user()->karyawan;
 
         $total = 0;
         foreach ($request->produk_ids as $key => $produkId) {
@@ -177,7 +177,7 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::create([
             'debet_id'   => 7,
             'kredit_id'  => 1,
-            'pegawai_id' => $pegawai->id,
+            'karyawan_id' => $karyawan->id,
             'tanggal'    => $tanggal,
             'total'      => $total,
             'kode'       => $kode,
@@ -218,7 +218,7 @@ class TransaksiController extends Controller
      */
     public function show($id)
     {
-        $transaksi = Transaksi::with(['penjualan.produk', 'pegawai'])->findOrFail($id);
+        $transaksi = Transaksi::with(['penjualan.produk', 'karyawan'])->findOrFail($id);
         $transaksi->tanggal = \Carbon\Carbon::parse($transaksi->tanggal)->format('d-m-Y');
 
         // dd($transaksi->penjualan->first()->produk->nama);
@@ -231,7 +231,7 @@ class TransaksiController extends Controller
      */
     public function struk($id)
     {
-        $transaksi = Transaksi::with(['penjualan.produk', 'pegawai'])->findOrFail($id);
+        $transaksi = Transaksi::with(['penjualan.produk', 'karyawan'])->findOrFail($id);
         $transaksi->tanggal = \Carbon\Carbon::parse($transaksi->tanggal)->format('d-m-Y');
 
         $html = view('transaksi.struk', compact('transaksi'))->render();

@@ -30,7 +30,7 @@ class TransaksiImport implements ToModel,WithStartRow
         return new Transaksi([
             'tanggal' => $tanggal, // Asumsi kolom pertama adalah tanggal
             'total' => $row[2], // Asumsi kolom kedua adalah total
-            'pegawai_id' => $row[3], // Asumsi kolom ketiga adalah pegawai_id
+            'karyawan_id' => $row[3], // Asumsi kolom ketiga adalah karyawan_id
             'status' => $row[4], // Asumsi kolom keempat adalah status,
             'debet_id' => $row[5], // Asumsi kolom kelima adalah debet_id
             'kredit_id' => $row[6], // Asumsi kolom keenam adalah kredit_id

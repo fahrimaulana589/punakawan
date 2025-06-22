@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignId('debet_id')->constrained('akuns')->onDelete('restrict');
             $table->foreignId('kredit_id')->constrained('akuns')->onDelete('restrict');
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('restrict');
+            $table->foreignId('karyawan_id')->constrained('karyawans')->onDelete('restrict');
             
             $table->integer('total');
             $table->date('tanggal');

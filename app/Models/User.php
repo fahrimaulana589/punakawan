@@ -24,7 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'pegawai_id'
+        'karyawan_id'
     ];
 
     /**
@@ -47,9 +47,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function pegawai()
+    public function karyawan()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(Karyawan::class);
     }
 
     public function sendPasswordResetNotification($token)
