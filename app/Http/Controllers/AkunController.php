@@ -45,7 +45,8 @@ class AkunController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string|max:255|unique:akuns,nama,'.$id,
-            'tipe' => 'nullable|string|max:255'
+            'tipe' => 'nullable|string|max:255',
+            'kode' => 'required|string|max:255|unique:akuns,kode'
         ]);
         
         if($data['tipe'] == null){

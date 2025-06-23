@@ -8,7 +8,7 @@
     
     <div class="grid grid-cols-1">
       <!-- Breadcrumb Start -->
-      <div x-data="{ pageName: `Produk`}">
+      <div x-data="{ pageName: `Rekap Penjualan`}">
         @include('partials.breadcrumb')
       </div>
       <!-- Breadcrumb End -->
