@@ -43,13 +43,17 @@ class AkunController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->validate([
             'nama' => 'required|string|max:255|unique:akuns,nama,'.$id,
             'tipe' => 'nullable|string|max:255'
         ]);
         
+        if($data['tipe'] == null){
+            $data['tipe'] = '';
+        }
+        
         $akun = Akun::findOrFail($id);
-        $akun->update($request->all());
+        $akun->update($data);
 
         return back()->with('success', 'Akun updated successfully.');
     }
