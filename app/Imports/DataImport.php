@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Absensi;
 use App\Models\Karyawan;
 use App\Models\GajiKaryawan;
+use App\Models\Jurnal;
 use App\Models\GajiLainya;
 
 class DataImport implements WithMultipleSheets, WithEvents
@@ -59,20 +60,33 @@ class DataImport implements WithMultipleSheets, WithEvents
                     $tanggal_akhir = Carbon::parse($gaji->tanggal)->startOfDay(); // Hapus waktu
                     $end_of_month = $tanggal_akhir->copy()->endOfMonth()->startOfDay();
 
-                    $is_akhir_bulan = $tanggal_akhir->isSameDay($end_of_month);
-                    if ($is_akhir_bulan) {
-                        $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
-                    } else {
-                        $target_day = $tanggal_akhir->day + 1;
-                        $bulan_lalu = $tanggal_akhir->copy()->startOfMonth()->subMonth();
+                    $awal_bulan_sebelumnya = $tanggal_akhir->copy()->startOfMonth()->subMonth();
+                    $akhir_bulan_sebelumnya = $tanggal_akhir->copy()->startOfMonth()->subMonth()->endOfMonth();
 
-                        $max_day_last_month = $bulan_lalu->copy()->endOfMonth()->day;
+                    $gaji_sebelumnya = Jurnal::where('tipe', 2)
+                        ->whereBetween('tanggal', [$awal_bulan_sebelumnya, $akhir_bulan_sebelumnya])
+                        ->first();
 
-                        if ($target_day <= $max_day_last_month) {
-                            $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+
+                    if(!$gaji_sebelumnya){
+                        $is_akhir_bulan = $tanggal_akhir->isSameDay($end_of_month);
+                        if ($is_akhir_bulan) {
+                            $tanggal_awal = $tanggal_akhir->copy()->startOfMonth();
                         } else {
-                            $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
+                            $target_day = $tanggal_akhir->day + 1;
+                            $bulan_lalu = $tanggal_akhir->copy()->startOfMonth()->subMonth();
+
+                            $max_day_last_month = $bulan_lalu->copy()->endOfMonth()->day;
+
+                            if ($target_day <= $max_day_last_month) {
+                                $tanggal_awal = $bulan_lalu->copy()->day($target_day);
+                            } else {
+                                $tanggal_awal = $bulan_lalu->copy()->endOfMonth();
+                            }
                         }
+                    }else{
+                        // Ambil tanggal dari gaji bulan sebelumnya, lalu tambahkan 1 hari
+                        $tanggal_awal = Carbon::parse($gaji_sebelumnya->tanggal)->addDay()->startOfDay();
                     }
                     // Format hasil
                     $tanggal_awal = $tanggal_awal->toDateString();
