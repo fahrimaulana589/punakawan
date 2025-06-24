@@ -15,6 +15,11 @@ class PersedianImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+        
         return new Persedian([
             'tahun' => $row[2],
             'bulan' => $row[3],

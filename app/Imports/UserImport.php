@@ -16,6 +16,11 @@ class UserImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+        
         $user = User::create([
             'name' => $row[1], // Asumsi kolom pertama adalah nama
             'email' => $row[2], // Asumsi kolom kedua adalah email

@@ -12,7 +12,11 @@ class BahanProduksiImport implements ToModel,WithStartRow
 {
 
     public function model(array $row){
-        
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+
         return new Konsumsi([
             'debet_id' => $row[2], // Asumsi kolom pertama adalah debet_id
             'kredit_id' => $row[3], // Asumsi kolom kedua adalah kredit_id

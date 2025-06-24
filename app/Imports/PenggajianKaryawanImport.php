@@ -16,6 +16,11 @@ class PenggajianKaryawanImport implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+        
         return new Penggajian([
             'karyawan_id' => $row[0],
             'nama' => $row[1],

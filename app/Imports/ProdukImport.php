@@ -15,6 +15,11 @@ class ProdukImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+        
         $lastId = Produk::max('id') ?? 0;
         $kode = 'PRD' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
        

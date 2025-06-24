@@ -16,6 +16,11 @@ class BiayaImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+
         $tanggal = null;
         if (is_numeric($row[1])) {
             $tanggal = Date::excelToDateTimeObject($row[1])->format('Y-m-d');

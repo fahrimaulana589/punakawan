@@ -16,6 +16,11 @@ class PeralatanImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+        
         $tanggal_aktif = null;
         if (is_numeric($row[2])) {
             $tanggal_aktif = Date::excelToDateTimeObject($row[2])->format('Y-m-d');

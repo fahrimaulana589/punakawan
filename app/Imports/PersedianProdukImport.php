@@ -15,6 +15,11 @@ class PersedianProdukImport implements ToModel,WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+        
         return new PersediaanProdukJadi([
             'tahun' => $row[3],
             'bulan'  => $row[4],

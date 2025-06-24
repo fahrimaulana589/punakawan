@@ -15,6 +15,11 @@ class AbsensiImport implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+
         return new Absensi([
             'tanggal' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0]),
             'karyawan_id' => $row[1],

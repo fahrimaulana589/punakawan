@@ -17,6 +17,11 @@ class GajiKaryawanImport implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
+        // Lewati baris kosong (semua kolom kosong)
+        if (collect($row)->filter()->isEmpty()) {
+            return null;
+        }
+        
         $gaji = Jurnal::where('id', $row[0])
             ->where('tipe', 2)
             ->first();
